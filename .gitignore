@@ -23,12 +23,6 @@ backend/build/
 *.log
 logs/
 
-# Environment files (do not commit secrets)
-.env
-.env.local
-frontend/.env
-backend/.env
-ai-services/.env
 
 # Python
 __pycache__/
@@ -40,12 +34,7 @@ venv/
 .pytest_cache/
 .ipynb_checkpoints/
 
-# AI model weights and caches
-ai-services/models/**
-!ai-services/models/README.md
-ai-services/models/**/.cache/
-ai-services/models/**/.huggingface/
-ai-services/models/face_emotion_recognition/.cache/
+
 
 # Package managers
 npm-cache/
