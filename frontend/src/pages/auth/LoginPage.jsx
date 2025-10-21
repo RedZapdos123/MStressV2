@@ -65,9 +65,11 @@ const LoginPage = () => {
       if (result.success) {
         toast.success('Welcome back! Login successful.');
 
-        // Redirect based on user type
-        if (result.user.userType === 'admin') {
+        // Redirect based on user role
+        if (result.user.role === 'admin') {
           navigate('/admin/dashboard');
+        } else if (result.user.role === 'human_reviewer') {
+          navigate('/reviewer/dashboard');
         } else {
           navigate('/dashboard');
         }
@@ -245,13 +247,12 @@ const LoginPage = () => {
                   Remember me
                 </label>
               </div>
-              <button
-                type="button"
-                className="text-sm text-blue-600 hover:text-blue-700 font-medium"
-                onClick={() => toast.info('Password reset functionality would be implemented here')}
+              <Link
+                to="/forgot-password"
+                className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
               >
                 Forgot password?
-              </button>
+              </Link>
             </div>
 
             {/* Submit Button */}

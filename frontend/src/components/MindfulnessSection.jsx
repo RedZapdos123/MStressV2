@@ -166,11 +166,11 @@ const MindfulnessSection = ({ userAssessments = [] }) => {
   const getTypeColor = (type) => {
     switch (type) {
       case 'breathing': return 'bg-blue-100 text-blue-800';
-      case 'movement': return 'bg-green-100 text-green-800';
+      case 'movement': return 'bg-purple-100 text-purple-800';
       case 'reflection': return 'bg-purple-100 text-purple-800';
-      case 'grounding': return 'bg-orange-100 text-orange-800';
-      case 'body-awareness': return 'bg-indigo-100 text-indigo-800';
-      case 'relaxation': return 'bg-pink-100 text-pink-800';
+      case 'grounding': return 'bg-blue-100 text-blue-800';
+      case 'body-awareness': return 'bg-purple-100 text-purple-800';
+      case 'relaxation': return 'bg-blue-100 text-blue-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };

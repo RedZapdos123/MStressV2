@@ -45,18 +45,17 @@ const EmotionVisualization = ({
       const imageSrc = webcamRef.current.getScreenshot();
       if (!imageSrc) return;
 
-      // Convert base64 image to blob
-      const response = await fetch(imageSrc);
-      const blob = await response.blob();
-
-      // Create FormData for API request
-      const formData = new FormData();
-      formData.append('image', blob, 'webcam_frame.jpg');
-
-      // Call enhanced facial emotion API
-      const apiResponse = await fetch('http://localhost:8000/analyze_webcam_frame', {
+      // Call enhanced facial emotion API with correct endpoint and JSON format
+      const apiResponse = await fetch('http://localhost:8000/analyze/webcam-frame', {
         method: 'POST',
-        body: formData
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          image_data: imageSrc,
+          frame_number: 1,
+          reset_temporal: false
+        })
       });
 
       if (!apiResponse.ok) {
@@ -64,22 +63,22 @@ const EmotionVisualization = ({
       }
 
       const result = await apiResponse.json();
-      
-      if (result.status === 'success' && result.data) {
-        const { emotions, dominant_emotion, confidence } = result.data;
-        
-        const emotionData = {
-          emotions: emotions,
-          dominantEmotion: dominant_emotion,
-          confidence: confidence,
+
+      if (result.success && result.data && result.data.emotions && result.data.emotions.length > 0) {
+        const emotionData = result.data.emotions[0];
+
+        const emotionDataFormatted = {
+          emotions: emotionData.emotions || {},
+          dominantEmotion: emotionData.dominant_emotion || 'neutral',
+          confidence: emotionData.confidence || 0,
           timestamp: Date.now(),
           faces: faces
         };
 
-        setCurrentEmotion(emotionData);
-        
+        setCurrentEmotion(emotionDataFormatted);
+
         if (onEmotionDetected) {
-          onEmotionDetected(emotionData);
+          onEmotionDetected(emotionDataFormatted);
         }
       } else {
         // Fallback to neutral emotion if no face detected

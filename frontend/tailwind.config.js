@@ -8,6 +8,18 @@ export default {
     extend: {
       colors: {
         primary: {
+          50: '#f3e8ff',
+          100: '#e9d5ff',
+          200: '#d8b4fe',
+          300: '#c084fc',
+          400: '#a855f7',
+          500: '#9333ea',
+          600: '#7e22ce',
+          700: '#6b21a8',
+          800: '#581c87',
+          900: '#3f0f5c',
+        },
+        secondary: {
           50: '#eff6ff',
           100: '#dbeafe',
           200: '#bfdbfe',
@@ -20,10 +32,10 @@ export default {
           900: '#1e3a8a',
         },
         mental: {
-          calm: '#10b981',
+          calm: '#7e22ce',
           focus: '#3b82f6',
-          energy: '#f59e0b',
-          stress: '#ef4444',
+          energy: '#dc2626',
+          stress: '#dc2626',
         }
       },
       fontFamily: {

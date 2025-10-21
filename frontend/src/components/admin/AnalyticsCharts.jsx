@@ -85,14 +85,14 @@ const AnalyticsCharts = () => {
   };
 
   const colorBlindFriendlyPalette = [
-    '#1f77b4', // blue
-    '#ff7f0e', // orange
-    '#2ca02c', // green
-    '#d62728', // red
-    '#9467bd', // purple
-    '#8c564b', // brown
-    '#e377c2', // pink
-    '#7f7f7f', // gray
+    '#9333ea', // purple
+    '#3b82f6', // blue
+    '#dc2626', // red
+    '#7e22ce', // dark purple
+    '#1d4ed8', // dark blue
+    '#991b1b', // dark red
+    '#6b21a8', // darker purple
+    '#1e40af', // darker blue
   ];
 
   // Registration trends chart data

@@ -110,7 +110,7 @@ const HomePage = () => {
             </div>
             <nav className="hidden md:flex space-x-8">
               <a href="#features" className="text-gray-700 hover:text-blue-600 transition-colors">Features</a>
-              <a href="#how-it-works" className="text-gray-700 hover:text-blue-600 transition-colors">How It Works</a>
+              <Link to="/how-it-works" className="text-gray-700 hover:text-blue-600 transition-colors">How It Works</Link>
               {user ? (
                 <div className="flex items-center space-x-4">
                   <Link to="/dashboard" className="text-blue-600 font-semibold">Dashboard</Link>
@@ -128,10 +128,16 @@ const HomePage = () => {
             </nav>
             <div className="flex items-center space-x-4">
               {!user && (
-                <Link to="/admin/login" className="text-purple-700 hover:text-purple-900 font-medium transition-colors flex items-center">
-                  <ShieldCheckIcon className="h-4 w-4 mr-1" />
-                  Admin
-                </Link>
+                <>
+                  <Link to="/admin/login" className="text-purple-700 hover:text-purple-900 font-medium transition-colors flex items-center">
+                    <ShieldCheckIcon className="h-4 w-4 mr-1" />
+                    Admin
+                  </Link>
+                  <Link to="/reviewer/login" className="text-indigo-700 hover:text-indigo-900 font-medium transition-colors flex items-center">
+                    <ShieldCheckIcon className="h-4 w-4 mr-1" />
+                    Reviewer
+                  </Link>
+                </>
               )}
               {user ? (
                 <div className="flex items-center space-x-4">
@@ -141,9 +147,17 @@ const HomePage = () => {
                       Admin Panel
                     </Link>
                   )}
-                  <Link to="/assessment" className="btn-primary">
-                    Start Assessment
-                  </Link>
+                  {user.role === 'human_reviewer' && (
+                    <Link to="/reviewer/dashboard" className="text-indigo-700 hover:text-indigo-900 font-medium transition-colors flex items-center">
+                      <ShieldCheckIcon className="h-4 w-4 mr-1" />
+                      Reviewer Panel
+                    </Link>
+                  )}
+                  {user.role === 'user' && (
+                    <Link to="/assessment" className="btn-primary">
+                      Start Assessment
+                    </Link>
+                  )}
                 </div>
               ) : (
                 <Link to="/register" className="btn-primary">
@@ -199,10 +213,6 @@ const HomePage = () => {
 
             {/* Trust Indicators */}
             <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-gray-500">
-              <div className="flex items-center">
-                <ShieldCheckIcon className="h-5 w-5 text-green-500 mr-2" />
-                HIPAA Compliant
-              </div>
               <div className="flex items-center">
                 <CheckCircleIcon className="h-5 w-5 text-blue-500 mr-2" />
                 Evidence-Based
@@ -333,19 +343,15 @@ const HomePage = () => {
             <div className="border-t border-gray-800 mt-8 pt-8">
               <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8">
                 <div className="flex items-center space-x-4 text-sm text-gray-400">
-                  <p>&copy; 2024 MStress Platform. All rights reserved.</p>
+                  <p>&copy; 2025 MStress Platform. All rights reserved.</p>
                   <span className="hidden md:block">|</span>
                   <p className="flex items-center">
                     <HeartIcon className="h-4 w-4 mr-1 text-red-400" />
                     Built with care for mental health
                   </p>
                 </div>
-                
+
                 <div className="flex items-center space-x-4 text-sm text-gray-400">
-                  <span className="flex items-center">
-                    <ShieldCheckIcon className="h-4 w-4 mr-1 text-green-400" />
-                    HIPAA Compliant
-                  </span>
                   <span className="flex items-center">
                     <CheckCircleIcon className="h-4 w-4 mr-1 text-blue-400" />
                     Evidence-Based

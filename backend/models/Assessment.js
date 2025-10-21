@@ -8,7 +8,7 @@ const assessmentSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['standard', 'comprehensive'],
+    enum: ['standard', 'advanced', 'detailed_stress', 'multi_modal', 'comprehensive', 'detailed', 'anxiety', 'wellbeing'],
     required: true
   },
   status: {
@@ -177,16 +177,16 @@ assessmentSchema.methods.isExpired = function() {
 assessmentSchema.statics.getLatestByUser = function(userId) {
   return this.findOne({ user: userId, status: 'completed' })
     .sort({ completedAt: -1 })
-    .populate('user', 'name email userType')
+    .populate('user', 'name email role')
 }
 
 // Static method to get stress level statistics
-assessmentSchema.statics.getStressLevelStats = function(userType = null) {
+assessmentSchema.statics.getStressLevelStats = function(role = null) {
   const match = { status: 'completed' }
-  if (userType) {
-    match['user.userType'] = userType
+  if (role) {
+    match['user.role'] = role
   }
-  
+
   return this.aggregate([
     { $match: match },
     { $lookup: { from: 'users', localField: 'user', foreignField: '_id', as: 'user' } },

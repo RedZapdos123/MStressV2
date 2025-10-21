@@ -37,36 +37,13 @@ const userSchema = new mongoose.Schema({
     trim: true,
     maxlength: 100
   },
-  userType: {
+  role: {
     type: String,
-    enum: ['student', 'professional', 'admin'],
-    default: 'student',
+    enum: ['user', 'human_reviewer', 'admin'],
+    default: 'user',
     required: true
   },
   profile: {
-    institution: {
-      type: String,
-      trim: true,
-      maxlength: 200
-    },
-    department: {
-      type: String,
-      trim: true,
-      maxlength: 100
-    },
-    yearOfStudy: {
-      type: String,
-      trim: true
-    },
-    profession: {
-      type: String,
-      trim: true,
-      maxlength: 100
-    },
-    experience: {
-      type: String,
-      trim: true
-    },
     age: {
       type: Number,
       min: 16,
@@ -110,6 +87,14 @@ const userSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: Date.now
+  },
+  resetToken: {
+    type: String,
+    default: null
+  },
+  resetTokenExpiry: {
+    type: Date,
+    default: null
   }
 })
 
@@ -117,7 +102,7 @@ const userSchema = new mongoose.Schema({
 userSchema.index({ email: 1 }, { unique: true })
 userSchema.index({ googleId: 1 }, { unique: true, sparse: true })
 userSchema.index({ authProvider: 1 })
-userSchema.index({ userType: 1 })
+userSchema.index({ role: 1 })
 userSchema.index({ isActive: 1 })
 userSchema.index({ createdAt: -1 })
 

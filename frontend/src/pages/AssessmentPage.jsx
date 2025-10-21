@@ -9,11 +9,14 @@ import {
   CheckCircleIcon,
   SparklesIcon,
   ExclamationTriangleIcon,
-  XMarkIcon
+  XMarkIcon,
+  ArrowLeftIcon,
+  HeartIcon
 } from '@heroicons/react/24/outline';
 import Webcam from 'react-webcam';
 import AssessmentForm from '../components/AssessmentForm';
-import ComprehensiveAssessment from '../components/ComprehensiveAssessment';
+import DetailedAssessment from '../components/DetailedAssessment';
+import MultiModalAssessment from '../components/MultiModalAssessment';
 import EmotionVisualization from '../components/EmotionVisualization';
 import { useAuth } from '../App';
 import toast from 'react-hot-toast';
@@ -408,39 +411,40 @@ const AssessmentPage = () => {
     setVideoFrames([]);
     setAnalysisResults(null);
     videoDataRef.current = [];
-    toast.info('Facial analysis disabled. Assessment will continue with questionnaire only.');
+    toast.success('Facial analysis disabled. Assessment will continue with questionnaire only.');
   };
 
   // Sample assessments with facial emotion recognition options
   const sampleAssessments = [
     {
-      id: 'stress-assessment',
-      title: 'Standard Stress Assessment',
-      description: 'Evaluate your current stress levels through a comprehensive questionnaire.',
+      id: 'standard-questionnaire',
+      title: 'Standard Questionnaire Assessment',
+      description: 'Evaluate your stress levels through 20 DASS-21 based MCQ questions and 2-4 subjective text questions for sentiment analysis.',
       duration: '10-15 minutes',
       questions: 20,
-      category: 'stress',
-      methods: ['questionnaire'],
+      category: 'standard',
+      methods: ['questionnaire', 'sentiment_analysis'],
       targetAudience: ['student', 'professional'],
       features: [
-        'Evidence-based questionnaire',
+        'DASS-21 based questionnaire',
+        'RoBERTa sentiment analysis',
         'AI-powered analysis',
         'Personalized recommendations',
         'Progress tracking'
       ]
     },
     {
-      id: 'comprehensive-stress',
-      title: 'Comprehensive Stress Assessment',
-      description: 'Advanced stress evaluation combining questionnaire responses with facial emotion recognition for enhanced accuracy.',
-      duration: '15-20 minutes',
+      id: 'advanced-stress',
+      title: 'Advanced Stress Assessment',
+      description: 'Advanced stress evaluation with 20 MCQ questions and 2-4 subjective text questions for enhanced sentiment analysis.',
+      duration: '12-18 minutes',
       questions: 20,
-      category: 'comprehensive_stress',
-      methods: ['questionnaire', 'facial_emotion'],
+      category: 'advanced',
+      methods: ['questionnaire', 'sentiment_analysis'],
       targetAudience: ['student', 'professional'],
       features: [
-        'Multi-modal assessment',
-        'Facial emotion recognition',
+        'DASS-21 based questionnaire',
+        'Advanced RoBERTa sentiment analysis',
         'Enhanced AI analysis',
         'Detailed stress insights',
         'Privacy-protected processing'
@@ -448,21 +452,41 @@ const AssessmentPage = () => {
       isAdvanced: true
     },
     {
-      id: 'multi-modal-assessment',
-      title: 'Multi-Modal Comprehensive Assessment',
-      description: 'The most advanced assessment combining questionnaire, voice analysis, facial emotion recognition, and sentiment analysis for complete mental health evaluation.',
-      duration: '25-35 minutes',
-      questions: 25,
-      category: 'multi_modal',
-      methods: ['questionnaire', 'voice_analysis', 'facial_emotion', 'sentiment_analysis'],
+      id: 'detailed-stress',
+      title: 'Detailed Stress Assessment',
+      description: 'Comprehensive assessment with automatic facial emotion capture during each question, plus questionnaire and sentiment analysis.',
+      duration: '15-25 minutes',
+      questions: 20,
+      category: 'detailed_stress',
+      methods: ['questionnaire', 'facial_emotion', 'sentiment_analysis'],
       targetAudience: ['student', 'professional'],
       features: [
-        'Voice pattern analysis',
-        'Facial emotion recognition',
-        'Advanced questionnaire with open-ended questions',
+        'Automatic facial capture per question',
+        'Live video preview',
+        'DASS-21 questionnaire',
         'RoBERTa sentiment analysis',
-        'Comprehensive AI-powered insights',
-        'Multi-dimensional stress evaluation'
+        'LibreFace FER analysis',
+        'Multi-modal insights'
+      ],
+      isAdvanced: true
+    },
+    {
+      id: 'multi-modal-assessment',
+      title: 'Multi-Modal Stress Assessment',
+      description: 'The most comprehensive assessment combining questionnaire, automatic facial capture, voice analysis, and sentiment analysis.',
+      duration: '25-40 minutes',
+      questions: 20,
+      category: 'multi_modal',
+      methods: ['questionnaire', 'facial_emotion', 'voice_analysis', 'sentiment_analysis'],
+      targetAudience: ['student', 'professional'],
+      features: [
+        'Automatic facial capture per question',
+        'Voice recording and analysis',
+        'Whisper speech-to-text',
+        'Librosa audio features',
+        'DASS-21 questionnaire',
+        'RoBERTa sentiment analysis',
+        'Complete mental health evaluation'
       ],
       isAdvanced: true,
       isNew: true
@@ -561,7 +585,7 @@ const AssessmentPage = () => {
 
       // If facial analysis is enabled, start the 30-second post-assessment recording
       if (facialAnalysisEnabled && webcamEnabled) {
-        toast.info('Assessment complete! Starting 30-second facial emotion analysis...');
+        toast.success('Assessment complete! Starting 30-second facial emotion analysis...');
 
         // Start the 30-second recording session
         await startPostAssessmentRecording();
@@ -653,12 +677,17 @@ const AssessmentPage = () => {
   }
 
   if (showForm && selectedAssessment) {
-    // Render comprehensive assessment for advanced types
-    if (selectedAssessment.id === 'comprehensive-stress') {
-      return <ComprehensiveAssessment assessmentType={selectedAssessment.category} />;
+    // Render multi-modal assessment for multi-modal type
+    if (selectedAssessment.id === 'multi-modal-assessment') {
+      return <MultiModalAssessment assessmentType={selectedAssessment.category} />;
     }
 
-    // Render standard assessment form
+    // Render detailed assessment for detailed stress type
+    if (selectedAssessment.id === 'detailed-stress') {
+      return <DetailedAssessment assessmentType={selectedAssessment.category} />;
+    }
+
+    // Render standard assessment form for questionnaire-based assessments
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -842,7 +871,7 @@ const AssessmentPage = () => {
           )}
 
           <AssessmentForm
-            assessmentId={selectedAssessment.id}
+            assessmentType={selectedAssessment.category}
             onComplete={handleAssessmentComplete}
             userType={user?.userType || 'student'}
           />
@@ -854,13 +883,36 @@ const AssessmentPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Back Button */}
+        <button
+          onClick={() => navigate('/dashboard')}
+          className="flex items-center text-blue-600 hover:text-blue-700 font-medium mb-8"
+        >
+          <ArrowLeftIcon className="h-5 w-5 mr-2" />
+          Back to Dashboard
+        </button>
+
         {/* Header */}
         <div className="text-center mb-12">
+          {/* Logo */}
+          <div className="flex items-center justify-center mb-6">
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="flex items-center hover:opacity-80 transition-opacity"
+              title="Go to Dashboard"
+            >
+              <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center mr-3">
+                <HeartIcon className="h-6 w-6 text-white" />
+              </div>
+              <span className="text-2xl font-bold text-gradient">MStress</span>
+            </button>
+          </div>
+          {/* TODO: Replace with actual SVG logo file */}
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Mental Health Assessments
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Choose from our scientifically validated assessments to gain insights into your mental health 
+            Choose from our scientifically validated assessments to gain insights into your mental health
             and receive personalized recommendations for improvement.
           </p>
         </div>

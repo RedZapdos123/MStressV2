@@ -43,13 +43,23 @@ const AdminLogin = () => {
 
       if (response.data.success) {
         // Verify user is admin
-        if (response.data.user.userType === 'admin') {
+        if (response.data.user.role === 'admin') {
           // Store token and user data
           localStorage.setItem('token', response.data.token);
           localStorage.setItem('user', JSON.stringify(response.data.user));
 
+          // Set axios authorization header
+          axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+
+          // Update auth context
+          login({ email: formData.email, password: formData.password });
+
           toast.success('Admin login successful');
-          navigate('/admin/dashboard');
+
+          // Redirect to admin dashboard
+          setTimeout(() => {
+            navigate('/admin/dashboard');
+          }, 100);
         } else {
           toast.error('Access denied. Admin privileges required.');
         }

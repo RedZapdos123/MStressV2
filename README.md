@@ -1,267 +1,217 @@
-# Mental Health Platform for Students and Professionals
+# MStress: Mental Health Assessment Platform.
 
-A comprehensive AI-powered mental health assessment and support platform designed for students and working professionals. This platform provides stress measurement, sentiment analysis, personalized recommendations, and location-based healthcare facility discovery.
+## Overview:
 
-## 🌟 Features
+MStress is a comprehensive mental health assessment platform designed to help users evaluate their stress, anxiety, and depression levels using the DASS-21 (Depression Anxiety Stress Scale) methodology. The application combines multiple assessment methodologies including questionnaires, facial emotion recognition, voice analysis, and sentiment analysis to provide accurate mental health evaluations. MStress is built as a three-tier microservices architecture with a React frontend, Node.js backend, and Python AI services.
 
-### Core Functionality
-- **AI-Powered Stress Assessment**: Advanced algorithms for measuring stress levels (0-100 scale)
-- **Voice Analysis**: Real-time voice sentiment analysis using Whisper and advanced NLP
-- **Personalized Recommendations**: AI-generated stress management suggestions via Google Gemini
-- **Location-Based Services**: Nearby mental health facilities using Google Maps API
-- **Data Export**: Professional PDF reports and CSV data export
-- **Multi-User Support**: Separate interfaces for students, professionals, and administrators
+## Key Features:
 
-### Authentication & Security
-- **Google OAuth 2.0**: Primary authentication method
-- **Email/Password Fallback**: Manual registration and login
-- **Secure Session Management**: JWT-based authentication
-- **Privacy Compliance**: GDPR-compliant data handling
+### Core Assessment Types:
 
-### Modern UI/UX
-- **Responsive Design**: Mobile-first approach with Tailwind CSS
-- **Dark/Light Mode**: User preference-based theming
-- **Accessibility**: WCAG 2.1 AA compliance
-- **Smooth Animations**: Modern micro-interactions
+1. **Standard Questionnaire Assessment**: DASS-21 based questionnaire with sentiment analysis (10-15 minutes).
+2. **Advanced Stress Assessment**: Enhanced questionnaire with advanced sentiment analysis (12-18 minutes).
+3. **Detailed Stress Analysis**: Comprehensive assessment with facial emotion recognition (15-20 minutes).
+4. **Multi-Modal Stress Assessment**: Complete assessment combining questionnaires, facial recognition, and voice analysis (20-30 minutes).
 
-## 🏗️ Architecture
+### Platform Features:
+
+- **User Authentication**: Secure registration and login with JWT tokens.
+- **Password Management**: Forgot password and password reset functionality.
+- **Profile Management**: Users can update their profile information and change passwords.
+- **Assessment History**: Complete history of all assessments with scores and stress levels.
+- **Personalized Recommendations**: AI-generated recommendations based on assessment results using Gemini API.
+- **Nearby Resources**: Location-based mental health resources using Google Maps API.
+- **Reviewer Panel**: Human reviewers can review assessments and provide feedback.
+- **Admin Dashboard**: Administrative features for system management.
+- **Real-time Status**: Real-time "Open Now" status for mental health resources.
+
+## Technology Stack:
+
+### Frontend:
+- **React**: UI framework with React Router for navigation.
+- **Vite**: Fast build tool and development server.
+- **Tailwind CSS**: Utility-first CSS framework for styling.
+- **Heroicons**: Icon library for UI components.
+- **Axios**: HTTP client for API requests.
+- **React Hot Toast**: Toast notifications for user feedback.
+
+### Backend:
+- **Node.js**: JavaScript runtime.
+- **Express**: Web framework for API development.
+- **MongoDB**: NoSQL database for data storage.
+- **JWT**: JSON Web Tokens for authentication.
+- **Bcrypt**: Password hashing and verification.
+- **Gemini API**: AI-powered recommendations.
+- **Google Maps API**: Location-based resource discovery.
+
+### AI Services:
+- **FastAPI**: Python web framework for AI services.
+- **Transformers**: NLP models for sentiment analysis (RoBERTa).
+- **Librosa**: Audio analysis library.
+- **OpenAI Whisper**: Speech-to-text transcription.
+- **LibreFace**: Facial emotion recognition.
+
+## Project Structure:
 
 ```
-mental-health-platform/
-├── frontend/                 # React application (Vite)
+MStress/
+├── frontend/                 # React frontend application
 │   ├── src/
-│   │   ├── components/       # Reusable UI components
 │   │   ├── pages/           # Page components
-│   │   ├── services/        # API services
-│   │   ├── hooks/           # Custom React hooks
-│   │   ├── contexts/        # React contexts
-│   │   └── utils/           # Utility functions
-│   ├── public/              # Static assets
+│   │   ├── components/      # Reusable components
+│   │   ├── App.jsx          # Main app component with routing
+│   │   └── index.css        # Global styles
 │   └── package.json
-├── backend/                  # Node.js/Express API
-│   ├── routes/              # API routes
-│   ├── models/              # Database models
+├── backend/                  # Node.js/Express backend
+│   ├── routes/              # API route handlers
+│   ├── models/              # MongoDB schemas
+│   ├── services/            # Business logic services
 │   ├── middleware/          # Express middleware
-│   ├── controllers/         # Route controllers
-│   ├── services/            # Business logic
-│   └── server.js
-├── ai-services/             # Python AI backend
-│   ├── models/              # AI/ML models
-│   ├── services/            # AI processing services
-│   ├── api/                 # FastAPI endpoints
-│   └── requirements.txt
-├── database/                # Database management
-│   ├── schemas/             # Database schemas
-│   ├── migrations/          # Database migrations
-│   └── seeds/               # Seed data
-├── docs/                    # Documentation
-└── docker-compose.yml       # Container orchestration
+│   ├── server.js            # Main server file
+│   └── package.json
+├── ai-services/             # Python FastAPI services
+│   ├── main.py              # FastAPI application
+│   ├── services/            # AI service implementations
+│   └── requirements.txt      # Python dependencies
+├── API.md                    # API documentation
+├── CodeBaseIndex.md          # Codebase structure documentation
+├── InstallationAndSetup.md   # Installation instructions
+└── Usage.md                  # Usage guide
 ```
 
-## 🚀 Quick Start
+## Quick Start:
 
-### Prerequisites
-- Node.js 18+ and npm
-- Python 3.9+ with conda/pip
-- MongoDB 5.0+
-- Git
+### Prerequisites:
 
-### Installation
+- Node.js (v14 or higher).
+- Python (v3.8 or higher).
+- MongoDB (running locally or remote connection).
+- npm or yarn package manager.
 
-1. **Clone the repository**
-```bash
-git clone <repository-url>
-cd mental-health-platform
-```
+### Installation:
 
-2. **Setup Frontend**
-```bash
-cd frontend
-npm install
-npm run dev
-```
+1. **Clone the repository**:
+   ```bash
+   git clone <repository-url>
+   cd MStress
+   ```
 
-3. **Setup Backend**
-```bash
-cd backend
-npm install
-npm start
-```
+2. **Run the setup script**:
+   ```bash
+   .\setup.ps1
+   ```
 
-4. **Setup AI Services**
-```bash
-cd ai-services
-pip install -r requirements.txt
-uvicorn app:app --reload --port 8000
-```
+   This will install all dependencies for frontend, backend, and AI services.
 
-5. **Access the application**
-- Frontend: http://localhost:5173
-- Backend API: http://localhost:5000
-- AI Services: http://localhost:8000
-- API Documentation: http://localhost:8000/docs
+### Starting the Application:
 
-## 🔧 Configuration
+1. **Start all services**:
+   ```bash
+   .\start.ps1
+   ```
 
-### Environment Variables
+   This will start all three services in parallel:
+   - Backend: http://localhost:5000
+   - Frontend: http://localhost:5173
+   - AI Services: http://localhost:8000
 
-Create `.env` files in each service directory:
+2. **Access the application**:
+   - Open your browser and navigate to `http://localhost:5173`
 
-**Frontend (.env)**
-```
-VITE_API_URL=http://localhost:5000
-VITE_AI_API_URL=http://localhost:8000
-VITE_GOOGLE_CLIENT_ID=your_google_client_id
-VITE_GOOGLE_MAPS_API_KEY=AIzaSyBw1lCX08SDNr6pbfcpD3cu7dAqdZjg6qo_DUMMY
-```
+### Test Credentials:
 
-**Backend (.env)**
-```
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/mental_health_platform
-JWT_SECRET=your_jwt_secret
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
-```
+Use these credentials to test the application:
 
-**AI Services (.env)**
-```
-GEMINI_API_KEY=AIzaSyDw1lCX08SDNr6pbfcpD3cu7dAqdZjg6qo
-DATABASE_URL=sqlite:///./mental_health.db
-```
+| Email | Password | Role | Name |
+|-------|----------|------|------|
+| `reviewer@mstress.com` | `reviewer123` | Reviewer | Mridankan Mandal |
+| `admin@mstress.com` | `admin123` | Admin | Admin User |
+| `user1@example.com` | `password123` | User | Rajesh Kumar |
+| `user2@example.com` | `password123` | User | Priya Singh |
 
-## 📊 User Roles
+To populate the database with test data, run the following command after starting the backend:
 
-### Student Users
-- Stress assessments focused on academic pressure
-- Study-life balance recommendations
-- Campus mental health resources
-- Peer support features
-
-### Professional Users
-- Work-related stress analysis
-- Career burnout prevention
-- Work-life balance optimization
-- Professional counseling resources
-
-### Administrators
-- User management and analytics
-- Question set management
-- System configuration
-- Report generation
-
-## 🧠 AI Capabilities
-
-### Voice Analysis
-- Real-time speech-to-text using OpenAI Whisper
-- Sentiment analysis from voice patterns
-- Stress level detection from vocal characteristics
-- Multi-language support (English, Hindi)
-
-### Personalized Recommendations
-- Google Gemini AI integration
-- Context-aware suggestions
-- Adaptive learning from user feedback
-- Evidence-based mental health strategies
-
-### Assessment Engine
-- DASS-21 compatible scoring
-- Weighted multi-factor analysis
-- Trend analysis and progress tracking
-- Risk level categorization
-
-## 🗺️ Location Services
-
-### Healthcare Facility Discovery
-- Google Maps API integration
-- Nearby mental health clinics
-- Hospital psychiatric departments
-- Private practice therapists
-- Community counseling centers
-
-### Features
-- Real-time location detection
-- Distance and rating-based sorting
-- Contact information and directions
-- User reviews and ratings
-
-## 📈 Data Export
-
-### PDF Reports
-- Professional assessment summaries
-- Progress charts and trends
-- Personalized recommendations
-- Historical data analysis
-
-### CSV Export
-- Raw assessment data
-- Trend analysis data
-- Custom date range selection
-- Data analysis compatibility
-
-## 🔒 Security & Privacy
-
-### Data Protection
-- End-to-end encryption for sensitive data
-- GDPR compliance
-- User consent management
-- Data retention policies
-
-### Authentication Security
-- OAuth 2.0 implementation
-- JWT token management
-- Session security
-- Rate limiting
-
-## 🧪 Testing
-
-### Frontend Testing
-```bash
-cd frontend
-npm run test
-npm run test:e2e
-```
-
-### Backend Testing
 ```bash
 cd backend
-npm test
-npm run test:integration
+node scripts/populate-test-data.js
 ```
 
-### AI Services Testing
-```bash
-cd ai-services
-pytest
-pytest --cov=.
-```
+## API Documentation:
 
-## 📚 Documentation
+For detailed API documentation, see [API.md](./API.md).
 
-- [API Documentation](./docs/api.md)
-- [User Manual](./docs/user-manual.md)
-- [Admin Guide](./docs/admin-guide.md)
-- [Developer Guide](./docs/developer-guide.md)
-- [Deployment Guide](./docs/deployment.md)
+## User Roles:
 
-## 🤝 Contributing
+### User:
+- Take assessments.
+- View assessment history and results.
+- Receive personalized recommendations.
+- View nearby mental health resources.
+- Manage profile and password.
 
-Please read our [Contributing Guidelines](./docs/contributing.md) for details on our code of conduct and the process for submitting pull requests.
+### Human Reviewer:
+- Review pending assessments.
+- View assessment history for users.
+- View previous reviews.
+- Provide feedback and risk assessments.
+- Flag assessments for follow-up.
 
-## 📄 License
+### Admin:
+- Access all reviewer features.
+- Manage user accounts.
+- View system statistics.
+- Configure system settings.
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## Assessment Scoring:
 
-## 🆘 Support
+Assessments use the DASS-21 (Depression Anxiety Stress Scale) scoring methodology:
 
-For support and questions:
-- Create an issue on GitHub
-- Email: support@mentalhealthplatform.com
-- Documentation: [docs.mentalhealthplatform.com](https://docs.mentalhealthplatform.com)
+- **0-9**: Normal.
+- **10-13**: Mild.
+- **14-20**: Moderate.
+- **21-27**: Severe.
+- **28+**: Extremely Severe.
 
-## 🙏 Acknowledgments
+## Security:
 
-- OpenAI Whisper for voice analysis
-- Google Gemini for AI recommendations
-- Google Maps for location services
-- The mental health research community
+- Passwords are hashed using bcrypt with 10 salt rounds.
+- JWT tokens expire after 7 days.
+- Password reset tokens expire after 1 hour.
+- All sensitive endpoints require authentication.
+- CORS is configured to allow requests from specified origins.
+
+## Troubleshooting:
+
+### Services not starting:
+- Ensure MongoDB is running on `mongodb://localhost:27017`.
+- Check that ports 5000, 5173, and 8000 are not in use.
+- Verify all dependencies are installed correctly.
+
+### API errors:
+- Check the browser console for error messages.
+- Review backend logs for detailed error information.
+- Ensure all environment variables are configured correctly.
+
+### Database issues:
+- Verify MongoDB connection string in environment variables.
+- Check that the database exists and is accessible.
+- Run the seed script to populate test data: `cd backend && node scripts/populate-test-data.js`.
+
+## Contributing:
+
+For contribution guidelines, please refer to the project documentation.
+
+## License:
+
+This project is licensed under the MIT License.
+
+## Support:
+
+For support and questions, please contact the development team.
+
+## Version:
+
+Current Version: 1.0.0
+
+Last Updated: October 21, 2025.
+

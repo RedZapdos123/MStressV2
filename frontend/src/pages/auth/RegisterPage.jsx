@@ -24,7 +24,7 @@ const RegisterPage = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    userType: 'student',
+    role: 'user',
     agreeToTerms: false
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -35,17 +35,17 @@ const RegisterPage = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
 
-  const userTypes = [
+  const userRoles = [
     {
-      id: 'student',
-      title: 'Student',
-      description: 'Academic stress, exam anxiety, social pressures',
+      id: 'user',
+      title: 'User',
+      description: 'Regular user for stress assessments and mental health tracking',
       icon: AcademicCapIcon
     },
     {
-      id: 'professional',
-      title: 'Professional',
-      description: 'Work-life balance, career stress, burnout assessment',
+      id: 'human_reviewer',
+      title: 'Human Reviewer',
+      description: 'Review and analyze user assessments, provide feedback',
       icon: BriefcaseIcon
     }
   ];
@@ -102,7 +102,7 @@ const RegisterPage = () => {
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        userType: formData.userType
+        role: formData.role
       });
 
       if (response.data.success) {
@@ -213,41 +213,41 @@ const RegisterPage = () => {
         {/* Registration Form */}
         <div className="card">
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* User Type Selection */}
+            {/* User Role Selection */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-3">
                 I am a...
               </label>
               <div className="grid grid-cols-1 gap-3">
-                {userTypes.map((type) => (
-                  <label key={type.id} className="relative">
+                {userRoles.map((roleOption) => (
+                  <label key={roleOption.id} className="relative">
                     <input
                       type="radio"
-                      name="userType"
-                      value={type.id}
-                      checked={formData.userType === type.id}
+                      name="role"
+                      value={roleOption.id}
+                      checked={formData.role === roleOption.id}
                       onChange={handleChange}
                       className="sr-only"
                     />
                     <div className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
-                      formData.userType === type.id
+                      formData.role === roleOption.id
                         ? 'border-blue-500 bg-blue-50'
                         : 'border-gray-200 hover:border-gray-300'
                     }`}>
                       <div className="flex items-center">
-                        <type.icon className={`h-6 w-6 mr-3 ${
-                          formData.userType === type.id ? 'text-blue-600' : 'text-gray-400'
+                        <roleOption.icon className={`h-6 w-6 mr-3 ${
+                          formData.role === roleOption.id ? 'text-blue-600' : 'text-gray-400'
                         }`} />
                         <div>
                           <div className={`font-medium ${
-                            formData.userType === type.id ? 'text-blue-900' : 'text-gray-900'
+                            formData.role === roleOption.id ? 'text-blue-900' : 'text-gray-900'
                           }`}>
-                            {type.title}
+                            {roleOption.title}
                           </div>
                           <div className={`text-sm ${
-                            formData.userType === type.id ? 'text-blue-700' : 'text-gray-600'
+                            formData.role === roleOption.id ? 'text-blue-700' : 'text-gray-600'
                           }`}>
-                            {type.description}
+                            {roleOption.description}
                           </div>
                         </div>
                       </div>

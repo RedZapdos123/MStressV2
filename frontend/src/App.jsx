@@ -8,14 +8,18 @@ import axios from 'axios';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
+import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
+import ResetPasswordPage from './pages/auth/ResetPasswordPage';
 import DashboardPage from './pages/DashboardPage';
 import AssessmentPage from './pages/AssessmentPage';
 import ResultsPage from './pages/ResultsPage';
-import FindHelpPage from './pages/FindHelpPage';
-import ExercisePage from './pages/ExercisePage';
-import MindfulnessPage from './pages/MindfulnessPage';
+import RecommendationsPage from './pages/RecommendationsPage';
+import ProfilePage from './pages/ProfilePage';
+import HowItWorksPage from './pages/HowItWorksPage';
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import ReviewerLogin from './pages/reviewer/ReviewerLogin';
+import ReviewerDashboard from './pages/reviewer/ReviewerDashboard';
 
 // Set axios defaults
 axios.defaults.baseURL = 'http://localhost:5000';
@@ -68,12 +72,18 @@ const AuthProvider = ({ children }) => {
               throw new Error('Token verification failed');
             }
           } catch (error) {
-            // Token invalid or server unavailable, clear storage
+            // Token invalid or server unavailable, use localStorage data as fallback
             console.warn('Token verification failed:', error.message);
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            delete axios.defaults.headers.common['Authorization'];
-            setUser(null);
+            // Use the parsed user data from localStorage as fallback
+            if (parsedUser) {
+              setUser(parsedUser);
+              axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            } else {
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              delete axios.defaults.headers.common['Authorization'];
+              setUser(null);
+            }
           }
         }
       } catch (error) {
@@ -198,7 +208,7 @@ const AdminProtectedRoute = ({ children }) => {
     return <Navigate to="/admin/login" replace />;
   }
 
-  if (user.userType !== 'admin') {
+  if (user.role !== 'admin') {
     return <Navigate to="/unauthorized" replace />;
   }
 
@@ -273,6 +283,47 @@ class ErrorBoundary extends React.Component {
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || "140018359505-8u5mskaaakhjtmhe5d81buu9cr300efk.apps.googleusercontent.com";
 
 function App() {
+  // Load Google Maps API script
+  useEffect(() => {
+    const loadGoogleMapsScript = () => {
+      // Check if Google Maps is already loaded
+      if (window.google && window.google.maps) {
+        console.log('Google Maps API already loaded');
+        return;
+      }
+
+      // Check if script is already being loaded
+      if (window.__googleMapsScriptLoading) {
+        console.log('Google Maps script already loading');
+        return;
+      }
+
+      if (document.querySelector('script[src*="maps.googleapis.com"]')) {
+        console.log('Google Maps script already in DOM');
+        return;
+      }
+
+      window.__googleMapsScriptLoading = true;
+
+      const script = document.createElement('script');
+      const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+      script.async = true;
+      script.defer = true;
+      script.onload = () => {
+        console.log('Google Maps API loaded successfully');
+        window.__googleMapsScriptLoading = false;
+      };
+      script.onerror = () => {
+        console.error('Failed to load Google Maps API');
+        window.__googleMapsScriptLoading = false;
+      };
+      document.head.appendChild(script);
+    };
+
+    loadGoogleMapsScript();
+  }, []);
+
   return (
     <GoogleOAuthProvider
       clientId={GOOGLE_CLIENT_ID}
@@ -286,6 +337,7 @@ function App() {
               <Routes>
               {/* Public Routes */}
               <Route path="/" element={<HomePage />} />
+              <Route path="/how-it-works" element={<HowItWorksPage />} />
               <Route path="/login" element={
                 <PublicRoute>
                   <LoginPage />
@@ -294,6 +346,16 @@ function App() {
               <Route path="/register" element={
                 <PublicRoute>
                   <RegisterPage />
+                </PublicRoute>
+              } />
+              <Route path="/forgot-password" element={
+                <PublicRoute>
+                  <ForgotPasswordPage />
+                </PublicRoute>
+              } />
+              <Route path="/reset-password/:token" element={
+                <PublicRoute>
+                  <ResetPasswordPage />
                 </PublicRoute>
               } />
               
@@ -313,19 +375,14 @@ function App() {
                   <ResultsPage />
                 </ProtectedRoute>
               } />
-              <Route path="/find-help" element={
+              <Route path="/recommendations" element={
                 <ProtectedRoute>
-                  <FindHelpPage />
+                  <RecommendationsPage />
                 </ProtectedRoute>
               } />
-              <Route path="/exercises" element={
+              <Route path="/profile" element={
                 <ProtectedRoute>
-                  <ExercisePage />
-                </ProtectedRoute>
-              } />
-              <Route path="/mindfulness" element={
-                <ProtectedRoute>
-                  <MindfulnessPage />
+                  <ProfilePage />
                 </ProtectedRoute>
               } />
 
@@ -335,6 +392,14 @@ function App() {
                 <AdminProtectedRoute>
                   <AdminDashboard />
                 </AdminProtectedRoute>
+              } />
+
+              {/* Reviewer Routes */}
+              <Route path="/reviewer/login" element={<ReviewerLogin />} />
+              <Route path="/reviewer/dashboard" element={
+                <ProtectedRoute>
+                  <ReviewerDashboard />
+                </ProtectedRoute>
               } />
 
               {/* Fallback Routes */}

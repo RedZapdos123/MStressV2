@@ -23,118 +23,741 @@ const AssessmentForm = ({
   
   const { user } = useAuth();
 
-  // Mental health assessment questions based on validated scales
-  const questions = [
-    {
-      id: 'stress_level',
-      category: 'general_wellbeing',
-      text: 'How would you rate your current stress level?',
-      type: 'scale',
-      required: true,
-      options: [
-        { value: 1, label: 'Very Low', description: 'Feeling calm and relaxed' },
-        { value: 2, label: 'Low', description: 'Minimal stress, manageable' },
-        { value: 3, label: 'Moderate', description: 'Some stress, but coping well' },
-        { value: 4, label: 'High', description: 'Significant stress, affecting daily life' },
-        { value: 5, label: 'Very High', description: 'Overwhelming stress, difficult to cope' }
-      ]
-    },
-    {
-      id: 'sleep_quality',
-      category: 'physical_health',
-      text: 'How would you describe your sleep quality over the past week?',
-      type: 'scale',
-      required: true,
-      options: [
-        { value: 1, label: 'Excellent', description: 'Restful sleep, wake up refreshed' },
-        { value: 2, label: 'Good', description: 'Generally good sleep with minor issues' },
-        { value: 3, label: 'Fair', description: 'Some sleep difficulties, occasional tiredness' },
-        { value: 4, label: 'Poor', description: 'Frequent sleep problems, often tired' },
-        { value: 5, label: 'Very Poor', description: 'Severe sleep issues, constantly exhausted' }
-      ]
-    },
-    {
-      id: 'energy_level',
-      category: 'physical_health',
-      text: 'How would you rate your energy levels recently?',
-      type: 'scale',
-      required: true,
-      options: [
-        { value: 1, label: 'Very High', description: 'Energetic and motivated' },
-        { value: 2, label: 'High', description: 'Good energy for daily activities' },
-        { value: 3, label: 'Moderate', description: 'Average energy, some fatigue' },
-        { value: 4, label: 'Low', description: 'Often tired, low motivation' },
-        { value: 5, label: 'Very Low', description: 'Constantly exhausted, no energy' }
-      ]
-    },
-    {
-      id: 'work_academic_stress',
-      category: user?.userType === 'student' ? 'academic_stress' : 'work_stress',
-      text: user?.userType === 'student' 
-        ? 'How stressed do you feel about your academic responsibilities?'
-        : 'How stressed do you feel about your work responsibilities?',
-      type: 'scale',
-      required: true,
-      options: [
-        { value: 1, label: 'Not at all', description: 'No stress from responsibilities' },
-        { value: 2, label: 'Slightly', description: 'Minor stress, easily manageable' },
-        { value: 3, label: 'Moderately', description: 'Some stress, requires effort to manage' },
-        { value: 4, label: 'Very much', description: 'High stress, significantly impacts life' },
-        { value: 5, label: 'Extremely', description: 'Overwhelming stress, major life impact' }
-      ]
-    },
-    {
-      id: 'social_relationships',
-      category: 'social_relationships',
-      text: 'How satisfied are you with your social relationships and support system?',
-      type: 'scale',
-      required: true,
-      options: [
-        { value: 1, label: 'Very Satisfied', description: 'Strong support network, fulfilling relationships' },
-        { value: 2, label: 'Satisfied', description: 'Good relationships, adequate support' },
-        { value: 3, label: 'Neutral', description: 'Average relationships, some support' },
-        { value: 4, label: 'Dissatisfied', description: 'Limited support, relationship issues' },
-        { value: 5, label: 'Very Dissatisfied', description: 'Poor relationships, little to no support' }
-      ]
-    },
-    {
-      id: 'coping_strategies',
-      category: 'general_wellbeing',
-      text: 'How well do you feel you cope with daily challenges and stress?',
-      type: 'scale',
-      required: true,
-      options: [
-        { value: 1, label: 'Very Well', description: 'Excellent coping skills, handle stress effectively' },
-        { value: 2, label: 'Well', description: 'Good coping strategies, manage most situations' },
-        { value: 3, label: 'Moderately', description: 'Some coping skills, struggle occasionally' },
-        { value: 4, label: 'Poorly', description: 'Limited coping skills, often overwhelmed' },
-        { value: 5, label: 'Very Poorly', description: 'Poor coping, frequently unable to manage stress' }
-      ]
-    },
-    {
-      id: 'mood_changes',
-      category: 'general_wellbeing',
-      text: 'Have you noticed any significant changes in your mood recently?',
-      type: 'multiple_choice',
-      required: true,
-      options: [
-        { value: 'no_changes', label: 'No significant changes', description: 'Mood has been stable' },
-        { value: 'more_positive', label: 'More positive than usual', description: 'Feeling happier or more optimistic' },
-        { value: 'more_negative', label: 'More negative than usual', description: 'Feeling sadder or more pessimistic' },
-        { value: 'mood_swings', label: 'Frequent mood swings', description: 'Emotions changing rapidly' },
-        { value: 'emotional_numbness', label: 'Feeling emotionally numb', description: 'Difficulty feeling emotions' }
-      ]
-    },
-    {
-      id: 'specific_stressors',
-      category: 'general_wellbeing',
-      text: 'Please describe any specific stressors or challenges you\'re currently facing:',
-      type: 'text',
-      required: false,
-      placeholder: 'Share what\'s been causing you stress lately... (Optional)',
-      maxLength: 500
+  // Get questions based on assessment type
+  const getQuestions = () => {
+    // Anxiety Screening (GAD-7 based - 15 questions)
+    if (assessmentType === 'anxiety') {
+      return [
+        {
+          id: 'anxiety_1',
+          category: 'anxiety',
+          text: 'Feeling nervous, anxious or on edge',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 0, label: 'Not at all' },
+            { value: 1, label: 'Several days' },
+            { value: 2, label: 'More than half the days' },
+            { value: 3, label: 'Nearly every day' }
+          ]
+        },
+        {
+          id: 'anxiety_2',
+          category: 'anxiety',
+          text: 'Not being able to stop or control worrying',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 0, label: 'Not at all' },
+            { value: 1, label: 'Several days' },
+            { value: 2, label: 'More than half the days' },
+            { value: 3, label: 'Nearly every day' }
+          ]
+        },
+        {
+          id: 'anxiety_3',
+          category: 'anxiety',
+          text: 'Worrying too much about different things',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 0, label: 'Not at all' },
+            { value: 1, label: 'Several days' },
+            { value: 2, label: 'More than half the days' },
+            { value: 3, label: 'Nearly every day' }
+          ]
+        },
+        {
+          id: 'anxiety_4',
+          category: 'anxiety',
+          text: 'Trouble relaxing',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 0, label: 'Not at all' },
+            { value: 1, label: 'Several days' },
+            { value: 2, label: 'More than half the days' },
+            { value: 3, label: 'Nearly every day' }
+          ]
+        },
+        {
+          id: 'anxiety_5',
+          category: 'anxiety',
+          text: 'Being so restless that it is hard to sit still',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 0, label: 'Not at all' },
+            { value: 1, label: 'Several days' },
+            { value: 2, label: 'More than half the days' },
+            { value: 3, label: 'Nearly every day' }
+          ]
+        },
+        {
+          id: 'anxiety_6',
+          category: 'anxiety',
+          text: 'Becoming easily annoyed or irritable',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 0, label: 'Not at all' },
+            { value: 1, label: 'Several days' },
+            { value: 2, label: 'More than half the days' },
+            { value: 3, label: 'Nearly every day' }
+          ]
+        },
+        {
+          id: 'anxiety_7',
+          category: 'anxiety',
+          text: 'Feeling afraid as if something awful might happen',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 0, label: 'Not at all' },
+            { value: 1, label: 'Several days' },
+            { value: 2, label: 'More than half the days' },
+            { value: 3, label: 'Nearly every day' }
+          ]
+        },
+        {
+          id: 'anxiety_8',
+          category: 'anxiety',
+          text: 'How often do you experience panic attacks or sudden intense fear?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 0, label: 'Never' },
+            { value: 1, label: 'Rarely' },
+            { value: 2, label: 'Sometimes' },
+            { value: 3, label: 'Often' }
+          ]
+        },
+        {
+          id: 'anxiety_9',
+          category: 'anxiety',
+          text: 'Do you avoid situations due to anxiety?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 0, label: 'Not at all' },
+            { value: 1, label: 'Slightly' },
+            { value: 2, label: 'Moderately' },
+            { value: 3, label: 'Severely' }
+          ]
+        },
+        {
+          id: 'anxiety_10',
+          category: 'anxiety',
+          text: 'How much does anxiety interfere with your daily activities?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 0, label: 'Not at all' },
+            { value: 1, label: 'Slightly' },
+            { value: 2, label: 'Moderately' },
+            { value: 3, label: 'Severely' }
+          ]
+        },
+        {
+          id: 'anxiety_11',
+          category: 'anxiety',
+          text: 'Do you have physical symptoms of anxiety (racing heart, sweating)?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 0, label: 'Never' },
+            { value: 1, label: 'Rarely' },
+            { value: 2, label: 'Sometimes' },
+            { value: 3, label: 'Often' }
+          ]
+        },
+        {
+          id: 'anxiety_12',
+          category: 'anxiety',
+          text: 'How well do you sleep at night?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 0, label: 'Very well' },
+            { value: 1, label: 'Fairly well' },
+            { value: 2, label: 'Poorly' },
+            { value: 3, label: 'Very poorly' }
+          ]
+        },
+        {
+          id: 'anxiety_13',
+          category: 'anxiety',
+          text: 'How would you rate your overall anxiety level?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 0, label: 'Minimal' },
+            { value: 1, label: 'Mild' },
+            { value: 2, label: 'Moderate' },
+            { value: 3, label: 'Severe' }
+          ]
+        },
+        {
+          id: 'anxiety_14',
+          category: 'anxiety',
+          text: 'Do you seek professional help for anxiety?',
+          type: 'multiple_choice',
+          required: true,
+          options: [
+            { value: 'no', label: 'No, not currently' },
+            { value: 'considering', label: 'Considering it' },
+            { value: 'yes', label: 'Yes, I am' },
+            { value: 'previously', label: 'Previously did' }
+          ]
+        },
+        {
+          id: 'anxiety_15',
+          category: 'anxiety',
+          text: 'Please describe any specific triggers or situations that cause you anxiety:',
+          type: 'text',
+          required: false,
+          placeholder: 'Share your anxiety triggers... (Optional)',
+          maxLength: 500
+        }
+      ];
     }
-  ];
+
+    // Wellbeing Check (30 questions)
+    if (assessmentType === 'wellbeing') {
+      return [
+        {
+          id: 'wellbeing_1',
+          category: 'general_wellbeing',
+          text: 'How would you rate your overall life satisfaction?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Very Dissatisfied' },
+            { value: 2, label: 'Dissatisfied' },
+            { value: 3, label: 'Neutral' },
+            { value: 4, label: 'Satisfied' },
+            { value: 5, label: 'Very Satisfied' }
+          ]
+        },
+        {
+          id: 'wellbeing_2',
+          category: 'physical_health',
+          text: 'How is your physical health?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Poor' },
+            { value: 2, label: 'Fair' },
+            { value: 3, label: 'Good' },
+            { value: 4, label: 'Very Good' },
+            { value: 5, label: 'Excellent' }
+          ]
+        },
+        {
+          id: 'wellbeing_3',
+          category: 'physical_health',
+          text: 'How would you rate your sleep quality?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Very Poor' },
+            { value: 2, label: 'Poor' },
+            { value: 3, label: 'Fair' },
+            { value: 4, label: 'Good' },
+            { value: 5, label: 'Excellent' }
+          ]
+        },
+        {
+          id: 'wellbeing_4',
+          category: 'physical_health',
+          text: 'How often do you exercise or engage in physical activity?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Never' },
+            { value: 2, label: 'Rarely' },
+            { value: 3, label: 'Sometimes' },
+            { value: 4, label: 'Often' },
+            { value: 5, label: 'Very Often' }
+          ]
+        },
+        {
+          id: 'wellbeing_5',
+          category: 'physical_health',
+          text: 'How would you rate your energy levels?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Very Low' },
+            { value: 2, label: 'Low' },
+            { value: 3, label: 'Moderate' },
+            { value: 4, label: 'High' },
+            { value: 5, label: 'Very High' }
+          ]
+        },
+        {
+          id: 'wellbeing_6',
+          category: 'general_wellbeing',
+          text: 'How would you describe your current mood?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Very Negative' },
+            { value: 2, label: 'Negative' },
+            { value: 3, label: 'Neutral' },
+            { value: 4, label: 'Positive' },
+            { value: 5, label: 'Very Positive' }
+          ]
+        },
+        {
+          id: 'wellbeing_7',
+          category: 'general_wellbeing',
+          text: 'How often do you feel happy or content?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Never' },
+            { value: 2, label: 'Rarely' },
+            { value: 3, label: 'Sometimes' },
+            { value: 4, label: 'Often' },
+            { value: 5, label: 'Very Often' }
+          ]
+        },
+        {
+          id: 'wellbeing_8',
+          category: 'general_wellbeing',
+          text: 'How would you rate your stress level?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Very High' },
+            { value: 2, label: 'High' },
+            { value: 3, label: 'Moderate' },
+            { value: 4, label: 'Low' },
+            { value: 5, label: 'Very Low' }
+          ]
+        },
+        {
+          id: 'wellbeing_9',
+          category: 'social_relationships',
+          text: 'How satisfied are you with your relationships?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Very Dissatisfied' },
+            { value: 2, label: 'Dissatisfied' },
+            { value: 3, label: 'Neutral' },
+            { value: 4, label: 'Satisfied' },
+            { value: 5, label: 'Very Satisfied' }
+          ]
+        },
+        {
+          id: 'wellbeing_10',
+          category: 'social_relationships',
+          text: 'How strong is your support network?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Very Weak' },
+            { value: 2, label: 'Weak' },
+            { value: 3, label: 'Moderate' },
+            { value: 4, label: 'Strong' },
+            { value: 5, label: 'Very Strong' }
+          ]
+        },
+        {
+          id: 'wellbeing_11',
+          category: 'social_relationships',
+          text: 'How often do you spend time with friends or family?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Never' },
+            { value: 2, label: 'Rarely' },
+            { value: 3, label: 'Sometimes' },
+            { value: 4, label: 'Often' },
+            { value: 5, label: 'Very Often' }
+          ]
+        },
+        {
+          id: 'wellbeing_12',
+          category: 'work_stress',
+          text: 'How satisfied are you with your work/studies?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Very Dissatisfied' },
+            { value: 2, label: 'Dissatisfied' },
+            { value: 3, label: 'Neutral' },
+            { value: 4, label: 'Satisfied' },
+            { value: 5, label: 'Very Satisfied' }
+          ]
+        },
+        {
+          id: 'wellbeing_13',
+          category: 'work_stress',
+          text: 'How well do you balance work/studies with personal life?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Very Poorly' },
+            { value: 2, label: 'Poorly' },
+            { value: 3, label: 'Fairly' },
+            { value: 4, label: 'Well' },
+            { value: 5, label: 'Very Well' }
+          ]
+        },
+        {
+          id: 'wellbeing_14',
+          category: 'general_wellbeing',
+          text: 'How often do you engage in activities you enjoy?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Never' },
+            { value: 2, label: 'Rarely' },
+            { value: 3, label: 'Sometimes' },
+            { value: 4, label: 'Often' },
+            { value: 5, label: 'Very Often' }
+          ]
+        },
+        {
+          id: 'wellbeing_15',
+          category: 'general_wellbeing',
+          text: 'How would you rate your sense of purpose in life?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Very Low' },
+            { value: 2, label: 'Low' },
+            { value: 3, label: 'Moderate' },
+            { value: 4, label: 'High' },
+            { value: 5, label: 'Very High' }
+          ]
+        },
+        {
+          id: 'wellbeing_16',
+          category: 'general_wellbeing',
+          text: 'How often do you feel anxious?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Very Often' },
+            { value: 2, label: 'Often' },
+            { value: 3, label: 'Sometimes' },
+            { value: 4, label: 'Rarely' },
+            { value: 5, label: 'Never' }
+          ]
+        },
+        {
+          id: 'wellbeing_17',
+          category: 'general_wellbeing',
+          text: 'How often do you feel depressed?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Very Often' },
+            { value: 2, label: 'Often' },
+            { value: 3, label: 'Sometimes' },
+            { value: 4, label: 'Rarely' },
+            { value: 5, label: 'Never' }
+          ]
+        },
+        {
+          id: 'wellbeing_18',
+          category: 'general_wellbeing',
+          text: 'How well do you cope with challenges?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Very Poorly' },
+            { value: 2, label: 'Poorly' },
+            { value: 3, label: 'Fairly' },
+            { value: 4, label: 'Well' },
+            { value: 5, label: 'Very Well' }
+          ]
+        },
+        {
+          id: 'wellbeing_19',
+          category: 'general_wellbeing',
+          text: 'How often do you practice self-care?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Never' },
+            { value: 2, label: 'Rarely' },
+            { value: 3, label: 'Sometimes' },
+            { value: 4, label: 'Often' },
+            { value: 5, label: 'Very Often' }
+          ]
+        },
+        {
+          id: 'wellbeing_20',
+          category: 'general_wellbeing',
+          text: 'How satisfied are you with your personal growth?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Very Dissatisfied' },
+            { value: 2, label: 'Dissatisfied' },
+            { value: 3, label: 'Neutral' },
+            { value: 4, label: 'Satisfied' },
+            { value: 5, label: 'Very Satisfied' }
+          ]
+        },
+        {
+          id: 'wellbeing_21',
+          category: 'general_wellbeing',
+          text: 'How often do you feel lonely?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Very Often' },
+            { value: 2, label: 'Often' },
+            { value: 3, label: 'Sometimes' },
+            { value: 4, label: 'Rarely' },
+            { value: 5, label: 'Never' }
+          ]
+        },
+        {
+          id: 'wellbeing_22',
+          category: 'general_wellbeing',
+          text: 'How would you rate your self-esteem?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Very Low' },
+            { value: 2, label: 'Low' },
+            { value: 3, label: 'Moderate' },
+            { value: 4, label: 'High' },
+            { value: 5, label: 'Very High' }
+          ]
+        },
+        {
+          id: 'wellbeing_23',
+          category: 'general_wellbeing',
+          text: 'How often do you feel motivated?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Never' },
+            { value: 2, label: 'Rarely' },
+            { value: 3, label: 'Sometimes' },
+            { value: 4, label: 'Often' },
+            { value: 5, label: 'Very Often' }
+          ]
+        },
+        {
+          id: 'wellbeing_24',
+          category: 'general_wellbeing',
+          text: 'How would you rate your financial wellbeing?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Very Poor' },
+            { value: 2, label: 'Poor' },
+            { value: 3, label: 'Fair' },
+            { value: 4, label: 'Good' },
+            { value: 5, label: 'Excellent' }
+          ]
+        },
+        {
+          id: 'wellbeing_25',
+          category: 'general_wellbeing',
+          text: 'How often do you feel grateful?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Never' },
+            { value: 2, label: 'Rarely' },
+            { value: 3, label: 'Sometimes' },
+            { value: 4, label: 'Often' },
+            { value: 5, label: 'Very Often' }
+          ]
+        },
+        {
+          id: 'wellbeing_26',
+          category: 'general_wellbeing',
+          text: 'How would you rate your spiritual or existential wellbeing?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Very Low' },
+            { value: 2, label: 'Low' },
+            { value: 3, label: 'Moderate' },
+            { value: 4, label: 'High' },
+            { value: 5, label: 'Very High' }
+          ]
+        },
+        {
+          id: 'wellbeing_27',
+          category: 'general_wellbeing',
+          text: 'How often do you practice mindfulness or meditation?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Never' },
+            { value: 2, label: 'Rarely' },
+            { value: 3, label: 'Sometimes' },
+            { value: 4, label: 'Often' },
+            { value: 5, label: 'Very Often' }
+          ]
+        },
+        {
+          id: 'wellbeing_28',
+          category: 'general_wellbeing',
+          text: 'How would you rate your overall mental health?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Very Poor' },
+            { value: 2, label: 'Poor' },
+            { value: 3, label: 'Fair' },
+            { value: 4, label: 'Good' },
+            { value: 5, label: 'Excellent' }
+          ]
+        },
+        {
+          id: 'wellbeing_29',
+          category: 'general_wellbeing',
+          text: 'How often do you seek professional help when needed?',
+          type: 'scale',
+          required: true,
+          options: [
+            { value: 1, label: 'Never' },
+            { value: 2, label: 'Rarely' },
+            { value: 3, label: 'Sometimes' },
+            { value: 4, label: 'Often' },
+            { value: 5, label: 'Very Often' }
+          ]
+        },
+        {
+          id: 'wellbeing_30',
+          category: 'general_wellbeing',
+          text: 'Please share any additional thoughts about your wellbeing:',
+          type: 'text',
+          required: false,
+          placeholder: 'Share your thoughts... (Optional)',
+          maxLength: 500
+        }
+      ];
+    }
+
+    // Default: Standard/Advanced Assessment (8 questions)
+    return [
+      {
+        id: 'stress_level',
+        category: 'general_wellbeing',
+        text: 'How would you rate your current stress level?',
+        type: 'scale',
+        required: true,
+        options: [
+          { value: 1, label: 'Very Low', description: 'Feeling calm and relaxed' },
+          { value: 2, label: 'Low', description: 'Minimal stress, manageable' },
+          { value: 3, label: 'Moderate', description: 'Some stress, but coping well' },
+          { value: 4, label: 'High', description: 'Significant stress, affecting daily life' },
+          { value: 5, label: 'Very High', description: 'Overwhelming stress, difficult to cope' }
+        ]
+      },
+      {
+        id: 'sleep_quality',
+        category: 'physical_health',
+        text: 'How would you describe your sleep quality over the past week?',
+        type: 'scale',
+        required: true,
+        options: [
+          { value: 1, label: 'Excellent', description: 'Restful sleep, wake up refreshed' },
+          { value: 2, label: 'Good', description: 'Generally good sleep with minor issues' },
+          { value: 3, label: 'Fair', description: 'Some sleep difficulties, occasional tiredness' },
+          { value: 4, label: 'Poor', description: 'Frequent sleep problems, often tired' },
+          { value: 5, label: 'Very Poor', description: 'Severe sleep issues, constantly exhausted' }
+        ]
+      },
+      {
+        id: 'energy_level',
+        category: 'physical_health',
+        text: 'How would you rate your energy levels recently?',
+        type: 'scale',
+        required: true,
+        options: [
+          { value: 1, label: 'Very High', description: 'Energetic and motivated' },
+          { value: 2, label: 'High', description: 'Good energy for daily activities' },
+          { value: 3, label: 'Moderate', description: 'Average energy, some fatigue' },
+          { value: 4, label: 'Low', description: 'Often tired, low motivation' },
+          { value: 5, label: 'Very Low', description: 'Constantly exhausted, no energy' }
+        ]
+      },
+      {
+        id: 'work_academic_stress',
+        category: user?.userType === 'student' ? 'academic_stress' : 'work_stress',
+        text: user?.userType === 'student'
+          ? 'How stressed do you feel about your academic responsibilities?'
+          : 'How stressed do you feel about your work responsibilities?',
+        type: 'scale',
+        required: true,
+        options: [
+          { value: 1, label: 'Not at all', description: 'No stress from responsibilities' },
+          { value: 2, label: 'Slightly', description: 'Minor stress, easily manageable' },
+          { value: 3, label: 'Moderately', description: 'Some stress, requires effort to manage' },
+          { value: 4, label: 'Very much', description: 'High stress, significantly impacts life' },
+          { value: 5, label: 'Extremely', description: 'Overwhelming stress, major life impact' }
+        ]
+      },
+      {
+        id: 'social_relationships',
+        category: 'social_relationships',
+        text: 'How satisfied are you with your social relationships and support system?',
+        type: 'scale',
+        required: true,
+        options: [
+          { value: 1, label: 'Very Satisfied', description: 'Strong support network, fulfilling relationships' },
+          { value: 2, label: 'Satisfied', description: 'Good relationships, adequate support' },
+          { value: 3, label: 'Neutral', description: 'Average relationships, some support' },
+          { value: 4, label: 'Dissatisfied', description: 'Limited support, relationship issues' },
+          { value: 5, label: 'Very Dissatisfied', description: 'Poor relationships, little to no support' }
+        ]
+      },
+      {
+        id: 'coping_strategies',
+        category: 'general_wellbeing',
+        text: 'How well do you feel you cope with daily challenges and stress?',
+        type: 'scale',
+        required: true,
+        options: [
+          { value: 1, label: 'Very Well', description: 'Excellent coping skills, handle stress effectively' },
+          { value: 2, label: 'Well', description: 'Good coping strategies, manage most situations' },
+          { value: 3, label: 'Moderately', description: 'Some coping skills, struggle occasionally' },
+          { value: 4, label: 'Poorly', description: 'Limited coping skills, often overwhelmed' },
+          { value: 5, label: 'Very Poorly', description: 'Poor coping, frequently unable to manage stress' }
+        ]
+      },
+      {
+        id: 'mood_changes',
+        category: 'general_wellbeing',
+        text: 'Have you noticed any significant changes in your mood recently?',
+        type: 'multiple_choice',
+        required: true,
+        options: [
+          { value: 'no_changes', label: 'No significant changes', description: 'Mood has been stable' },
+          { value: 'more_positive', label: 'More positive than usual', description: 'Feeling happier or more optimistic' },
+          { value: 'more_negative', label: 'More negative than usual', description: 'Feeling sadder or more pessimistic' },
+          { value: 'mood_swings', label: 'Frequent mood swings', description: 'Emotions changing rapidly' },
+          { value: 'emotional_numbness', label: 'Feeling emotionally numb', description: 'Difficulty feeling emotions' }
+        ]
+      },
+      {
+        id: 'specific_stressors',
+        category: 'general_wellbeing',
+        text: 'Please describe any specific stressors or challenges you\'re currently facing:',
+        type: 'text',
+        required: false,
+        placeholder: 'Share what\'s been causing you stress lately... (Optional)',
+        maxLength: 500
+      }
+    ];
+  };
+
+  const questions = getQuestions();
 
   const currentQuestion = questions[currentQuestionIndex];
   const isLastQuestion = currentQuestionIndex === questions.length - 1;

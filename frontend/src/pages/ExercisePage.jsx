@@ -185,8 +185,8 @@ const ExercisePage = () => {
 
   const getDifficultyColor = (difficulty) => {
     switch (difficulty) {
-      case 'Beginner': return 'bg-green-100 text-green-800';
-      case 'Intermediate': return 'bg-yellow-100 text-yellow-800';
+      case 'Beginner': return 'bg-purple-100 text-purple-800';
+      case 'Intermediate': return 'bg-blue-100 text-blue-800';
       case 'Advanced': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
     }
@@ -196,7 +196,7 @@ const ExercisePage = () => {
     const colors = {
       blue: 'bg-blue-50 text-blue-700 border-blue-200',
       purple: 'bg-purple-50 text-purple-700 border-purple-200',
-      green: 'bg-green-50 text-green-700 border-green-200'
+      red: 'bg-red-50 text-red-700 border-red-200'
     };
     return colors[color] || colors.blue;
   };
@@ -205,13 +205,13 @@ const ExercisePage = () => {
     const colors = {
       blue: 'bg-blue-600 text-white',
       purple: 'bg-purple-600 text-white',
-      green: 'bg-green-600 text-white'
+      red: 'bg-red-600 text-white'
     };
     return colors[color] || colors.blue;
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="text-center mb-12">

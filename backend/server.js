@@ -42,12 +42,12 @@ mongoose.connect(MONGODB_URI, {
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:5174', 'http://localhost:8000'],
+  origin: ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://localhost:8000'],
   credentials: true
 }));
 
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // Basic logging middleware
 app.use((req, res, next) => {
@@ -83,518 +83,21 @@ const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 const googleMapsClient = new Client({});
 
-// Authentication routes
-app.post('/api/auth/register', async (req, res) => {
-  try {
-    const { email, password, name, userType = 'student' } = req.body;
-
-    // Validate required fields
-    if (!email || !password || !name) {
-      return res.status(400).json({
-        success: false,
-        message: 'Email, password, and name are required'
-      });
-    }
-
-    // Check if user already exists
-    const existingUser = await User.findOne({ email: email.toLowerCase() });
-    if (existingUser) {
-      return res.status(400).json({
-        success: false,
-        message: 'User with this email already exists'
-      });
-    }
-
-    // Create user (password will be hashed by pre-save middleware)
-    const user = new User({
-      email: email.toLowerCase(),
-      password,
-      name,
-      userType
-    });
-
-    await user.save();
-
-    // Generate JWT token
-    const token = jwt.sign(
-      { userId: user._id, email: user.email },
-      JWT_SECRET,
-      { expiresIn: '7d' }
-    );
-
-    // Return user data (password excluded by toJSON transform)
-    res.status(201).json({
-      success: true,
-      message: 'User registered successfully',
-      user: user.toJSON(),
-      token
-    });
-
-  } catch (error) {
-    console.error('Registration error:', error);
-
-    if (error.name === 'ValidationError') {
-      return res.status(400).json({
-        success: false,
-        message: Object.values(error.errors)[0].message
-      });
-    }
-
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error during registration'
-    });
-  }
-});
-
-app.post('/api/auth/login', async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    // Validate required fields
-    if (!email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: 'Email and password are required'
-      });
-    }
-
-    // Find user
-    const user = await User.findOne({ email: email.toLowerCase() });
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid email or password'
-      });
-    }
-
-    // Check password using the model method
-    const isPasswordValid = await user.comparePassword(password);
-    if (!isPasswordValid) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid email or password'
-      });
-    }
-
-    // Update login info
-    await user.updateLoginInfo();
-
-    // Generate JWT token
-    const token = jwt.sign(
-      { userId: user._id, email: user.email },
-      JWT_SECRET,
-      { expiresIn: '7d' }
-    );
-
-    // Return user data (password excluded by toJSON transform)
-    res.json({
-      success: true,
-      message: 'Login successful',
-      user: user.toJSON(),
-      token
-    });
-
-  } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error during login'
-    });
-  }
-});
-
-app.get('/api/auth/verify', async (req, res) => {
-  try {
-    const token = req.headers.authorization?.replace('Bearer ', '');
-
-    if (!token) {
-      return res.status(401).json({
-        success: false,
-        message: 'No token provided'
-      });
-    }
-
-    const decoded = jwt.verify(token, JWT_SECRET);
-    const user = await User.findById(decoded.userId);
-
-    if (!user || !user.isActive) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid token or inactive account'
-      });
-    }
-
-    res.json({
-      success: true,
-      user: user.toJSON()
-    });
-
-  } catch (error) {
-    console.error('Token verification error:', error);
-    res.status(401).json({
-      success: false,
-      message: 'Invalid token'
-    });
-  }
-});
-
-// User assessments endpoint
-app.get('/api/user/assessments', async (req, res) => {
-  try {
-    const token = req.headers.authorization?.replace('Bearer ', '');
-
-    if (!token) {
-      return res.status(401).json({
-        success: false,
-        message: 'No token provided'
-      });
-    }
-
-    const decoded = jwt.verify(token, JWT_SECRET);
-    const user = await User.findById(decoded.userId);
-
-    if (!user || !user.isActive) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid token or inactive account'
-      });
-    }
-
-    // Get user's assessments from database
-    const assessments = await Assessment.find({
-      user: user._id,
-      status: 'completed'
-    })
-    .sort({ completedAt: -1 })
-    .limit(20)
-    .select('_id type results.overallScore results.stressLevel completedAt metadata.duration responses.facialAnalysis');
-
-    // Transform data for frontend
-    const transformedAssessments = assessments.map(assessment => ({
-      id: assessment._id,
-      type: assessment.type === 'standard' ? 'Stress Assessment' : 'Comprehensive Stress Assessment',
-      createdAt: assessment.completedAt?.toISOString() || new Date().toISOString(),
-      date: assessment.completedAt?.toISOString() || new Date().toISOString(),
-      stressLevel: assessment.results?.stressLevel || 'Unknown',
-      stressScore: assessment.results?.overallScore || 0,
-      score: assessment.results?.overallScore || 0,
-      status: 'completed',
-      duration: assessment.metadata?.duration || 0,
-      methods: assessment.type === 'comprehensive' && assessment.responses?.facialAnalysis
-        ? ['questionnaire', 'facial_emotion']
-        : ['questionnaire']
-    }));
-
-    res.json({
-      success: true,
-      assessments: transformedAssessments,
-      total: transformedAssessments.length
-    });
-
-  } catch (error) {
-    console.error('Get user assessments error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to retrieve user assessments'
-    });
-  }
-});
-
-// Assessment endpoints
-
-// Assessment endpoints
-app.post('/api/assessments/facial-emotion', async (req, res) => {
-  try {
-    const { imageData, userId } = req.body;
-
-    // Validate required fields
-    if (!imageData) {
-      return res.status(400).json({
-        success: false,
-        message: 'Image data is required for facial emotion analysis'
-      });
-    }
-
-    // Simulate facial emotion analysis (replace with actual AI service call)
-    const emotions = {
-      happy: Math.random() * 0.3 + 0.1,
-      sad: Math.random() * 0.2 + 0.05,
-      angry: Math.random() * 0.15 + 0.02,
-      fear: Math.random() * 0.1 + 0.01,
-      surprise: Math.random() * 0.1 + 0.01,
-      disgust: Math.random() * 0.05 + 0.01,
-      neutral: Math.random() * 0.4 + 0.2
-    };
-
-    // Normalize emotions to sum to 1
-    const total = Object.values(emotions).reduce((sum, val) => sum + val, 0);
-    Object.keys(emotions).forEach(key => {
-      emotions[key] = emotions[key] / total;
-    });
-
-    // Determine dominant emotion
-    const dominantEmotion = Object.entries(emotions)
-      .reduce((max, [emotion, value]) => value > max.value ? { emotion, value } : max,
-              { emotion: 'neutral', value: 0 });
-
-    // Calculate stress indicators based on emotions
-    const stressLevel = (emotions.angry + emotions.fear + emotions.sad) * 100;
-    const positivityLevel = (emotions.happy + emotions.surprise) * 100;
-
-    const analysisResult = {
-      emotions,
-      dominantEmotion: dominantEmotion.emotion,
-      confidence: dominantEmotion.value,
-      stressLevel: Math.round(stressLevel),
-      positivityLevel: Math.round(positivityLevel),
-      timestamp: new Date().toISOString(),
-      userId
-    };
-
-    res.json({
-      success: true,
-      message: 'Facial emotion analysis completed',
-      analysis: analysisResult
-    });
-
-  } catch (error) {
-    console.error('Facial emotion analysis error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error during facial emotion analysis'
-    });
-  }
-});
-
-// Enhanced facial analysis endpoint using the facial emotion service
-app.post('/api/assessments/facial-analysis', async (req, res) => {
-  try {
-    const { imageData, userId } = req.body;
-
-    // Validate required fields
-    if (!imageData) {
-      return res.status(400).json({
-        success: false,
-        message: 'Image data is required for facial analysis'
-      });
-    }
-
-    // Validate image data format
-    if (!facialEmotionService.validateImageData(imageData)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid image data format. Expected base64 encoded image.'
-      });
-    }
-
-    // Perform facial emotion analysis
-    const analysisResult = await facialEmotionService.analyzeFacialEmotion(imageData, userId);
-
-    // Log the analysis for debugging (remove in production)
-    console.log(`Facial analysis completed for user ${userId || 'anonymous'}:`, {
-      dominantEmotion: analysisResult.dominantEmotion,
-      stressLevel: analysisResult.stressLevel,
-      confidence: analysisResult.confidence
-    });
-
-    res.json({
-      success: true,
-      message: 'Facial emotion analysis completed successfully',
-      data: analysisResult,
-      serviceStatus: facialEmotionService.getServiceStatus()
-    });
-
-  } catch (error) {
-    console.error('Facial analysis endpoint error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to analyze facial emotions',
-      error: error.message
-    });
-  }
-});
-
-app.post('/api/assessments/comprehensive', async (req, res) => {
-  try {
-    const {
-      userId,
-      questionnaire,
-      facialAnalysis,
-      voiceAnalysis,
-      assessmentType = 'comprehensive'
-    } = req.body;
-
-    // Validate required fields
-    if (!userId || !questionnaire) {
-      return res.status(400).json({
-        success: false,
-        message: 'User ID and questionnaire data are required'
-      });
-    }
-
-    // Calculate comprehensive assessment score
-    let overallScore = 0;
-    let stressLevel = 'low';
-    const recommendations = [];
-
-    // Process questionnaire data
-    if (questionnaire.responses) {
-      const responses = Object.values(questionnaire.responses);
-      const numericResponses = responses.filter(r => !isNaN(r)).map(r => parseInt(r));
-
-      if (numericResponses.length > 0) {
-        const avgScore = numericResponses.reduce((sum, val) => sum + val, 0) / numericResponses.length;
-        overallScore = Math.round((avgScore / 5) * 100); // Convert to percentage
-      }
-    }
-
-    // Incorporate facial analysis if available
-    if (facialAnalysis && facialAnalysis.stressLevel) {
-      overallScore = Math.round((overallScore + facialAnalysis.stressLevel) / 2);
-    }
-
-    // Determine stress level
-    if (overallScore >= 70) {
-      stressLevel = 'high';
-      recommendations.push(
-        'Consider speaking with a mental health professional',
-        'Practice daily stress reduction techniques',
-        'Ensure adequate sleep (7-9 hours per night)',
-        'Contact emergency helpline if needed: 1800-599-0019'
-      );
-    } else if (overallScore >= 50) {
-      stressLevel = 'moderate';
-      recommendations.push(
-        'Implement regular stress management practices',
-        'Consider mindfulness or meditation',
-        'Maintain regular exercise routine',
-        'Ensure work-life balance'
-      );
-    } else {
-      stressLevel = 'low';
-      recommendations.push(
-        'Continue current positive practices',
-        'Maintain healthy lifestyle habits',
-        'Stay connected with support network',
-        'Regular self-check-ins recommended'
-      );
-    }
-
-    // Create assessment record using existing Assessment model structure
-    const assessment = new Assessment({
-      user: userId,
-      type: assessmentType,
-      status: 'completed',
-      responses: {
-        questionnaire: Object.entries(questionnaire.responses || {}).map(([key, value]) => ({
-          questionId: key,
-          question: key.replace(/_/g, ' '),
-          response: value,
-          category: 'work_stress' // Use valid enum value
-        })),
-        facialAnalysis: facialAnalysis || null,
-        voiceAnalysis: voiceAnalysis || null
-      },
-      results: {
-        overallScore,
-        stressLevel,
-        confidence: 0.8,
-        categoryScores: {
-          workStress: Math.round(overallScore * 0.8),
-          personalLife: Math.round(overallScore * 0.9),
-          physicalHealth: Math.round(overallScore * 0.7),
-          sleepQuality: Math.round(overallScore * 0.6),
-          socialRelationships: Math.round(overallScore * 0.8),
-          academicStress: Math.round(overallScore * 0.7)
-        },
-        insights: {
-          strengths: ['Self-awareness', 'Seeking help'],
-          concerns: stressLevel === 'high' ? ['High stress levels', 'Work-life balance'] : ['Moderate stress'],
-          riskFactors: stressLevel === 'high' ? ['Burnout risk', 'Sleep issues'] : []
-        },
-        recommendations: [{
-          category: 'immediate',
-          priority: 'high',
-          items: recommendations.slice(0, 2)
-        }, {
-          category: 'weekly',
-          priority: 'medium',
-          items: recommendations.slice(2)
-        }]
-      }
-    });
-
-    // Save assessment to database
-    await assessment.save();
-
-    res.status(201).json({
-      success: true,
-      message: 'Assessment completed successfully',
-      assessment: {
-        id: assessment._id,
-        results: assessment.results,
-        type: assessment.type
-      }
-    });
-
-  } catch (error) {
-    console.error('Comprehensive assessment error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error during assessment submission'
-    });
-  }
-});
-
-// Get assessment results
-app.get('/api/assessments/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const assessment = await Assessment.findById(id).populate('user', 'name email userType');
-
-    if (!assessment) {
-      return res.status(404).json({
-        success: false,
-        message: 'Assessment not found'
-      });
-    }
-
-    res.json({
-      success: true,
-      assessment
-    });
-
-  } catch (error) {
-    console.error('Get assessment error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error retrieving assessment'
-    });
-  }
-});
-
-// Get user assessments
-app.get('/api/assessments/user/:userId', async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const userAssessments = await Assessment.find({ user: userId })
-      .sort({ createdAt: -1 })
-      .select('type results createdAt status');
-
-    res.json({
-      success: true,
-      assessments: userAssessments
-    });
-
-  } catch (error) {
-    console.error('Get user assessments error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error retrieving user assessments'
-    });
-  }
-});
+// Import and mount route files
+const authRoutes = require('./routes/auth');
+const usersRoutes = require('./routes/users');
+const questionsRoutes = require('./routes/questions');
+const assessmentsRoutes = require('./routes/assessments');
+const recommendationsRoutes = require('./routes/recommendations');
+const reviewsRoutes = require('./routes/reviews');
+
+// Mount route files
+app.use('/api/auth', authRoutes);
+app.use('/api/users', usersRoutes);
+app.use('/api/questions', questionsRoutes);
+app.use('/api/assessments', assessmentsRoutes);
+app.use('/api/recommendations', recommendationsRoutes);
+app.use('/api/reviews', reviewsRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
@@ -667,7 +170,7 @@ app.post('/api/auth/google/verify', async (req, res) => {
           googleId: googleUser.sub,
           authProvider: 'google',
           profilePicture: googleUser.picture,
-          userType: 'student' // default user type
+          role: 'user' // default user role
         });
         await user.save();
       }
@@ -1598,7 +1101,7 @@ const requireAdmin = async (req, res, next) => {
     const decoded = jwt.verify(token, JWT_SECRET);
     const user = await User.findById(decoded.userId);
 
-    if (!user || !user.isActive || user.userType !== 'admin') {
+    if (!user || !user.isActive || user.role !== 'admin') {
       return res.status(403).json({
         success: false,
         message: 'Admin access required'
@@ -1691,7 +1194,7 @@ app.get('/api/admin/users', requireAdmin, async (req, res) => {
 // Create new user (admin only)
 app.post('/api/admin/users', requireAdmin, async (req, res) => {
   try {
-    const { email, password, name, userType = 'student' } = req.body;
+    const { email, password, name, role = 'user' } = req.body;
 
     // Validate required fields
     if (!email || !password || !name) {
@@ -1715,7 +1218,7 @@ app.post('/api/admin/users', requireAdmin, async (req, res) => {
       email: email.toLowerCase(),
       password,
       name,
-      userType
+      role
     });
 
     await user.save();
@@ -2000,7 +1503,7 @@ app.post('/api/admin/create', async (req, res) => {
       email: 'iib2024017@iiita.ac.in',
       password: 'Pokemon@123',
       name: 'Mridankan Mandal',
-      userType: 'admin'
+      role: 'admin'
     });
 
     await adminUser.save();

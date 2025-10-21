@@ -16,7 +16,8 @@ import {
   ArrowUpIcon,
   ArrowDownIcon,
   MinusIcon,
-  ArrowPathIcon
+  ArrowPathIcon,
+  SparklesIcon
 } from '@heroicons/react/24/outline';
 import { useAuth } from '../App';
 import axios from 'axios';
@@ -57,6 +58,25 @@ const DashboardPage = () => {
   const [assessmentHistory, setAssessmentHistory] = useState([]);
   const [stressData, setStressData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [recommendations, setRecommendations] = useState(null);
+  const [recommendationsLoading, setRecommendationsLoading] = useState(false);
+
+  // Function to get user-friendly assessment type name
+  const getAssessmentTypeName = (type) => {
+    const typeMap = {
+      'standard': 'Standard Questionnaire Assessment',
+      'advanced': 'Advanced Stress Assessment',
+      'detailed_stress': 'Detailed Stress Analysis',
+      'multi_modal': 'Multi-Modal Stress Assessment',
+      'anxiety': 'Anxiety Screening Tool',
+      'wellbeing': 'General Wellbeing Check',
+      'comprehensive_stress': 'Detailed Stress Analysis', // Legacy name mapping
+      'comprehensive': 'Detailed Stress Analysis', // Legacy name mapping
+      'detailed': 'Detailed Stress Analysis', // Legacy name mapping
+      'stress_assessment': 'Advanced Stress Assessment' // Legacy name mapping
+    };
+    return typeMap[type] || type;
+  };
 
   // Function to refresh dashboard data
   const refreshDashboardData = async () => {
@@ -85,30 +105,32 @@ const DashboardPage = () => {
       try {
         setLoading(true);
         const token = localStorage.getItem('token');
+        const userData = localStorage.getItem('user');
 
-        if (!token) {
+        if (!token || !userData) {
           navigate('/login');
           return;
         }
 
+        const parsedUser = JSON.parse(userData);
+        const userId = parsedUser.id || parsedUser._id;
+
         // Fetch user assessments
-        const response = await axios.get('/api/user/assessments', {
+        const response = await axios.get(`/api/assessments/user/${userId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 
-        if (response.data.success) {
-          const assessments = response.data.assessments || [];
-          setAssessmentHistory(assessments);
+        const assessments = response.data.assessments || [];
+        setAssessmentHistory(assessments);
 
-          // Transform assessment data for chart
-          const chartData = assessments.map(assessment => ({
-            date: new Date(assessment.createdAt).toLocaleDateString(),
-            score: assessment.stressScore || assessment.score || 0,
-            level: assessment.stressLevel || 'Unknown'
-          })).reverse(); // Show chronological order
+        // Transform assessment data for chart
+        const chartData = assessments.map(assessment => ({
+          date: new Date(assessment.date).toLocaleDateString(),
+          score: assessment.score || 0,
+          level: assessment.level || 'Unknown'
+        })).reverse(); // Show chronological order
 
-          setStressData(chartData);
-        }
+        setStressData(chartData);
       } catch (error) {
         console.error('Failed to fetch user data:', error);
 
@@ -138,14 +160,44 @@ const DashboardPage = () => {
       }
     };
 
+  // Fetch recommendations
+  const fetchRecommendations = async () => {
+    try {
+      setRecommendationsLoading(true);
+      const token = localStorage.getItem('token');
+      const userData = localStorage.getItem('user');
+
+      if (!token || !userData) {
+        return;
+      }
+
+      const parsedUser = JSON.parse(userData);
+      const userId = parsedUser.id || parsedUser._id;
+
+      const response = await axios.get(`/api/recommendations/user/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (response.data.success) {
+        setRecommendations(response.data.recommendations);
+      }
+    } catch (error) {
+      console.warn('Error fetching recommendations:', error);
+    } finally {
+      setRecommendationsLoading(false);
+    }
+  };
+
   // Initial data fetch and setup for real-time updates
   useEffect(() => {
     fetchUserData();
+    fetchRecommendations();
 
     // Listen for assessment completion events
     const handleAssessmentComplete = () => {
       setTimeout(() => {
         refreshDashboardData();
+        fetchRecommendations();
       }, 1000); // Small delay to ensure data is saved
     };
 
@@ -176,16 +228,26 @@ const DashboardPage = () => {
   };
 
   const getStressLevelColor = (level) => {
-    switch (level.toLowerCase()) {
-      case 'low': return 'text-green-600 bg-green-100';
-      case 'moderate': return 'text-yellow-600 bg-yellow-100';
+    // Handle undefined, null, or empty values
+    if (!level || typeof level !== 'string') {
+      return 'text-gray-600 bg-gray-100';
+    }
+
+    switch (level.toLowerCase().trim()) {
+      case 'low': return 'text-purple-600 bg-purple-100';
+      case 'moderate': return 'text-blue-600 bg-blue-100';
       case 'high': return 'text-red-600 bg-red-100';
       default: return 'text-gray-600 bg-gray-100';
     }
   };
 
   const getStressLevelIcon = (level) => {
-    switch (level.toLowerCase()) {
+    // Handle undefined, null, or empty values
+    if (!level || typeof level !== 'string') {
+      return <ClockIcon className="h-5 w-5" />;
+    }
+
+    switch (level.toLowerCase().trim()) {
       case 'low': return <CheckCircleIcon className="h-5 w-5" />;
       case 'moderate': return <ExclamationTriangleIcon className="h-5 w-5" />;
       case 'high': return <ExclamationTriangleIcon className="h-5 w-5" />;
@@ -372,6 +434,16 @@ const DashboardPage = () => {
                   <UserIcon className="h-5 w-5 text-gray-400" />
                   <span className="text-gray-600">{user?.name || 'User'}</span>
                 </div>
+                <Link
+                  to="/profile"
+                  className="text-gray-600 hover:text-gray-800 transition-colors"
+                  title="Profile Settings"
+                >
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </Link>
                 <button
                   onClick={handleLogout}
                   className="flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-colors"
@@ -468,7 +540,8 @@ const DashboardPage = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Stress Trends and Recent Assessments - Two Column Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {/* Stress Trend Chart */}
           <div className="card">
             <div className="flex justify-between items-center mb-6">
@@ -585,9 +658,9 @@ const DashboardPage = () => {
               {assessmentHistory.map((assessment) => (
                 <div key={assessment.id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
                   <div className="flex justify-between items-start mb-2">
-                    <h4 className="font-medium text-gray-900">{assessment.type}</h4>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStressLevelColor(assessment.stressLevel)}`}>
-                      {assessment.stressLevel}
+                    <h4 className="font-medium text-gray-900">{getAssessmentTypeName(assessment.type)}</h4>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStressLevelColor(assessment.level || assessment.stressLevel)}`}>
+                      {assessment.level || assessment.stressLevel || 'Unknown'}
                     </span>
                   </div>
                   <div className="flex justify-between items-center text-sm text-gray-600">
@@ -614,66 +687,53 @@ const DashboardPage = () => {
           </div>
         </div>
 
-        {/* Quick Actions Section */}
-        <div className="mt-8">
-          <div className="card">
-            <h3 className="text-xl font-semibold text-gray-900 mb-6">Wellness Tools</h3>
+        {/* Personalized Recommendations Section */}
+        {assessmentHistory.length > 0 && recommendations && (
+          <div className="card mb-8">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center">
+                <SparklesIcon className="h-6 w-6 text-blue-600 mr-3" />
+                <h3 className="text-xl font-semibold text-gray-900">Personalized Recommendations</h3>
+              </div>
+            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <Link to="/mindfulness" className="bg-blue-50 rounded-lg p-6 hover:bg-blue-100 transition-colors block">
-                <div className="flex items-center mb-4">
-                  <HeartIcon className="h-6 w-6 text-blue-600 mr-2" />
-                  <h4 className="font-semibold text-blue-900">Mindfulness</h4>
+            <div className="space-y-4">
+              {/* Immediate Actions Preview */}
+              {recommendations.immediateActions && recommendations.immediateActions.length > 0 && (
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-2">Immediate Actions</h4>
+                  <p className="text-gray-700 text-sm">
+                    {recommendations.immediateActions[0]}
+                  </p>
                 </div>
-                <p className="text-blue-800 text-sm mb-4">
-                  Discover personalized mindfulness techniques and meditation practices based on your assessments.
-                </p>
-                <span className="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                  Start Practice →
-                </span>
-              </Link>
+              )}
 
-              <Link to="/exercises" className="bg-green-50 rounded-lg p-6 hover:bg-green-100 transition-colors block">
-                <div className="flex items-center mb-4">
-                  <ArrowTrendingUpIcon className="h-6 w-6 text-green-600 mr-2" />
-                  <h4 className="font-semibold text-green-900">Exercise</h4>
+              {/* Weekly Practices Preview */}
+              {recommendations.weeklyPractices && recommendations.weeklyPractices.length > 0 && (
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-2">Weekly Practices</h4>
+                  <p className="text-gray-700 text-sm">
+                    {recommendations.weeklyPractices[0]}
+                  </p>
                 </div>
-                <p className="text-green-800 text-sm mb-4">
-                  Explore calming exercises and mental wellness techniques to help manage stress.
-                </p>
-                <span className="text-green-600 hover:text-green-700 text-sm font-medium">
-                  Get Started →
-                </span>
-              </Link>
+              )}
 
-              <Link to="/find-help" className="bg-purple-50 rounded-lg p-6 hover:bg-purple-100 transition-colors block">
-                <div className="flex items-center mb-4">
-                  <UserIcon className="h-6 w-6 text-purple-600 mr-2" />
-                  <h4 className="font-semibold text-purple-900">Find Help</h4>
+              {/* Summary */}
+              {recommendations.summary && (
+                <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
+                  <p className="text-gray-800 text-sm italic">{recommendations.summary}</p>
                 </div>
-                <p className="text-purple-800 text-sm mb-4">
-                  Locate nearby mental health professionals and support resources in your area.
-                </p>
-                <span className="text-purple-600 hover:text-purple-700 text-sm font-medium">
-                  Find Help →
-                </span>
-              </Link>
+              )}
+            </div>
 
-              <Link to="/assessment" className="bg-orange-50 rounded-lg p-6 hover:bg-orange-100 transition-colors block">
-                <div className="flex items-center mb-4">
-                  <ClipboardDocumentListIcon className="h-6 w-6 text-orange-600 mr-2" />
-                  <h4 className="font-semibold text-orange-900">New Assessment</h4>
-                </div>
-                <p className="text-orange-800 text-sm mb-4">
-                  Take another assessment to track your progress and get updated insights.
-                </p>
-                <span className="text-orange-600 hover:text-orange-700 text-sm font-medium">
-                  Start Assessment →
-                </span>
+            <div className="mt-6 pt-6 border-t border-gray-200">
+              <Link to="/recommendations" className="btn-primary w-full">
+                View Full Recommendations
               </Link>
             </div>
           </div>
-        </div>
+        )}
+
       </div>
     </div>
   );

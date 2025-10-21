@@ -23,7 +23,6 @@ backend/build/
 *.log
 logs/
 
-
 # Python
 __pycache__/
 *.py[cod]
@@ -33,8 +32,6 @@ venv/
 .env*/
 .pytest_cache/
 .ipynb_checkpoints/
-
-
 
 # Package managers
 npm-cache/
@@ -47,3 +44,40 @@ yarn-error.log
 
 # Misc
 *.tmp
+
+# AI Models and Large Files
+# Exclude pre-trained model files
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.safetensors
+*.onnx
+
+# Exclude model directories (but keep README files)
+ai-services/models/**/*.pt
+ai-services/models/**/*.pth
+ai-services/models/**/*.bin
+ai-services/models/**/*.ckpt
+ai-services/models/**/*.safetensors
+
+# Exclude Hugging Face cache
+~/.cache/huggingface/
+.cache/huggingface/
+
+# Exclude Whisper cache
+~/.cache/whisper/
+.cache/whisper/
+
+# Exclude PyTorch cache
+~/.cache/torch/
+.cache/torch/
+
+# Exclude virtual environments
+ai-services/venv/
+backend/venv/
+frontend/node_modules/
+
+# Keep README files in models directory
+!ai-services/models/README.md
+!ai-services/models/**/README.md

@@ -25,6 +25,8 @@ const ResultsPage = () => {
   const navigate = useNavigate();
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [review, setReview] = useState(null);
+  const [reviewLoading, setReviewLoading] = useState(false);
 
   useEffect(() => {
     const fetchAssessmentResults = async () => {
@@ -44,6 +46,7 @@ const ResultsPage = () => {
           const data = response.data.data;
           // Transform API data to match frontend format
           setResults({
+            assessmentId: id,
             id: data.id,
             type: data.type === 'stress_assessment' ? 'Stress Assessment' : 'Comprehensive Stress Assessment',
             completedAt: data.timestamp,
@@ -149,6 +152,18 @@ const ResultsPage = () => {
           }
         ]
       });
+
+      // Fetch review if available
+      try {
+        const reviewResponse = await axios.get(`/api/reviews/${id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (reviewResponse.data.review) {
+          setReview(reviewResponse.data.review);
+        }
+      } catch (err) {
+        console.log('No review available yet');
+      }
       } else {
           console.error('Failed to fetch assessment results');
           navigate('/dashboard');
@@ -170,8 +185,8 @@ const ResultsPage = () => {
 
   const getStressLevelColor = (level) => {
     switch (level?.toLowerCase()) {
-      case 'low': return 'text-green-600 bg-green-100 border-green-200';
-      case 'moderate': return 'text-yellow-600 bg-yellow-100 border-yellow-200';
+      case 'low': return 'text-purple-600 bg-purple-100 border-purple-200';
+      case 'moderate': return 'text-blue-600 bg-blue-100 border-blue-200';
       case 'high': return 'text-red-600 bg-red-100 border-red-200';
       default: return 'text-gray-600 bg-gray-100 border-gray-200';
     }
@@ -512,6 +527,83 @@ ${results.recommendations[0].items.map(item => `- ${item}`).join('\n')}
             ))}
           </div>
         </div>
+
+        {/* Professional Review Section */}
+        {review && (
+          <div className="card bg-blue-50 border-blue-200 mb-8">
+            <div className="flex items-start">
+              <CheckCircleIcon className="h-6 w-6 text-blue-600 mr-3 flex-shrink-0 mt-1" />
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-blue-900 mb-4">
+                  Professional Review
+                </h3>
+                <div className="bg-white rounded-lg p-4 space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-gray-600">Reviewer</p>
+                      <p className="font-medium text-gray-900">{review.reviewer?.name}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Review Status</p>
+                      <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
+                        review.status === 'approved' ? 'bg-green-100 text-green-800' :
+                        review.status === 'reviewed' ? 'bg-blue-100 text-blue-800' :
+                        'bg-yellow-100 text-yellow-800'
+                      }`}>
+                        {review.status}
+                      </span>
+                    </div>
+                    {review.reviewScore && (
+                      <div>
+                        <p className="text-sm text-gray-600">Review Score</p>
+                        <p className="font-medium text-gray-900">{review.reviewScore}/100</p>
+                      </div>
+                    )}
+                    {review.riskAssessment && (
+                      <div>
+                        <p className="text-sm text-gray-600">Risk Assessment</p>
+                        <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
+                          review.riskAssessment === 'critical' ? 'bg-red-100 text-red-800' :
+                          review.riskAssessment === 'high' ? 'bg-orange-100 text-orange-800' :
+                          review.riskAssessment === 'moderate' ? 'bg-yellow-100 text-yellow-800' :
+                          'bg-green-100 text-green-800'
+                        }`}>
+                          {review.riskAssessment}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  {review.comments && (
+                    <div>
+                      <p className="text-sm text-gray-600 mb-2">Comments</p>
+                      <p className="text-gray-900 bg-gray-50 p-3 rounded">{review.comments}</p>
+                    </div>
+                  )}
+                  {review.recommendations && review.recommendations.length > 0 && (
+                    <div>
+                      <p className="text-sm text-gray-600 mb-2">Reviewer Recommendations</p>
+                      <ul className="space-y-2">
+                        {review.recommendations.map((rec, idx) => (
+                          <li key={idx} className="text-sm text-gray-700 flex items-start">
+                            <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            {rec}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {review.flaggedForFollowUp && (
+                    <div className="bg-yellow-50 border border-yellow-200 rounded p-3">
+                      <p className="text-sm text-yellow-800">
+                        <strong>⚠️ Flagged for Follow-up:</strong> {review.followUpNotes || 'This assessment requires professional follow-up.'}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Emergency Resources */}
         <div className="card bg-red-50 border-red-200">

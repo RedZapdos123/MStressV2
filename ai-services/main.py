@@ -13,31 +13,77 @@ from pydantic import BaseModel
 import base64
 import logging
 
-# Import our services
+# Import our services (each guarded to prevent startup failure if one import breaks)
+facial_emotion_service = None
+assessment_service = None
+analyze_text_sentiment = None
+analyze_multiple_texts_sentiment = None
+get_sentiment_service_info = None
+transcribe_audio_file = None
+get_speech_service_info = None
+recognize_emotion = None
+detect_faces = None
+get_fer_service_info = None
+extract_features = None
+analyze_speech_rate = None
+analyze_stress_indicators = None
+get_audio_service_info = None
+
+# Legacy/optional services that may rely on mediapipe; keep non-fatal if they fail
 try:
-    from services.facial_emotion_service import facial_emotion_service
-    from services.assessment_service import assessment_service
-    from services.sentiment_analysis_service import (
+    from services.facial_emotion_service import facial_emotion_service  # legacy, optional
+except Exception as e:
+    logging.warning(f"services.facial_emotion_service unavailable: {e}")
+
+try:
+    from services.assessment_service import assessment_service  # legacy, optional
+except Exception as e:
+    logging.warning(f"services.assessment_service unavailable: {e}")
+
+# Core services used in the refactor
+try:
+    from services.roberta_sentiment_service import (
         analyze_text_sentiment,
         analyze_multiple_texts_sentiment,
-        get_sentiment_service_info
+        get_sentiment_service_info,
     )
-    from services.speech_to_text_service import (
+except Exception as e:
+    logging.warning(f"roberta_sentiment_service unavailable: {e}")
+
+try:
+    from services.whisper_transcription_service import (
         transcribe_audio_file,
-        analyze_voice_stress,
-        get_speech_service_info
+        get_speech_service_info,
     )
-except ImportError as e:
-    # Fallback if services not available
-    print(f"Warning: Some services not available: {e}")
-    facial_emotion_service = None
-    assessment_service = None
-    analyze_text_sentiment = None
-    analyze_multiple_texts_sentiment = None
-    get_sentiment_service_info = None
-    transcribe_audio_file = None
-    analyze_voice_stress = None
-    get_speech_service_info = None
+except Exception as e:
+    logging.warning(f"whisper_transcription_service unavailable: {e}")
+
+try:
+    from services.fer_libreface_service import (
+        recognize_emotion,
+        detect_faces,
+        get_fer_service_info,
+    )
+except Exception as e:
+    logging.warning(f"fer_libreface_service unavailable: {e}")
+
+try:
+    from services.audio_analysis_service import (
+        extract_features,
+        analyze_speech_rate,
+        analyze_stress_indicators,
+        get_audio_service_info,
+    )
+except Exception as e:
+    logging.warning(f"audio_analysis_service unavailable: {e}")
+
+# DASS-21 Scoring Service
+dass21_scorer = None
+try:
+    from services.dass21_scoring_service import DASS21ScoringService
+    dass21_scorer = DASS21ScoringService()
+except Exception as e:
+    logging.warning(f"dass21_scoring_service unavailable: {e}")
 
 app = FastAPI(
     title="MStress AI Services",
@@ -88,6 +134,10 @@ class SpeechToTextRequest(BaseModel):
     language: Optional[str] = None
     user_id: Optional[str] = None
 
+class DASS21ScoringRequest(BaseModel):
+    responses: List[int]  # List of 20 responses (0-3 scale)
+    user_id: Optional[str] = None
+
 @app.get("/health")
 async def health_check():
     return {
@@ -118,59 +168,69 @@ async def root():
 
 @app.post("/analyze/facial-emotion")
 async def analyze_facial_emotion(request: FacialEmotionRequest):
-    """Analyze facial emotions from an image using ElenaRyumina model"""
+    """Analyze facial emotions from an image using LibreFace FER service"""
     try:
-        if not facial_emotion_service:
-            raise HTTPException(status_code=503, detail="Facial emotion service not available")
-        
-        # Use enhanced service
-        import cv2
-        import numpy as np
-        
-        # Decode base64 image
-        try:
-            image_data = base64.b64decode(request.image_data.split(',')[1] if ',' in request.image_data else request.image_data)
-            image_array = np.frombuffer(image_data, np.uint8)
-            image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
-            
-            if image is None:
-                raise ValueError("Invalid image data")
-                
-        except Exception as e:
-            raise HTTPException(status_code=400, detail=f"Invalid image data: {str(e)}")
-            
-        # Analyze emotions in the frame
-        emotion_results = facial_emotion_service.analyze_frame(image)
-        
-        if not emotion_results:
+        # Use LibreFace FER service (primary) or fallback to legacy service
+        if recognize_emotion:
+            # Use LibreFace FER service
+            result = recognize_emotion(request.image_data)
+            return {
+                "success": True,
+                "data": result,
+                "user_id": request.user_id,
+                "timestamp": datetime.now().isoformat()
+            }
+        elif facial_emotion_service:
+            # Fallback to legacy service
+            import cv2
+            import numpy as np
+
+            # Decode base64 image
+            try:
+                image_data = base64.b64decode(request.image_data.split(',')[1] if ',' in request.image_data else request.image_data)
+                image_array = np.frombuffer(image_data, np.uint8)
+                image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
+
+                if image is None:
+                    raise ValueError("Invalid image data")
+
+            except Exception as e:
+                raise HTTPException(status_code=400, detail=f"Invalid image data: {str(e)}")
+
+            # Analyze emotions in the frame
+            emotion_results = facial_emotion_service.analyze_frame(image)
+
+            if not emotion_results:
+                return {
+                    "success": True,
+                    "data": {
+                        "faces_detected": 0,
+                        "emotions": [],
+                        "message": "No faces detected in the image"
+                    },
+                    "timestamp": datetime.now().isoformat()
+                }
+
+            # Calculate overall stress level
+            stress_assessment = facial_emotion_service.calculate_stress_level(emotion_results)
+
             return {
                 "success": True,
                 "data": {
-                    "faces_detected": 0,
-                    "emotions": [],
-                    "message": "No faces detected in the image"
+                    "faces_detected": len(emotion_results),
+                    "emotions": emotion_results,
+                    "stress_assessment": stress_assessment,
+                    "model_info": {
+                        "name": "ElenaRyumina Emo-AffectNet",
+                        "type": "dynamic" if facial_emotion_service.use_dynamic else "static",
+                        "backbone": "ResNet50",
+                        "temporal": facial_emotion_service.use_dynamic
+                    }
                 },
                 "timestamp": datetime.now().isoformat()
             }
-        
-        # Calculate overall stress level
-        stress_assessment = facial_emotion_service.calculate_stress_level(emotion_results)
-        
-        return {
-            "success": True,
-            "data": {
-                "faces_detected": len(emotion_results),
-                "emotions": emotion_results,
-                "stress_assessment": stress_assessment,
-                "model_info": {
-                    "name": "ElenaRyumina Emo-AffectNet",
-                    "type": "dynamic" if facial_emotion_service.use_dynamic else "static",
-                    "backbone": "ResNet50",
-                    "temporal": facial_emotion_service.use_dynamic
-                }
-            },
-            "timestamp": datetime.now().isoformat()
-        }
+        else:
+            raise HTTPException(status_code=503, detail="No facial emotion service available")
 
     except HTTPException:
         raise
@@ -364,6 +424,102 @@ async def analyze_speech_stress(request: SpeechToTextRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Voice stress analysis failed: {str(e)}")
 
+# ============ NEW AI SERVICES ENDPOINTS ============
+
+@app.post("/fer/recognize-emotion")
+async def fer_recognize_emotion(request: FacialEmotionRequest):
+    """Recognize emotions from facial image using libreface"""
+    try:
+        if not recognize_emotion:
+            raise HTTPException(status_code=503, detail="FER service not available")
+
+        result = recognize_emotion(request.image_data)
+
+        return {
+            "success": True,
+            "data": result,
+            "user_id": request.user_id,
+            "timestamp": datetime.now().isoformat()
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Emotion recognition failed: {str(e)}")
+
+@app.post("/fer/detect-faces")
+async def fer_detect_faces(request: FacialEmotionRequest):
+    """Detect faces in image"""
+    try:
+        if not detect_faces:
+            raise HTTPException(status_code=503, detail="Face detection service not available")
+
+        result = detect_faces(request.image_data)
+
+        return {
+            "success": True,
+            "data": result,
+            "user_id": request.user_id,
+            "timestamp": datetime.now().isoformat()
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Face detection failed: {str(e)}")
+
+@app.get("/fer/info")
+async def fer_info():
+    """Get FER service information"""
+    if not get_fer_service_info:
+        raise HTTPException(status_code=503, detail="FER service not available")
+
+    return {
+        "success": True,
+        "data": get_fer_service_info()
+    }
+
+@app.post("/audio/extract-features")
+async def audio_extract_features(request: SpeechToTextRequest):
+    """Extract audio features"""
+    try:
+        if not extract_features:
+            raise HTTPException(status_code=503, detail="Audio analysis service not available")
+
+        result = extract_features(request.audio_data)
+
+        return {
+            "success": True,
+            "data": result,
+            "user_id": request.user_id,
+            "timestamp": datetime.now().isoformat()
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Feature extraction failed: {str(e)}")
+
+@app.post("/audio/analyze-stress")
+async def audio_analyze_stress(request: SpeechToTextRequest):
+    """Analyze audio for stress indicators"""
+    try:
+        if not analyze_stress_indicators:
+            raise HTTPException(status_code=503, detail="Audio analysis service not available")
+
+        result = analyze_stress_indicators(request.audio_data)
+
+        return {
+            "success": True,
+            "data": result,
+            "user_id": request.user_id,
+            "timestamp": datetime.now().isoformat()
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Stress analysis failed: {str(e)}")
+
+@app.get("/audio/info")
+async def audio_info():
+    """Get audio analysis service information"""
+    if not get_audio_service_info:
+        raise HTTPException(status_code=503, detail="Audio service not available")
+
+    return {
+        "success": True,
+        "data": get_audio_service_info()
+    }
+
 @app.get("/speech/info")
 async def get_speech_info():
     """Get speech-to-text service information"""
@@ -376,6 +532,65 @@ async def get_speech_info():
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to get speech service info: {str(e)}")
+
+@app.post("/score/dass21")
+async def score_dass21(request: DASS21ScoringRequest):
+    """
+    Score a DASS-21 assessment based on 20 MCQ responses.
+
+    Request body:
+    {
+        "responses": [0, 1, 2, 3, ...],  # List of 20 integers (0-3 scale)
+        "user_id": "optional_user_id"
+    }
+
+    Returns:
+    {
+        "success": true,
+        "data": {
+            "depression": {"score": X, "severity": "...", "percentage": X},
+            "anxiety": {"score": X, "severity": "...", "percentage": X},
+            "stress": {"score": X, "severity": "...", "percentage": X},
+            "overall": {"score": X, "severity": "...", "percentage": X},
+            "interpretation": "...",
+            "recommendations": [...]
+        }
+    }
+    """
+    try:
+        if not dass21_scorer:
+            raise HTTPException(status_code=503, detail="DASS-21 scoring service not available")
+
+        # Score the assessment
+        result = dass21_scorer.score_assessment(request.responses)
+
+        return {
+            "success": True,
+            "data": result,
+            "user_id": request.user_id,
+            "timestamp": datetime.now().isoformat()
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=f"Invalid request: {str(e)}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"DASS-21 scoring failed: {str(e)}")
+
+@app.get("/services/all")
+async def get_all_services_info():
+    """Get information about all available AI services"""
+    services_info = {
+        "sentiment_analysis": get_sentiment_service_info() if get_sentiment_service_info else {"status": "unavailable"},
+        "speech_to_text": get_speech_service_info() if get_speech_service_info else {"status": "unavailable"},
+        "facial_emotion_recognition": get_fer_service_info() if get_fer_service_info else {"status": "unavailable"},
+        "audio_analysis": get_audio_service_info() if get_audio_service_info else {"status": "unavailable"},
+        "dass21_scoring": {"status": "available"} if dass21_scorer else {"status": "unavailable"}
+    }
+
+    return {
+        "success": True,
+        "timestamp": datetime.now().isoformat(),
+        "services": services_info
+    }
 
 if __name__ == "__main__":
     print("Starting MStress AI Services...")

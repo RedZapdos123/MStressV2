@@ -25,9 +25,9 @@ const questionSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
-  targetUserTypes: [{
+  targetRoles: [{
     type: String,
-    enum: ['student', 'professional', 'all'],
+    enum: ['user', 'human_reviewer', 'admin', 'all'],
     default: 'all'
   }],
   weight: {
@@ -84,27 +84,27 @@ questionSchema.pre('save', function(next) {
 
 // Indexes for performance
 questionSchema.index({ category: 1, order: 1 })
-questionSchema.index({ targetUserTypes: 1 })
+questionSchema.index({ targetRoles: 1 })
 questionSchema.index({ isActive: 1 })
 
-// Static method to get questions by user type
-questionSchema.statics.getByUserType = function(userType) {
+// Static method to get questions by role
+questionSchema.statics.getByRole = function(role) {
   return this.find({
     isActive: true,
     $or: [
-      { targetUserTypes: userType },
-      { targetUserTypes: 'all' }
+      { targetRoles: role },
+      { targetRoles: 'all' }
     ]
   }).sort({ order: 1 })
 }
 
 // Static method to get questions by category
-questionSchema.statics.getByCategory = function(category, userType = null) {
+questionSchema.statics.getByCategory = function(category, role = null) {
   const query = { isActive: true, category: category }
-  if (userType) {
+  if (role) {
     query.$or = [
-      { targetUserTypes: userType },
-      { targetUserTypes: 'all' }
+      { targetRoles: role },
+      { targetRoles: 'all' }
     ]
   }
   return this.find(query).sort({ order: 1 })

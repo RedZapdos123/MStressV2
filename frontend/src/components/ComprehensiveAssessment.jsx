@@ -13,7 +13,7 @@ import FacialEmotionCapture from './FacialEmotionCapture';
 import { useAuth } from '../App';
 import toast from 'react-hot-toast';
 
-const ComprehensiveAssessment = ({ assessmentType = 'comprehensive_stress' }) => {
+const DetailedAssessment = ({ assessmentType = 'detailed_stress' }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [questionnaireResponses, setQuestionnaireResponses] = useState([]);
   const [facialImageData, setFacialImageData] = useState(null);
@@ -83,12 +83,12 @@ const ComprehensiveAssessment = ({ assessmentType = 'comprehensive_stress' }) =>
 
       const assessmentData = {
         userId: user?.id || 'anonymous',
-        responses: questionnaireResponses,
+        questionnaire: questionnaireResponses,
         facialImage: facialImageData,
         assessmentType: assessmentType
       };
 
-      const response = await fetch('http://localhost:5000/api/assessments/comprehensive', {
+      const response = await fetch('http://localhost:5000/api/assessments/detailed', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -371,4 +371,4 @@ const ComprehensiveAssessment = ({ assessmentType = 'comprehensive_stress' }) =>
   );
 };
 
-export default ComprehensiveAssessment;
+export default DetailedAssessment;

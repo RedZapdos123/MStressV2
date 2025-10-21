@@ -1,33 +1,9 @@
 const express = require('express')
-const jwt = require('jsonwebtoken')
 const User = require('../models/User')
 const Assessment = require('../models/Assessment')
+const { authenticateToken } = require('../middleware/auth')
 
 const router = express.Router()
-const JWT_SECRET = process.env.JWT_SECRET || 'mstress-secret-key-2024'
-
-// Middleware to verify JWT token
-const authenticateToken = (req, res, next) => {
-  const token = req.header('Authorization')?.replace('Bearer ', '')
-  
-  if (!token) {
-    return res.status(401).json({ 
-      success: false,
-      message: 'Access denied. No token provided.' 
-    })
-  }
-
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET)
-    req.user = decoded
-    next()
-  } catch (error) {
-    res.status(401).json({ 
-      success: false,
-      message: 'Invalid token' 
-    })
-  }
-}
 
 // Get user profile
 router.get('/profile', authenticateToken, async (req, res) => {
@@ -47,7 +23,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
         id: user._id,
         email: user.email,
         name: user.name,
-        userType: user.userType,
+        role: user.role,
         profile: user.profile,
         preferences: user.preferences,
         isEmailVerified: user.isEmailVerified,
@@ -68,18 +44,66 @@ router.get('/profile', authenticateToken, async (req, res) => {
 router.put('/profile', authenticateToken, async (req, res) => {
   try {
     const user = await User.findById(req.user.userId)
-    
+
     if (!user) {
-      return res.status(404).json({ 
+      return res.status(404).json({
         success: false,
-        message: 'User not found' 
+        message: 'User not found'
       })
     }
 
-    const { name, profile, preferences } = req.body
+    const { name, profile, preferences, currentPassword, newPassword } = req.body
+
+    // If changing password, verify current password first
+    if (newPassword) {
+      if (!currentPassword) {
+        return res.status(400).json({
+          success: false,
+          message: 'Current password is required to change password'
+        })
+      }
+
+      // Verify current password
+      const isMatch = await user.comparePassword(currentPassword)
+      if (!isMatch) {
+        return res.status(400).json({
+          success: false,
+          message: 'Current password is incorrect'
+        })
+      }
+
+      // Validate new password strength
+      if (newPassword.length < 8) {
+        return res.status(400).json({
+          success: false,
+          message: 'New password must be at least 8 characters long'
+        })
+      }
+
+      // Check for uppercase, lowercase, number, and special character
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/
+      if (!passwordRegex.test(newPassword)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Password must contain uppercase, lowercase, number, and special character'
+        })
+      }
+
+      // Update password
+      user.password = newPassword
+    }
 
     // Update user fields
-    if (name) user.name = name.trim()
+    if (name) {
+      if (name.trim().length < 2) {
+        return res.status(400).json({
+          success: false,
+          message: 'Name must be at least 2 characters long'
+        })
+      }
+      user.name = name.trim()
+    }
+
     if (profile) {
       user.profile = {
         ...user.profile,
@@ -87,6 +111,7 @@ router.put('/profile', authenticateToken, async (req, res) => {
         age: profile.age ? parseInt(profile.age) : user.profile.age
       }
     }
+
     if (preferences) {
       user.preferences = {
         ...user.preferences,
@@ -103,16 +128,16 @@ router.put('/profile', authenticateToken, async (req, res) => {
         id: user._id,
         email: user.email,
         name: user.name,
-        userType: user.userType,
+        role: user.role,
         profile: user.profile,
         preferences: user.preferences
       }
     })
   } catch (error) {
     console.error('Profile update error:', error)
-    res.status(500).json({ 
+    res.status(500).json({
       success: false,
-      message: 'Server error during profile update' 
+      message: 'Server error during profile update'
     })
   }
 })

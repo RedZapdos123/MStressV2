@@ -19,7 +19,7 @@ const AdminDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Check if user is admin
-  if (!user || user.userType !== 'admin') {
+  if (!user || user.role !== 'admin') {
     return <Navigate to="/admin/login" replace />;
   }
 
