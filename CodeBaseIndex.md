@@ -1,4 +1,4 @@
-# MStress Codebase Index:
+# MStress Codebase Index.
 
 ## Project Overview:
 

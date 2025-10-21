@@ -1,4 +1,4 @@
-# MStress Usage Guide:
+# MStress Usage Guide.
 
 ## Starting the Application:
 

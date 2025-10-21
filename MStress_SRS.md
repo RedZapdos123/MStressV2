@@ -1,4 +1,4 @@
-# MStress - Software Requirements Specification (SRS):
+# MStress - Software Requirements Specification (SRS).
 
 ## 1. Introduction:
 
@@ -84,7 +84,7 @@ The authentication system provides secure login with email and password credenti
 
 ---
 
-## 3. Functional Requirements
+## 3. Functional Requirements:
 
 ### 3.1 User Authentication and Authorization
 
@@ -189,7 +189,7 @@ The admin creation interface enables system administrators to add new administra
 
 ---
 
-## 4. Non-Functional Requirements
+## 4. Non-Functional Requirements:
 
 ### 4.1 Performance Requirements
 
@@ -235,7 +235,7 @@ The admin creation interface enables system administrators to add new administra
 
 ---
 
-## 5. System Architecture
+## 5. System Architecture:
 
 ### 5.1 Three-Tier Microservices Architecture
 
@@ -255,7 +255,7 @@ The MStress platform is built using a three-tier microservices architecture:
 
 ---
 
-## 6. External Interface Requirements
+## 6. External Interface Requirements:
 
 ### 6.1 User Interfaces
 
@@ -293,7 +293,7 @@ The reviewer panel provides specialized interface for mental health professional
 
 ---
 
-## 7. Data Requirements
+## 7. Data Requirements:
 
 ### 7.1 Database Collections
 
@@ -310,7 +310,7 @@ The reviewer panel provides specialized interface for mental health professional
 
 ---
 
-## 8. Appendices
+## 8. Appendices:
 
 ### 8.1 DASS-21 Scoring Methodology
 

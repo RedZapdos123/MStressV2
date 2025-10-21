@@ -1,4 +1,4 @@
-# MStress API Documentation:
+# MStress API Documentation.
 
 ## Overview:
 
@@ -10,7 +10,7 @@ The MStress API is a comprehensive REST API for mental health assessment and man
 
 ---
 
-## Authentication Endpoints
+## Authentication Endpoints:
 
 ### POST /auth/register
 
@@ -171,7 +171,7 @@ Verify the validity of the current JWT token.
 
 ---
 
-## User Endpoints
+## User Endpoints:
 
 ### GET /users/profile
 
@@ -315,7 +315,7 @@ Delete the user account and all associated data.
 
 ---
 
-## Assessment Endpoints
+## Assessment Endpoints:
 
 ### GET /assessments/types
 
@@ -489,7 +489,7 @@ Get all assessments for a specific user.
 
 ---
 
-## Questions Endpoints
+## Questions Endpoints:
 
 ### GET /questions
 
@@ -538,7 +538,7 @@ Get all questions including inactive ones.
 
 ---
 
-## Recommendations Endpoints
+## Recommendations Endpoints:
 
 ### GET /recommendations
 
@@ -609,7 +609,7 @@ Get nearby mental health resources based on geolocation.
 
 ---
 
-## Reviews Endpoints
+## Reviews Endpoints:
 
 ### GET /reviews/pending
 
@@ -737,7 +737,7 @@ Get all reviews for a user's assessments.
 
 ---
 
-## Error Responses
+## Error Responses:
 
 All endpoints may return error responses with the following format:
 
@@ -783,7 +783,7 @@ All endpoints may return error responses with the following format:
 
 ---
 
-## Authentication
+## Authentication:
 
 Most endpoints require JWT authentication. Include the token in the `Authorization` header:
 
@@ -795,13 +795,13 @@ JWT tokens expire after 7 days. Users must log in again to receive a new token.
 
 ---
 
-## Rate Limiting
+## Rate Limiting:
 
 Currently, there is no rate limiting implemented. This should be added in production.
 
 ---
 
-## CORS
+## CORS:
 
 The API accepts requests from the following origins:
 - `http://localhost:3000`
@@ -812,7 +812,7 @@ The API accepts requests from the following origins:
 
 ---
 
-## Version
+## Version:
 
 API Version: 1.0.0
 

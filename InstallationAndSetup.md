@@ -1,4 +1,4 @@
-# MStress Installation and Setup Guide:
+# MStress Installation and Setup Guide.
 
 ## System Requirements:
 
@@ -156,7 +156,7 @@ python -c "from services.whisper_transcription_service import get_transcription_
 
 **Note:** First download may take 10-30 minutes depending on internet speed.
 
-## Running the Application
+## Running the Application:
 
 ### Terminal 1: Start MongoDB
 
@@ -213,7 +213,7 @@ Starting MStress AI Services...
 INFO:     Uvicorn running on http://0.0.0.0:8000
 ```
 
-## Verification
+## Verification:
 
 ### Check Backend Health
 
@@ -231,7 +231,7 @@ Open browser: http://localhost:5173
 curl http://localhost:8000/health
 ```
 
-## Database Seeding
+## Database Seeding:
 
 To populate the database with test data, run the populate-test-data script:
 
@@ -253,7 +253,7 @@ This will create:
 - Sample User Email: `user1@example.com` | Password: `password123`
 - Sample User Email: `user2@example.com` | Password: `password123`
 
-## Troubleshooting
+## Troubleshooting:
 
 ### MongoDB Connection Error
 
@@ -309,7 +309,7 @@ cd frontend
 npm install --legacy-peer-deps
 ```
 
-## Development Workflow
+## Development Workflow:
 
 ### Making Changes
 
@@ -338,7 +338,7 @@ cd frontend && npm test
 cd ai-services && pytest
 ```
 
-## Production Deployment
+## Production Deployment:
 
 ### Backend Deployment
 
@@ -358,7 +358,7 @@ cd ai-services && pytest
 2. Deploy to Python hosting (AWS Lambda, Google Cloud Run)
 3. Use Docker for containerization
 
-## Next Steps
+## Next Steps:
 
 1. Create admin account
 2. Upload assessment questionnaires
@@ -366,7 +366,7 @@ cd ai-services && pytest
 4. Set up backup strategy
 5. Configure monitoring and logging
 
-## Support
+## Support:
 
 For issues and questions:
 - Check documentation in `CodeBaseIndex.md`
