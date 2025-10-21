@@ -220,21 +220,7 @@ Assessments use the DASS-21 (Depression Anxiety Stress Scale) scoring methodolog
 - Check that the database exists and is accessible.
 - Run the seed script to populate test data: `cd backend && npm run seed`.
 
-## Contributing:
-
-For contribution guidelines, please refer to the project documentation.
-
 ## License:
 
 This project is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) License. See the LICENSE file for details.
-
-## Support:
-
-For support and questions, please contact the development team.
-
-## Version:
-
-Current Version: 1.0.0
-
-Last Updated: October 20, 2025.
 
