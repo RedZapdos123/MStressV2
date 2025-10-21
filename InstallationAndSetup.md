@@ -248,25 +248,25 @@ This will create:
 - 10 reviews linked to assessments.
 
 **Test Credentials:**
-- Reviewer Email: `reviewer@mstress.com` | Password: `reviewer123`
-- Admin Email: `admin@mstress.com` | Password: `admin123`
-- Sample User Email: `user1@example.com` | Password: `password123`
-- Sample User Email: `user2@example.com` | Password: `password123`
+- Reviewer Email: `reviewer@mstress.com` | Password: `reviewer123`.
+- Admin Email: `admin@mstress.com` | Password: `admin123`.
+- Sample User Email: `user1@example.com` | Password: `password123`.
+- Sample User Email: `user2@example.com` | Password: `password123`.
 
 ## Troubleshooting:
 
-### MongoDB Connection Error
+### MongoDB Connection Error:
 
-**Problem:** `MongooseError: Cannot connect to MongoDB`
+**Problem:** `MongooseError: Cannot connect to MongoDB`.
 
 **Solution:**
-1. Ensure MongoDB is running: `mongod` or `net start MongoDB`
-2. Check connection string in `.env`
-3. Verify MongoDB is listening on port 27017
+1. Ensure MongoDB is running: `mongod` or `net start MongoDB`.
+2. Check connection string in `.env`.
+3. Verify MongoDB is listening on port 27017.
 
-### Port Already in Use
+### Port Already in Use:
 
-**Problem:** `Error: listen EADDRINUSE: address already in use :::5000`
+**Problem:** `Error: listen EADDRINUSE: address already in use :::5000`.
 
 **Solution:**
 ```bash
@@ -279,7 +279,7 @@ kill -9 <PID>  # macOS/Linux
 taskkill /PID <PID> /F  # Windows
 ```
 
-### Python Dependencies Error
+### Python Dependencies Error:
 
 **Problem:** `ModuleNotFoundError: No module named 'torch'`
 
@@ -292,12 +292,12 @@ pip install -r requirements.txt
 
 ### CUDA/GPU Issues
 
-**Problem:** Models running slowly or CUDA errors
+**Problem:** Models running slowly or CUDA errors.
 
 **Solution:**
-1. Set `DEVICE=cpu` in `ai-services/.env`
-2. Or install CUDA: https://developer.nvidia.com/cuda-downloads
-3. Reinstall PyTorch with CUDA support
+1. Set `DEVICE=cpu` in `ai-services/.env`.
+2. Or install CUDA: https://developer.nvidia.com/cuda-downloads.
+3. Reinstall PyTorch with CUDA support.
 
 ### Frontend Build Errors
 
@@ -311,21 +311,21 @@ npm install --legacy-peer-deps
 
 ## Development Workflow:
 
-### Making Changes
+### Making Changes:
 
-1. Create feature branch: `git checkout -b feature/your-feature`
-2. Make changes in respective directories
-3. Test changes locally
-4. Commit changes: `git commit -am 'Add feature'`
-5. Push to branch: `git push origin feature/your-feature`
+1. Create feature branch: `git checkout -b feature/your-feature`.
+2. Make changes in respective directories.
+3. Test changes locally.
+4. Commit changes: `git commit -am 'Add feature'`.
+5. Push to branch: `git push origin feature/your-feature`.
 
-### Code Style
+### Code Style:
 
-- **Backend**: Use ESLint (configured in package.json)
-- **Frontend**: Use Prettier (configured in package.json)
-- **AI Services**: Use Black and Flake8
+- **Backend**: Use ESLint (configured in package.json).
+- **Frontend**: Use Prettier (configured in package.json).
+- **AI Services**: Use Black and Flake8.
 
-### Running Tests
+### Running Tests:
 
 ```bash
 # Backend tests
@@ -340,36 +340,28 @@ cd ai-services && pytest
 
 ## Production Deployment:
 
-### Backend Deployment
+### Backend Deployment:
 
-1. Set `NODE_ENV=production`
-2. Use production MongoDB URI
-3. Set strong `JWT_SECRET`
-4. Deploy to Node.js hosting (Heroku, AWS, DigitalOcean)
+1. Set `NODE_ENV=production`.
+2. Use production MongoDB URI.
+3. Set strong `JWT_SECRET`.
+4. Deploy to Node.js hosting (Heroku, AWS, DigitalOcean).
 
 ### Frontend Deployment
 
-1. Build: `npm run build`
-2. Deploy `dist/` folder to static hosting (Vercel, Netlify)
+1. Build: `npm run build`.
+2. Deploy `dist/` folder to static hosting (Vercel, Netlify).
 
 ### AI Services Deployment
 
-1. Use production DEVICE setting
-2. Deploy to Python hosting (AWS Lambda, Google Cloud Run)
-3. Use Docker for containerization
+1. Use production DEVICE setting.
+2. Deploy to Python hosting (AWS Lambda, Google Cloud Run).
+3. Use Docker for containerization.
 
 ## Next Steps:
 
-1. Create admin account
-2. Upload assessment questionnaires
-3. Configure email notifications
-4. Set up backup strategy
-5. Configure monitoring and logging
-
-## Support:
-
-For issues and questions:
-- Check documentation in `CodeBaseIndex.md`
-- Review error logs in respective directories
-- Check GitHub issues: https://github.com/yourusername/MStress/issues
-
+1. Create admin account.
+2. Upload assessment questionnaires.
+3. Configure email notifications.
+4. Set up backup strategy.
+5. Configure monitoring and logging.
