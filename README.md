@@ -23,7 +23,7 @@ The platform provides an intuitive interface for users to access mental health a
 
 The platform offers diverse assessment methodologies to accommodate different user needs and time constraints for comprehensive mental health evaluation.
 
-### Key Features
+### Key Features:
 
 - **User Authentication**: Secure registration and login with JWT tokens.
 - **Password Management**: Forgot password and password reset functionality.
@@ -39,9 +39,9 @@ The platform offers diverse assessment methodologies to accommodate different us
 
 The dashboard provides comprehensive tracking of assessment history with visual stress trends and AI-generated personalized recommendations for mental health management.
 
-## Technology Stack
+## Technology Stack:
 
-### Frontend
+### Frontend:
 - **React**: UI framework with React Router for navigation.
 - **Vite**: Fast build tool and development server.
 - **Tailwind CSS**: Utility-first CSS framework for styling.
@@ -49,7 +49,7 @@ The dashboard provides comprehensive tracking of assessment history with visual 
 - **Axios**: HTTP client for API requests.
 - **React Hot Toast**: Toast notifications for user feedback.
 
-### Backend
+### Backend:
 - **Node.js**: JavaScript runtime.
 - **Express**: Web framework for API development.
 - **MongoDB**: NoSQL database for data storage.
@@ -58,7 +58,7 @@ The dashboard provides comprehensive tracking of assessment history with visual 
 - **Gemini API**: AI-powered recommendations.
 - **Google Maps API**: Location-based resource discovery.
 
-### AI Services
+### AI Services:
 - **FastAPI**: Python web framework for AI services.
 - **Transformers**: NLP models for sentiment analysis (RoBERTa).
 - **Librosa**: Audio analysis library.
@@ -69,7 +69,7 @@ The dashboard provides comprehensive tracking of assessment history with visual 
 
 The platform integrates advanced AI technologies including facial emotion recognition and voice analysis for comprehensive multi-modal stress assessment.
 
-## Project Structure
+## Project Structure:
 
 ```
 MStress/
@@ -97,16 +97,16 @@ MStress/
 └── Usage.md                  # Usage guide
 ```
 
-## Quick Start
+## Quick Start:
 
-### Prerequisites
+### Prerequisites:
 
 - Node.js (v14 or higher)
 - Python (v3.8 or higher)
 - MongoDB (running locally or remote connection)
 - npm or yarn package manager
 
-### Installation
+### Installation:
 
 1. **Clone the repository**:
    ```bash
@@ -121,7 +121,7 @@ MStress/
 
    This will install all dependencies for frontend, backend, and AI services.
 
-### Starting the Application
+### Starting the Application:
 
 1. **Start all services**:
    ```bash
@@ -129,14 +129,14 @@ MStress/
    ```
 
    This will start all three services in parallel:
-  : Backend: http://localhost:5000
-  : Frontend: http://localhost:5174
-  : AI Services: http://localhost:8000
+   - Backend: http://localhost:5000
+   - Frontend: http://localhost:5174
+   - AI Services: http://localhost:8000
 
 2. **Access the application**:
-  : Open your browser and navigate to `http://localhost:5174`
+   - Open your browser and navigate to `http://localhost:5174`
 
-### Test Credentials
+### Test Credentials:
 
 Use these credentials to test the application:
 
@@ -151,20 +151,20 @@ Use these credentials to test the application:
 
 The secure login interface provides authentication for users, reviewers, and administrators with role-based access control.
 
-## API Documentation
+## API Documentation:
 
 For detailed API documentation, see [API.md](./API.md).
 
-## User Roles
+## User Roles:
 
-### User
+### User:
 - Take assessments.
 - View assessment history and results.
 - Receive personalized recommendations.
 - View nearby mental health resources.
 - Manage profile and password.
 
-### Human Reviewer
+### Human Reviewer:
 - Review pending assessments.
 - View assessment history for users.
 - View previous reviews.
@@ -175,7 +175,7 @@ For detailed API documentation, see [API.md](./API.md).
 
 The reviewer interface enables human professionals to review assessments, provide clinical feedback, and assess risk levels for user follow-up.
 
-### Admin
+### Admin:
 - Access all reviewer features.
 - Manage user accounts.
 - View system statistics.
@@ -185,7 +185,7 @@ The reviewer interface enables human professionals to review assessments, provid
 
 The admin panel provides comprehensive system management including user administration, analytics, and configuration capabilities.
 
-## Assessment Scoring
+## Assessment Scoring:
 
 Assessments use the DASS-21 (Depression Anxiety Stress Scale) scoring methodology:
 
@@ -195,7 +195,7 @@ Assessments use the DASS-21 (Depression Anxiety Stress Scale) scoring methodolog
 - **21-27**: Severe
 - **28+**: Extremely Severe
 
-## Security
+## Security:
 
 - Passwords are hashed using bcrypt with 10 salt rounds.
 - JWT tokens expire after 7 days.
@@ -203,36 +203,36 @@ Assessments use the DASS-21 (Depression Anxiety Stress Scale) scoring methodolog
 - All sensitive endpoints require authentication.
 - CORS is configured to allow requests from specified origins.
 
-## Troubleshooting
+## Troubleshooting:
 
-### Services not starting
+### Services not starting:
 - Ensure MongoDB is running on `mongodb://localhost:27017`.
 - Check that ports 5000, 5174, and 8000 are not in use.
 - Verify all dependencies are installed correctly.
 
-### API errors
+### API errors:
 - Check the browser console for error messages.
 - Review backend logs for detailed error information.
 - Ensure all environment variables are configured correctly.
 
-### Database issues
+### Database issues:
 - Verify MongoDB connection string in environment variables.
 - Check that the database exists and is accessible.
 - Run the seed script to populate test data: `cd backend && npm run seed`.
 
-## Contributing
+## Contributing:
 
 For contribution guidelines, please refer to the project documentation.
 
-## License
+## License:
 
 This project is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) License. See the LICENSE file for details.
 
-## Support
+## Support:
 
 For support and questions, please contact the development team.
 
-## Version
+## Version:
 
 Current Version: 1.0.0
 
