@@ -241,14 +241,3 @@ The application is designed for deployment on:
 - **AI Services**: Python hosting (AWS Lambda, Google Cloud Run, Docker).
 - **Database**: MongoDB Atlas or self-hosted MongoDB.
 
-## Contributing:
-
-1. Create a feature branch: `git checkout -b feature/your-feature`.
-2. Make changes and commit: `git commit -am 'Add feature'`.
-3. Push to branch: `git push origin feature/your-feature`.
-4. Submit a pull request.
-
-## License:
-
-This project is licensed under the MIT License.
-
