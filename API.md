@@ -810,11 +810,3 @@ The API accepts requests from the following origins:
 - `http://localhost:5175`
 - `http://localhost:8000`
 
----
-
-## Version:
-
-API Version: 1.0.0
-
-Last Updated: October 21, 2025.
-
