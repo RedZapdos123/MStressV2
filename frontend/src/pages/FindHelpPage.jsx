@@ -36,7 +36,7 @@ const FindHelpPage = () => {
         console.error('Geolocation error:', error);
         setLocationError('Unable to retrieve your location. Please enable location services.');
         setLoading(false);
-        // Use default location (Delhi, India) as fallback
+        // Use default location (Delhi, India) as fallback.
         const defaultLocation = { latitude: 28.6139, longitude: 77.2090 };
         setLocation(defaultLocation);
         fetchNearbyClinics(defaultLocation.latitude, defaultLocation.longitude);
@@ -114,7 +114,7 @@ const FindHelpPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Header */}
+        /* Header. */
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Find Mental Health Support
@@ -125,7 +125,7 @@ const FindHelpPage = () => {
           </p>
         </div>
 
-        {/* Location Status */}
+        /* Location Status. */
         <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold text-gray-900">Your Location</h2>
@@ -166,7 +166,7 @@ const FindHelpPage = () => {
             </div>
           )}
 
-          {/* Search Radius Selector */}
+          /* Search Radius Selector. */
           <div className="mt-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Search Radius
@@ -185,7 +185,7 @@ const FindHelpPage = () => {
           </div>
         </div>
 
-        {/* Emergency Contacts */}
+        /* Emergency Contacts. */
         <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-8">
           <h3 className="text-lg font-semibold text-red-900 mb-4">Emergency Mental Health Support</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -214,7 +214,7 @@ const FindHelpPage = () => {
           </div>
         </div>
 
-        {/* Nearby Clinics */}
+        /* Nearby Clinics. */
         <div className="bg-white rounded-lg shadow-lg p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-semibold text-gray-900">
@@ -327,7 +327,7 @@ const FindHelpPage = () => {
           )}
         </div>
 
-        {/* Additional Resources */}
+        /* Additional Resources. */
         <div className="mt-8 bg-white rounded-lg shadow-lg p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Additional Resources</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -46,6 +46,26 @@ Once all services are running, open your browser and navigate to:
 http://localhost:5173
 ```
 
+## How It Works:
+
+The MStress platform guides users through a comprehensive mental health assessment process with multiple assessment methodologies and AI-powered analysis.
+
+![Platform overview page explaining the assessment process and key features.](visuals/HowItWorksPage1.png)
+
+The platform provides clear guidance on how to use the assessment tools and understand the results.
+
+![Detailed explanation of assessment methodologies and stress evaluation techniques.](visuals/HowItWorksPage2.png)
+
+The system explains the DASS-21 methodology and how different assessment types provide comprehensive mental health evaluation.
+
+![Information about AI-powered analysis features including facial recognition and voice analysis.](visuals/HowItWorksPage3.png)
+
+The platform describes advanced AI technologies used for enhanced assessment accuracy and real-time emotion analysis.
+
+![Guide to interpreting assessment results and understanding stress level classifications.](visuals/HowItWorksPage4.png)
+
+The results interpretation guide helps users understand their assessment scores and stress level classifications.
+
 ## User Registration:
 
 1. Click on the "Register" link on the login page.
@@ -59,11 +79,23 @@ http://localhost:5173
 4. Click "Register" to create your account.
 5. You will be automatically logged in and redirected to the dashboard.
 
+![User registration form with email, name, and password fields for creating a new account.](visuals/UserReviewerSignUpPage1.png)
+
+The registration page displays input fields for user credentials and password strength requirements to ensure secure account creation.
+
+![Alternative user registration interface with additional profile information fields.](visuals/UserReviewerSignUpPage2.png)
+
+The registration form supports multiple user types including regular users and reviewers with role-specific registration options.
+
 ## User Login:
 
 1. Enter your email address and password.
 2. Click "Login".
 3. You will be redirected to the dashboard.
+
+![User login page with email and password input fields and login button.](visuals/UserSignInPage1.png)
+
+The login interface provides secure authentication with email and password credentials to access the MStress platform.
 
 ## Forgot Password:
 
@@ -85,6 +117,10 @@ The dashboard displays:
 - **Quick Stats**: Total assessments, current stress level, and trend indicators.
 - **Recommendations**: Personalized recommendations based on your latest assessment.
 
+![User dashboard showing stress level trends, recent assessments, and quick statistics.](visuals/UserDashboard1.png)
+
+The dashboard provides a comprehensive overview of assessment history, stress trends, and personalized recommendations for mental health management.
+
 ### Dashboard Actions:
 
 - **New Assessment**: Click to start a new assessment.
@@ -105,12 +141,44 @@ Choose from the available assessment types:
 5. **Anxiety Screening Tool** (8-12 minutes): Focused anxiety assessment.
 6. **General Wellbeing Check** (5-10 minutes): Quick wellbeing evaluation.
 
+![Assessment options page displaying six different assessment types with descriptions and estimated completion times.](visuals/AssessmentsOptionsPage1.png)
+
+The assessment selection interface allows users to choose from multiple assessment methodologies based on their needs and available time.
+
+![Additional assessment options showing alternative assessment types and configurations.](visuals/AssessmentsOptionsPage3.png)
+
+The platform provides flexible assessment selection with detailed descriptions of each assessment methodology and expected completion times.
+
+![Assessment options interface with expanded descriptions and feature highlights.](visuals/AssessmentsOptionsPage4.png)
+
+Users can review comprehensive information about each assessment type before selecting the most appropriate option for their needs.
+
+![Assessment selection page with visual indicators and assessment difficulty levels.](visuals/AssessmentsOptionsPage5.png)
+
+The assessment interface displays visual cues and difficulty indicators to help users select assessments matching their preferences and time availability.
+
 ### Step 2: Complete the Assessment:
 
 - Answer all questions honestly.
 - For questionnaire-based assessments, select your response on the provided scale.
 - For assessments with facial recognition, allow camera access when prompted.
 - For assessments with voice analysis, allow microphone access and follow the instructions.
+
+![Standard questionnaire assessment page with DASS-21 questions and response scale options.](visuals/StandardQuestionairePage1.png)
+
+The questionnaire interface presents assessment questions with intuitive response scales for accurate stress and anxiety evaluation.
+
+![Questionnaire assessment page showing additional questions and progress tracking.](visuals/StandardQuestionairePage2.png)
+
+The assessment form displays progress indicators and allows users to navigate through questions with clear response options for each item.
+
+![Detailed assessment page with facial emotion recognition camera interface for real-time emotion analysis.](visuals/DetailedAssessmentWithCameraPage2.png)
+
+The facial recognition assessment captures real-time emotion data using the device camera to enhance assessment accuracy.
+
+![Audio-based assessment interface with microphone input and voice analysis controls.](visuals/AudioBasedAssessmentPage1.png)
+
+The voice analysis assessment records and analyzes user speech patterns to provide comprehensive stress evaluation through audio feature extraction.
 
 ### Step 3: Review Results:
 
@@ -121,6 +189,10 @@ After completing the assessment, you will see:
 - **Detailed Analysis**: Breakdown of your responses and analysis.
 - **Recommendations**: Personalized recommendations based on your results.
 - **Nearby Resources**: Mental health resources near your location (if location access is granted).
+
+![Assessment results page displaying overall score, stress level classification, and detailed analysis breakdown.](visuals/UpdatedUserDashboardAfterAssessment1.png)
+
+The results page provides comprehensive assessment outcomes including stress classification, detailed analysis, and personalized recommendations for mental health improvement.
 
 ## Viewing Assessment History:
 
@@ -146,12 +218,24 @@ After completing the assessment, you will see:
    - Confirm your new password.
 4. Click "Save Changes".
 
+![Profile settings page with fields for updating user name and password information.](visuals/ProfileSettings1.png)
+
+The profile settings interface allows users to update personal information and manage password security with validation requirements.
+
+![Profile settings page showing additional account management options and preferences.](visuals/ProfileSettings2.png)
+
+The profile management interface provides comprehensive account settings including password management and personal information updates.
+
 ## Reviewer Panel:
 
 ### Accessing the Reviewer Panel:
 
 1. Log in with a reviewer account.
 2. You will be redirected to the Reviewer Dashboard.
+
+![Reviewer login page with email and password fields for reviewer account authentication.](visuals/ReviewerLoginPage.png)
+
+The reviewer login interface provides secure access to the reviewer panel for assessment review and feedback submission.
 
 ### Reviewing Assessments:
 
@@ -166,12 +250,20 @@ After completing the assessment, you will see:
    - **Flag for Follow-up**: Check if the assessment requires follow-up.
 6. Click "Submit Review".
 
+![Reviewer dashboard displaying pending assessments and review submission interface.](visuals/ReviewerDashboard.png)
+
+The reviewer dashboard provides access to pending assessments with tools for detailed review, risk assessment, and feedback submission.
+
 ## Admin Panel:
 
 ### Accessing the Admin Panel:
 
 1. Log in with an admin account.
 2. You will have access to all reviewer features plus additional admin features.
+
+![Admin login page with email and password fields for administrator authentication.](visuals/AdminLoginPage.png)
+
+The admin login interface provides secure access to the administrative panel with role-based authentication.
 
 ### Admin Features:
 
@@ -180,6 +272,22 @@ After completing the assessment, you will see:
 - Manage user accounts and roles.
 - Configure system settings.
 - View all assessments and reviews.
+
+![Admin dashboard displaying user management, system statistics, and administrative controls.](visuals/AdminDashboard1.png)
+
+The admin dashboard provides comprehensive system management capabilities including user administration, analytics, and configuration options.
+
+![User management section showing all registered users and account administration tools.](visuals/UserManagementSection.png)
+
+The user management interface displays all system users with options to view details, modify roles, and manage account status.
+
+![Admin interface for creating new user accounts with role assignment options.](visuals/CreateUserWindow1.png)
+
+The user creation interface allows administrators to register new users and assign appropriate roles within the system.
+
+![Admin interface for creating new administrator accounts with elevated privileges.](visuals/CreateAdminWindow1.png)
+
+The admin creation interface enables system administrators to add new administrative users with full system access.
 
 ## Troubleshooting:
 

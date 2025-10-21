@@ -1,3 +1,4 @@
+// This file handles authentication routes including registration, login, and password reset.
 const express = require('express')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')

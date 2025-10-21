@@ -10,10 +10,10 @@ const fs = require('fs')
 
 const router = express.Router()
 
-// Configure multer for file uploads
+// Configure multer for file uploads.
 const upload = multer({ dest: 'uploads/' })
 
-// Export personnel data as CSV (JSO and CO only)
+// Export personnel data as CSV (JSO and CO only).
 router.get('/export/:battalionId', auth, async (req, res) => {
   try {
     if (!['JCO', 'CO'].includes(req.user.role)) {
@@ -23,13 +23,13 @@ router.get('/export/:battalionId', auth, async (req, res) => {
     const { battalionId } = req.params
     
 
-    // // JSO can only export their battalion data
-    // if (req.user.role === 'JCO') {
-    //   const user = await User.findById(req.user.userId)
-    //   if (user.battalion.toString() !== battalionId) {
-    //     return res.status(403).json({ message: 'Access denied to this battalion' })
-    //   }
-    // }
+    // // JSO can only export their battalion data.
+    // if (req.user.role === 'JCO') {.
+    //   const user = await User.findById(req.user.userId).
+    //   if (user.battalion.toString() !== battalionId) {.
+    //     return res.status(403).json({ message: 'Access denied to this battalion' }).
+    //   }.
+    // }.
 
     const personnel = await Personnel.find({ battalion: battalionId })
       .populate('battalion', 'name')
@@ -49,7 +49,7 @@ router.get('/export/:battalionId', auth, async (req, res) => {
 
     let combinedData, fields;
     if (req.user.role === 'JCO') {
-      // JCO: Remove Depression, Stress, Anxiety columns
+      // JCO: Remove Depression, Stress, Anxiety columns.
       combinedData = personnel.map(person => {
         return {
           'Army No': person.armyNo,
@@ -78,7 +78,7 @@ router.get('/export/:battalionId', auth, async (req, res) => {
         'Evaluated By', 'Evaluation Date'
       ];
     } else {
-      // CO: Include all columns
+      // CO: Include all columns.
       combinedData = personnel.map(person => {
         const exam = (person.selfEvaluation === 'COMPLETED') 
           ? examMap.get(person.armyNo) 
@@ -126,7 +126,7 @@ router.get('/export/:battalionId', auth, async (req, res) => {
   }
 })
 
-// Import personnel data from CSV (JSO and CO only)
+// Import personnel data from CSV (JSO and CO only).
 router.post('/import/:battalionId', auth, upload.single('csvFile'), async (req, res) => {
   try {
     if (!['JCO', 'CO'].includes(req.user.role)) {
@@ -135,7 +135,7 @@ router.post('/import/:battalionId', auth, upload.single('csvFile'), async (req, 
 
     const { battalionId } = req.params
 
-    // JSO can only import to their battalion
+    // JSO can only import to their battalion.
     if (req.user.role === 'JCO') {
       const user = await User.findById(req.user.userId)
       if (user.battalion.toString() !== battalionId) {
@@ -150,7 +150,7 @@ router.post('/import/:battalionId', auth, upload.single('csvFile'), async (req, 
     const results = []
     const errors = []
 
-    // Read and parse CSV file
+    // Read and parse CSV file.
     fs.createReadStream(req.file.path)
       .pipe(csv())
       .on('data', (data) => results.push(data))
@@ -160,20 +160,20 @@ router.post('/import/:battalionId', auth, upload.single('csvFile'), async (req, 
             const row = results[i]
             
             try {
-              // Validate required fields
+              // Validate required fields.
               if (!row['Army No'] || !row['Rank'] || !row['Name']) {
                 errors.push(`Row ${i + 1}: Missing required fields`)
                 continue
               }
 
-              // Check if personnel already exists
+              // Check if personnel already exists.
               const existingPersonnel = await Personnel.findOne({ armyNo: row['Army No'] })
               if (existingPersonnel) {
                 errors.push(`Row ${i + 1}: Personnel with Army No ${row['Army No']} already exists`)
                 continue
               }
 
-              // Create new personnel record
+              // Create new personnel record.
               const personnelData = {
                 armyNo: row['Army No'],
                 rank: row['Rank'],
@@ -194,7 +194,7 @@ router.post('/import/:battalionId', auth, upload.single('csvFile'), async (req, 
             }
           }
 
-          // Clean up uploaded file
+          // Clean up uploaded file.
           fs.unlinkSync(req.file.path)
 
           res.json({

@@ -4,6 +4,7 @@
  * Mental Health Assessment Platform Backend API
  */
 
+// This file initializes the Express server with middleware, routes, and database connection.
 const express = require('express');
 const cors = require('cors');
 const path = require('path');

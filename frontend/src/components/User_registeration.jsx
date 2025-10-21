@@ -47,20 +47,18 @@ const UserRegister = ({ onRegister }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "battalion") {
-      // Find the selected battalion object
+    if (name === "battalion") {/* Find the selected battalion object.
       const selectedBattalion = battalions.find(b => b._id === value);
       setFormData({
         ...formData,
         battalion: value,
-        subBty: selectedBattalion ? selectedBattalion.postedStr : '',
-      });
+        subBty: selectedBattalion ? selectedBattalion.postedStr : '', */);
     } else {
       setFormData({
         ...formData,
         [name]: value,
       });
-      // Clear army number and rank if role is CO
+      // Clear army number and rank if role is CO.
       if (name === "role" && value === "CO") {
         setFormData((prev) => ({
           ...prev,

@@ -1,3 +1,4 @@
+// This file displays Indian mental health emergency resources and support services.
 import React, { useState } from 'react';
 import {
   PhoneIcon,

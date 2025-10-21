@@ -4,18 +4,16 @@ import { useNavigate } from 'react-router-dom'
 const Header = ({ currentUser, onLogout }) => {
   const navigate = useNavigate()
 
-  const handleLogout = () => {
-    // Clear all stored data
+  const handleLogout = () => {/* Clear all stored data.
     localStorage.removeItem('token')
     localStorage.removeItem('user')
     localStorage.removeItem('currentArmyNo')
     
-    // Call parent logout function if provided
+    // Call parent logout function if provided.
     if (onLogout) {
-      onLogout()
-    }
+      onLogout() */
     
-    // Redirect to login page
+    // Redirect to login page.
     navigate('/login')
   }
 

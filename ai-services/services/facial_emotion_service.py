@@ -1,23 +1,23 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.
 """
 Facial Emotion Recognition Service using ElenaRyumina's Emo-AffectNet Model
 Provides facial emotion analysis for stress assessment with state-of-the-art accuracy
 Integrates with the comprehensive assessment system
 """
 
-# Suppress MediaPipe warnings before importing
+# Suppress MediaPipe warnings before importing.
 import os
 import warnings
 import logging
 
-# Comprehensive warning suppression for MediaPipe and TensorFlow
+# Comprehensive warning suppression for MediaPipe and TensorFlow.
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Suppress TensorFlow warnings
 os.environ['CUDA_VISIBLE_DEVICES'] = ''  # Force CPU usage to avoid CUDA warnings
 os.environ['GLOG_minloglevel'] = '3'      # Suppress MediaPipe C++ warnings
 os.environ['MEDIAPIPE_DISABLE_GPU'] = '1'  # Disable MediaPipe GPU processing
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'  # Disable TensorFlow optimization warnings
 
-# Configure logging to suppress warnings from external libraries
+# Configure logging to suppress warnings from external libraries.
 logging.getLogger('tensorflow').setLevel(logging.ERROR)
 logging.getLogger('mediapipe').setLevel(logging.ERROR)
 logging.getLogger('absl').setLevel(logging.ERROR)
@@ -56,11 +56,11 @@ def suppress_stderr():
         finally:
             sys.stderr = old_stderr
 
-# Import MediaPipe with stderr suppression to avoid C++ warnings
+# Import MediaPipe with stderr suppression to avoid C++ warnings.
 with suppress_stderr():
     import mediapipe as mp
 
-# Configure logging
+# Configure logging.
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -91,10 +91,10 @@ class Bottleneck(nn.Module):
         x = self.conv3(x)
         x = self.batch_norm3(x)
         
-        #downsample if needed
+        #downsample if needed.
         if self.i_downsample is not None:
             identity = self.i_downsample(identity)
-        #add identity
+        #add identity.
         x+=identity
         x=self.relu(x)
         
@@ -230,21 +230,21 @@ class FacialEmotionService:
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.use_dynamic = use_dynamic
         
-        # Emotion labels matching the training data
+        # Emotion labels matching the training data.
         self.emotion_labels = ['Neutral', 'Happiness', 'Sadness', 'Surprise', 'Fear', 'Disgust', 'Anger']
         self.emotion_mapping = {i: label for i, label in enumerate(self.emotion_labels)}
         
-        # Stress level mapping based on emotions
+        # Stress level mapping based on emotions.
         self.stress_indicators = {
             'high_stress': ['Anger', 'Fear', 'Sadness'],
             'moderate_stress': ['Disgust', 'Surprise'],
             'low_stress': ['Happiness', 'Neutral']
         }
         
-        # Initialize MediaPipe face detection with optimized settings
+        # Initialize MediaPipe face detection with optimized settings.
         self.mp_face_mesh = mp.solutions.face_mesh
         try:
-            # Use static image mode to avoid temporal inference feedback warnings
+            # Use static image mode to avoid temporal inference feedback warnings.
             self.face_mesh = self.mp_face_mesh.FaceMesh(
                 max_num_faces=1,
                 refine_landmarks=False,
@@ -255,19 +255,19 @@ class FacialEmotionService:
             logger.info("MediaPipe face mesh initialized successfully")
         except Exception as e:
             logger.warning(f"MediaPipe initialization warning (non-critical): {e}")
-            # Fallback initialization with minimal settings
+            # Fallback initialization with minimal settings.
             self.face_mesh = self.mp_face_mesh.FaceMesh(
                 max_num_faces=1,
                 static_image_mode=True
             )
         
-        # Load models
+        # Load models.
         self.backbone_model = self._load_backbone_model()
         if self.use_dynamic:
             self.lstm_model = self._load_lstm_model()
             self.lstm_features = []  # Store features for temporal analysis
         
-        # Image preprocessing
+        # Image preprocessing.
         self.transform = transforms.Compose([
             transforms.PILToTensor(),
             PreprocessInput()
@@ -280,14 +280,14 @@ class FacialEmotionService:
             model_file = os.path.join(self.model_path, "FER_static_ResNet50_AffectNet.pt")
             
             if os.path.exists(model_file):
-                # Load model with proper error handling
+                # Load model with proper error handling.
                 try:
-                    # First try with weights_only=False for better compatibility
+                    # First try with weights_only=False for better compatibility.
                     state_dict = torch.load(model_file, map_location='cpu')
                     if isinstance(state_dict, dict):
                         model.load_state_dict(state_dict)
                     else:
-                        # If it's a complete model, extract state_dict
+                        # If it's a complete model, extract state_dict.
                         if hasattr(state_dict, 'state_dict'):
                             model.load_state_dict(state_dict.state_dict())
                         else:
@@ -310,17 +310,17 @@ class FacialEmotionService:
         """Load the LSTM model for temporal analysis"""
         try:
             model = LSTMPyTorch()
-            # Use Aff-Wild2 model as default (best performance)
+            # Use Aff-Wild2 model as default (best performance).
             model_file = os.path.join(self.model_path, "FER_dinamic_LSTM_Aff-Wild2.pt")
             
             if os.path.exists(model_file):
                 try:
-                    # Load with CPU mapping for better compatibility
+                    # Load with CPU mapping for better compatibility.
                     state_dict = torch.load(model_file, map_location='cpu')
                     if isinstance(state_dict, dict):
                         model.load_state_dict(state_dict)
                     else:
-                        # If it's a complete model, extract state_dict
+                        # If it's a complete model, extract state_dict.
                         if hasattr(state_dict, 'state_dict'):
                             model.load_state_dict(state_dict.state_dict())
                         else:
@@ -403,13 +403,13 @@ class FacialEmotionService:
     def _preprocess_face(self, face_image: np.ndarray) -> torch.Tensor:
         """Preprocess face image for model input"""
         try:
-            # Convert to PIL Image
+            # Convert to PIL Image.
             pil_image = Image.fromarray(cv2.cvtColor(face_image, cv2.COLOR_BGR2RGB))
             
-            # Resize to model input size
+            # Resize to model input size.
             pil_image = pil_image.resize((224, 224), Image.Resampling.NEAREST)
             
-            # Apply transforms
+            # Apply transforms.
             input_tensor = self.transform(pil_image).unsqueeze(0).to(self.device)
             
             return input_tensor
@@ -431,23 +431,23 @@ class FacialEmotionService:
             if self.backbone_model is None:
                 return self._get_mock_emotion_result()
             
-            # Preprocess the face image
+            # Preprocess the face image.
             input_tensor = self._preprocess_face(face_image)
             if input_tensor is None:
                 return self._get_mock_emotion_result()
             
-            # Get emotion predictions
+            # Get emotion predictions.
             with torch.no_grad():
                 outputs = self.backbone_model(input_tensor)
                 probabilities = torch.nn.functional.softmax(outputs, dim=1)
                 confidence_scores = probabilities.cpu().numpy()[0]
             
-            # Create emotion results
+            # Create emotion results.
             emotion_results = {}
             for i, emotion in enumerate(self.emotion_labels):
                 emotion_results[emotion] = float(confidence_scores[i])
             
-            # Get dominant emotion
+            # Get dominant emotion.
             dominant_emotion_idx = np.argmax(confidence_scores)
             dominant_emotion = self.emotion_labels[dominant_emotion_idx]
             confidence = float(np.max(confidence_scores))
@@ -478,38 +478,38 @@ class FacialEmotionService:
             if self.backbone_model is None or self.lstm_model is None:
                 return self.analyze_emotion_static(face_image)
             
-            # Preprocess the face image
+            # Preprocess the face image.
             input_tensor = self._preprocess_face(face_image)
             if input_tensor is None:
                 return self._get_mock_emotion_result()
             
-            # Extract features using backbone
+            # Extract features using backbone.
             with torch.no_grad():
                 features = torch.nn.functional.relu(
                     self.backbone_model.extract_features(input_tensor)
                 ).cpu().detach().numpy()
             
-            # Maintain sliding window of features (10 frames)
+            # Maintain sliding window of features (10 frames).
             if len(self.lstm_features) == 0:
                 self.lstm_features = [features] * 10
             else:
                 self.lstm_features = self.lstm_features[1:] + [features]
             
-            # Prepare LSTM input
+            # Prepare LSTM input.
             lstm_input = torch.from_numpy(np.vstack(self.lstm_features))
             lstm_input = torch.unsqueeze(lstm_input, 0).to(self.device)
             
-            # Get emotion predictions
+            # Get emotion predictions.
             with torch.no_grad():
                 outputs = self.lstm_model(lstm_input)
                 confidence_scores = outputs.cpu().detach().numpy()[0]
             
-            # Create emotion results
+            # Create emotion results.
             emotion_results = {}
             for i, emotion in enumerate(self.emotion_labels):
                 emotion_results[emotion] = float(confidence_scores[i])
             
-            # Get dominant emotion
+            # Get dominant emotion.
             dominant_emotion_idx = np.argmax(confidence_scores)
             dominant_emotion = self.emotion_labels[dominant_emotion_idx]
             confidence = float(np.max(confidence_scores))
@@ -607,7 +607,7 @@ class FacialEmotionService:
                     'analysis': 'No emotion data available'
                 }
             
-            # Calculate weighted stress score
+            # Calculate weighted stress score.
             total_stress_score = 0
             total_confidence = 0
             emotion_counts = {emotion: 0 for emotion in self.emotion_labels}
@@ -619,7 +619,7 @@ class FacialEmotionService:
                 emotion_counts[dominant_emotion] += 1
                 total_confidence += confidence
                 
-                # Assign stress weights
+                # Assign stress weights.
                 if dominant_emotion in self.stress_indicators['high_stress']:
                     total_stress_score += 3 * confidence
                 elif dominant_emotion in self.stress_indicators['moderate_stress']:
@@ -627,11 +627,11 @@ class FacialEmotionService:
                 else:
                     total_stress_score += 1 * confidence
             
-            # Normalize stress score
+            # Normalize stress score.
             avg_confidence = total_confidence / len(emotion_results)
             normalized_stress_score = (total_stress_score / (3 * len(emotion_results))) * 100
             
-            # Determine stress level
+            # Determine stress level.
             if normalized_stress_score >= 70:
                 stress_level = 'high'
             elif normalized_stress_score >= 40:
@@ -661,5 +661,5 @@ class FacialEmotionService:
         """Reset the temporal state for LSTM model"""
         self.lstm_features = []
 
-# Create a global instance
+# Create a global instance.
 facial_emotion_service = FacialEmotionService()

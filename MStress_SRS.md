@@ -54,6 +54,14 @@ The MStress platform provides the following core functions:
 6. **Admin Dashboard**: Administrative features for system management and analytics.
 7. **Data Export**: Export assessment data in various formats.
 
+![User registration interface demonstrating secure account creation with password strength validation.](visuals/UserReviewerSignUpPage1.png)
+
+The platform provides secure user registration with comprehensive password strength requirements and role-based account creation.
+
+![User login interface showing authentication mechanism for accessing the platform.](visuals/UserSignInPage1.png)
+
+The authentication system provides secure login with email and password credentials for all user types.
+
 ### 2.3 User Characteristics:
 
 - **Regular Users**: Individuals seeking mental health assessments. Technical proficiency: basic to intermediate.
@@ -98,6 +106,22 @@ The MStress platform provides the following core functions:
 - **FR-2.6**: Assessments can include facial emotion recognition (optional).
 - **FR-2.7**: Assessments can include voice analysis (optional).
 
+![Assessment selection interface displaying multiple assessment types with descriptions and time estimates.](visuals/AssessmentsOptionsPage1.png)
+
+The assessment selection interface provides users with multiple assessment methodologies to choose from based on their needs and available time.
+
+![Standard questionnaire assessment showing DASS-21 questions with response scale options.](visuals/StandardQuestionairePage1.png)
+
+The questionnaire assessment implements the DASS-21 methodology with intuitive response scales for accurate stress evaluation.
+
+![Detailed assessment with facial emotion recognition camera interface for real-time emotion analysis.](visuals/DetailedAssessmentWithCameraPage1.png)
+
+The detailed assessment includes facial emotion recognition capabilities for enhanced assessment accuracy through real-time emotion detection.
+
+![Audio-based assessment interface with microphone input for voice analysis and speech transcription.](visuals/AudioBasedAssessmentPage1.png)
+
+The voice analysis assessment captures and analyzes audio data for comprehensive stress evaluation through speech pattern analysis.
+
 ### 3.3 AI Services Integration
 
 - **FR-3.1**: Sentiment analysis using RoBERTa model.
@@ -115,6 +139,18 @@ The MStress platform provides the following core functions:
 - **FR-4.5**: Reviewers can view assessment history for users.
 - **FR-4.6**: Reviewers can view previous reviews.
 
+![Reviewer login interface providing secure access to the reviewer panel.](visuals/ReviewerLoginPage.png)
+
+The reviewer authentication system provides secure access to the reviewer panel for qualified mental health professionals.
+
+![Reviewer dashboard displaying pending assessments and review submission interface.](visuals/ReviewerDashboard.png)
+
+The reviewer dashboard provides access to pending assessments with comprehensive review tools and risk assessment capabilities.
+
+![Reviewer dashboard with assessment review section showing detailed review interface.](visuals/ReviewerDasboardWithReviewSection.png)
+
+The review interface enables reviewers to provide detailed feedback, assign risk levels, and flag assessments for follow-up action.
+
 ### 3.5 Admin Panel Features
 
 - **FR-5.1**: Admins can view all users and their information.
@@ -123,6 +159,26 @@ The MStress platform provides the following core functions:
 - **FR-5.4**: Admins can view all assessments and reviews.
 - **FR-5.5**: Admins can export data in CSV format.
 - **FR-5.6**: Admins can configure system settings.
+
+![Admin login interface providing secure access to administrative functions.](visuals/AdminLoginPage.png)
+
+The admin authentication system provides secure access to the administrative panel for system administrators.
+
+![Admin dashboard displaying user management, system statistics, and administrative controls.](visuals/AdminDashboard1.png)
+
+The admin dashboard provides comprehensive system management capabilities including user administration and analytics.
+
+![User management section showing all registered users with account administration tools.](visuals/UserManagementSection.png)
+
+The user management interface displays all system users with options to view details, modify roles, and manage account status.
+
+![Admin interface for creating new user accounts with role assignment options.](visuals/CreateUserWindow1.png)
+
+The user creation interface allows administrators to register new users and assign appropriate roles within the system.
+
+![Admin interface for creating new administrator accounts with elevated privileges.](visuals/CreateAdminWindow1.png)
+
+The admin creation interface enables system administrators to add new administrative users with full system access.
 
 ### 3.6 Results and Recommendations
 
@@ -206,6 +262,18 @@ The MStress platform is built using a three-tier microservices architecture:
 - **Web Application**: Responsive web interface accessible via modern browsers.
 - **Admin Dashboard**: Specialized interface for system administrators.
 - **Reviewer Panel**: Specialized interface for human reviewers.
+
+![User dashboard showing assessment history, stress trends, and personalized recommendations.](visuals/UserDashboard1.png)
+
+The user dashboard provides a comprehensive interface for viewing assessment history and stress trends with personalized recommendations.
+
+![Admin dashboard displaying user management and system administration controls.](visuals/AdminDashboard2.png)
+
+The admin dashboard provides specialized administrative interface for system management and user administration.
+
+![Reviewer dashboard with assessment review interface and risk assessment tools.](visuals/ReviewerDasboardWithReviewSection.png)
+
+The reviewer panel provides specialized interface for mental health professionals to review assessments and provide clinical feedback.
 
 ### 6.2 Hardware Interfaces
 

@@ -6,6 +6,7 @@ Provides comprehensive audio feature extraction and analysis
 import logging
 import os
 from typing import Dict, Optional
+# This file provides audio analysis for voice-based mental health assessment.
 import librosa
 import numpy as np
 import soundfile as sf

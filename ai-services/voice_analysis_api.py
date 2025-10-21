@@ -36,13 +36,13 @@ class VoiceAnalysisAPI:
         temp_path = None
         
         try:
-            # Save uploaded file temporarily
+            # Save uploaded file temporarily.
             with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as tmp_file:
                 content = await audio_file.read()
                 tmp_file.write(content)
                 temp_path = tmp_file.name
             
-            # Process audio with enhanced voice processor
+            # Process audio with enhanced voice processor.
             processing_result = self.voice_processor.process_audio_file(temp_path, language_hint="hi")
             
             if not processing_result.get('processing_successful', False):
@@ -52,7 +52,7 @@ class VoiceAnalysisAPI:
                     'details': processing_result
                 }
             
-            # Extract voice features for mental health analysis
+            # Extract voice features for mental health analysis.
             import librosa
             audio_data, sample_rate = librosa.load(temp_path, sr=16000)
             voice_features = self.feature_extractor.extract_all_features(audio_data, sample_rate)
@@ -63,10 +63,10 @@ class VoiceAnalysisAPI:
                     'error': 'Feature extraction failed'
                 }
             
-            # Calculate mental health scores
+            # Calculate mental health scores.
             mental_health_scores = self.mental_health_scorer.calculate_mental_health_scores(voice_features)
             
-            # Prepare comprehensive assessment with weighted scoring
+            # Prepare comprehensive assessment with weighted scoring.
             assessment_result = self.weighted_engine.calculate_comprehensive_scores(
                 voice_results=mental_health_scores,
                 sentiment_results={'negative': 0.3, 'positive': 0.5, 'neutral': 0.2},
@@ -95,7 +95,7 @@ class VoiceAnalysisAPI:
             }
             
         finally:
-            # Clean up temporary file
+            # Clean up temporary file.
             if temp_path and os.path.exists(temp_path):
                 os.remove(temp_path)
     
@@ -108,13 +108,13 @@ class VoiceAnalysisAPI:
             import librosa
             audio_data, sample_rate = librosa.load(audio_file_path, sr=16000)
             
-            # Extract comprehensive voice features
+            # Extract comprehensive voice features.
             voice_features = self.feature_extractor.extract_all_features(audio_data, sample_rate)
             
             if not voice_features:
                 return {'success': False, 'error': 'Feature extraction failed'}
             
-            # Calculate mental health scores from features
+            # Calculate mental health scores from features.
             mental_health_scores = self.mental_health_scorer.calculate_mental_health_scores(voice_features)
             
             return {
@@ -138,12 +138,12 @@ class VoiceAnalysisAPI:
         
         mental_health_scores = voice_results.get('mental_health_scores', {})
         
-        # Extract severity levels
+        # Extract severity levels.
         depression_severity = mental_health_scores.get('depression', {}).get('severity', 'normal')
         anxiety_severity = mental_health_scores.get('anxiety', {}).get('severity', 'normal')
         stress_severity = mental_health_scores.get('stress', {}).get('severity', 'normal')
         
-        # Determine primary concern
+        # Determine primary concern.
         scores = {
             'depression': mental_health_scores.get('depression', {}).get('score', 0),
             'anxiety': mental_health_scores.get('anxiety', {}).get('score', 0),
@@ -151,7 +151,7 @@ class VoiceAnalysisAPI:
         }
         primary_concern = max(scores, key=scores.get)
         
-        # Generate recommendations
+        # Generate recommendations.
         recommendations = self._generate_recommendations(mental_health_scores)
         
         return {
@@ -200,7 +200,7 @@ class VoiceAnalysisAPI:
         """Generate recommendations based on assessment results"""
         recommendations = []
         
-        # Check each condition and provide specific recommendations
+        # Check each condition and provide specific recommendations.
         for condition, data in mental_health_scores.items():
             severity = data.get('severity', 'normal')
             score = data.get('score', 0)
@@ -218,7 +218,7 @@ class VoiceAnalysisAPI:
         
         return recommendations
 
-# FastAPI integration example
+# FastAPI integration example.
 def create_voice_analysis_endpoints(app: FastAPI):
     """
     Create FastAPI endpoints for voice analysis
@@ -240,7 +240,7 @@ def create_voice_analysis_endpoints(app: FastAPI):
         """Endpoint for voice feature extraction only"""
         temp_path = None
         try:
-            # Save uploaded file temporarily
+            # Save uploaded file temporarily.
             with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as tmp_file:
                 content = await audio.read()
                 tmp_file.write(content)

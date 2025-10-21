@@ -8,6 +8,8 @@ from typing import List, Dict, Tuple
 import numpy as np
 
 
+# This file provides DASS-21 scoring and severity classification for mental health assessments.
+
 class DASS21ScoringService:
     """
     Implements DASS-21 scoring for questionnaire responses.

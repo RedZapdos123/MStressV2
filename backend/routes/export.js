@@ -6,7 +6,7 @@ const User = require('../models/User')
 const router = express.Router()
 const JWT_SECRET = process.env.JWT_SECRET || 'mstress-secret-key-2024'
 
-// Middleware to verify JWT token
+// Middleware to verify JWT token.
 const authenticateToken = (req, res, next) => {
   const token = req.header('Authorization')?.replace('Bearer ', '')
   
@@ -29,13 +29,13 @@ const authenticateToken = (req, res, next) => {
   }
 }
 
-// Export assessments as CSV
+// Export assessments as CSV.
 router.get('/csv', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId
     const { startDate, endDate, type } = req.query
 
-    // Build query
+    // Build query.
     const query = { user: userId, status: 'completed' }
     
     if (startDate && endDate) {
@@ -49,7 +49,7 @@ router.get('/csv', authenticateToken, async (req, res) => {
       query.type = type
     }
 
-    // Get assessments
+    // Get assessments.
     const assessments = await Assessment.find(query)
       .sort({ completedAt: -1 })
       .populate('user', 'name email userType')
@@ -61,7 +61,7 @@ router.get('/csv', authenticateToken, async (req, res) => {
       })
     }
 
-    // Generate CSV content
+    // Generate CSV content.
     const csvHeaders = [
       'Date',
       'Assessment Type',
@@ -96,7 +96,7 @@ router.get('/csv', authenticateToken, async (req, res) => {
       assessment.results?.recommendations?.length || 0
     ])
 
-    // Convert to CSV format
+    // Convert to CSV format.
     const csvContent = [
       csvHeaders.join(','),
       ...csvRows.map(row => row.map(field => 
@@ -106,7 +106,7 @@ router.get('/csv', authenticateToken, async (req, res) => {
       ).join(','))
     ].join('\n')
 
-    // Set response headers for file download
+    // Set response headers for file download.
     res.setHeader('Content-Type', 'text/csv')
     res.setHeader('Content-Disposition', `attachment; filename="mstress-assessments-${new Date().toISOString().split('T')[0]}.csv"`)
     
@@ -121,14 +121,14 @@ router.get('/csv', authenticateToken, async (req, res) => {
   }
 })
 
-// Export assessment summary as JSON
+// Export assessment summary as JSON.
 router.get('/summary', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId
     const { assessmentId } = req.query
 
     if (assessmentId) {
-      // Export specific assessment
+      // Export specific assessment.
       const assessment = await Assessment.findOne({ 
         _id: assessmentId, 
         user: userId 
@@ -172,7 +172,7 @@ router.get('/summary', authenticateToken, async (req, res) => {
       })
 
     } else {
-      // Export all assessments summary
+      // Export all assessments summary.
       const assessments = await Assessment.find({ 
         user: userId, 
         status: 'completed' 
@@ -222,12 +222,12 @@ router.get('/summary', authenticateToken, async (req, res) => {
   }
 })
 
-// Export user data (GDPR compliance)
+// Export user data (GDPR compliance).
 router.get('/user-data', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId
 
-    // Get user data
+    // Get user data.
     const user = await User.findById(userId).select('-password')
     
     if (!user) {
@@ -237,7 +237,7 @@ router.get('/user-data', authenticateToken, async (req, res) => {
       })
     }
 
-    // Get all assessments
+    // Get all assessments.
     const assessments = await Assessment.find({ user: userId })
 
     const userData = {
@@ -275,7 +275,7 @@ router.get('/user-data', authenticateToken, async (req, res) => {
       }
     }
 
-    // Set response headers for file download
+    // Set response headers for file download.
     res.setHeader('Content-Type', 'application/json')
     res.setHeader('Content-Disposition', `attachment; filename="mstress-user-data-${new Date().toISOString().split('T')[0]}.json"`)
     

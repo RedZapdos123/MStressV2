@@ -1,5 +1,6 @@
 const axios = require('axios');
 const { validationResult } = require('express-validator');
+// This file handles assessment creation, retrieval, and result processing logic.
 const Assessment = require('../models/Assessment');
 const User = require('../models/User');
 

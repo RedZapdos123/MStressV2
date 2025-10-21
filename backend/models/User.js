@@ -1,3 +1,4 @@
+// This file defines the User schema with authentication, profile, and role management.
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 
@@ -98,7 +99,7 @@ const userSchema = new mongoose.Schema({
   }
 })
 
-// Create indexes for performance
+// Create indexes for performance.
 userSchema.index({ email: 1 }, { unique: true })
 userSchema.index({ googleId: 1 }, { unique: true, sparse: true })
 userSchema.index({ authProvider: 1 })
@@ -106,13 +107,13 @@ userSchema.index({ role: 1 })
 userSchema.index({ isActive: 1 })
 userSchema.index({ createdAt: -1 })
 
-// Update the updatedAt field before saving
+// Update the updatedAt field before saving.
 userSchema.pre('save', function(next) {
   this.updatedAt = new Date()
   next()
 })
 
-// Hash password before saving (only for local auth)
+// Hash password before saving (only for local auth).
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password') || this.authProvider !== 'local') return next()
 
@@ -125,7 +126,7 @@ userSchema.pre('save', async function(next) {
   }
 })
 
-// Compare password method
+// Compare password method.
 userSchema.methods.comparePassword = async function(password) {
   try {
     return await bcrypt.compare(password, this.password)
@@ -134,13 +135,13 @@ userSchema.methods.comparePassword = async function(password) {
   }
 }
 
-// Method to update login info
+// Method to update login info.
 userSchema.methods.updateLoginInfo = function() {
   this.lastLoginAt = new Date();
   return this.save();
 };
 
-// Remove sensitive data when converting to JSON
+// Remove sensitive data when converting to JSON.
 userSchema.methods.toJSON = function() {
   const user = this.toObject()
   delete user.password

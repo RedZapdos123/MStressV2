@@ -1,3 +1,4 @@
+// This file handles the main application routing, authentication context, and layout structure.
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';

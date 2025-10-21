@@ -1,3 +1,4 @@
+// This file defines the Assessment schema for storing user assessment responses and results.
 const mongoose = require('mongoose')
 
 const assessmentSchema = new mongoose.Schema({

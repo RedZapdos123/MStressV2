@@ -48,16 +48,16 @@ class EnhancedVoiceProcessor:
             return {"transcription": "", "language": "unknown", "error": "Whisper model not available"}
 
         try:
-            # Load and preprocess audio
+            # Load and preprocess audio.
             audio_data = self._preprocess_audio(audio_path)
 
-            # Ensure only Hindi, English, and Hinglish are supported
+            # Ensure only Hindi, English, and Hinglish are supported.
             supported_languages = ["hi", "en"]
             if language_hint not in supported_languages:
                 language_hint = "hi"  # Default to Hindi for Hinglish support
 
-            # Transcribe with language preference for Hinglish support
-            # Use Hindi as primary language for better Hinglish detection
+            # Transcribe with language preference for Hinglish support.
+            # Use Hindi as primary language for better Hinglish detection.
             result = self.whisper_model.transcribe(
                 audio_path,
                 language=language_hint,  # Use specified language (hi/en only)
@@ -80,13 +80,13 @@ class EnhancedVoiceProcessor:
     def _preprocess_audio(self, audio_path: str) -> np.ndarray:
         """Preprocess audio for optimal transcription quality"""
         try:
-            # Load audio with librosa
+            # Load audio with librosa.
             audio, sr = librosa.load(audio_path, sr=self.sample_rate)
             
-            # Normalize audio
+            # Normalize audio.
             audio = librosa.util.normalize(audio)
             
-            # Apply noise reduction if audio is very quiet
+            # Apply noise reduction if audio is very quiet.
             if np.max(np.abs(audio)) < 0.1:
                 audio = audio * 3.0  # Amplify quiet audio
             
@@ -99,14 +99,14 @@ class EnhancedVoiceProcessor:
         """Estimate transcription confidence based on result characteristics"""
         text = whisper_result.get("text", "")
         
-        # Basic confidence estimation
+        # Basic confidence estimation.
         if len(text.strip()) == 0:
             return 0.0
         
-        # Longer transcriptions generally have higher confidence
+        # Longer transcriptions generally have higher confidence.
         length_factor = min(len(text) / 50, 1.0)
         
-        # Check for repeated patterns (lower confidence)
+        # Check for repeated patterns (lower confidence).
         words = text.split()
         if len(words) > 1:
             unique_words = len(set(words))
@@ -114,7 +114,7 @@ class EnhancedVoiceProcessor:
         else:
             repetition_factor = 1.0
         
-        # Combine factors
+        # Combine factors.
         confidence = (length_factor * 0.6 + repetition_factor * 0.4) * 0.85
         
         return round(confidence, 2)
@@ -124,12 +124,12 @@ class EnhancedVoiceProcessor:
         try:
             audio, sr = librosa.load(audio_path, sr=self.sample_rate)
             
-            # Basic audio characteristics
+            # Basic audio characteristics.
             duration = len(audio) / sr
             rms_energy = np.sqrt(np.mean(audio**2))
             zero_crossing_rate = np.mean(librosa.feature.zero_crossing_rate(audio))
             
-            # Spectral features
+            # Spectral features.
             spectral_centroid = np.mean(librosa.feature.spectral_centroid(y=audio, sr=sr))
             spectral_rolloff = np.mean(librosa.feature.spectral_rolloff(y=audio, sr=sr))
             
@@ -152,7 +152,7 @@ class EnhancedVoiceProcessor:
         if 'error' in features:
             return {'valid': False, 'reason': features['error']}
         
-        # Quality checks
+        # Quality checks.
         checks = {
             'sufficient_duration': features.get('duration', 0) >= 0.5,  # At least 0.5 seconds
             'adequate_energy': features.get('rms_energy', 0) >= 0.01,   # Not too quiet
@@ -173,7 +173,7 @@ class EnhancedVoiceProcessor:
         Complete audio processing pipeline
         Includes quality validation, transcription, and feature extraction
         """
-        # Validate audio quality
+        # Validate audio quality.
         quality_check = self.validate_audio_quality(audio_path)
         
         if not quality_check['valid']:
@@ -184,10 +184,10 @@ class EnhancedVoiceProcessor:
                 'error': 'Audio quality insufficient for reliable transcription'
             }
         
-        # Perform transcription
+        # Perform transcription.
         transcription_result = self.transcribe_audio(audio_path, language_hint)
         
-        # Extract audio features
+        # Extract audio features.
         audio_features = self.extract_audio_features(audio_path)
         
         return {
@@ -205,10 +205,10 @@ class EnhancedVoiceProcessor:
             output_path = input_path.replace(os.path.splitext(input_path)[1], '.wav')
         
         try:
-            # Load and resample audio
+            # Load and resample audio.
             audio, sr = librosa.load(input_path, sr=self.sample_rate)
             
-            # Save as WAV
+            # Save as WAV.
             import soundfile as sf
             sf.write(output_path, audio, self.sample_rate)
             

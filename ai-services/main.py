@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# This file provides the FastAPI application with endpoints for AI-powered mental health analysis.
 """
 MStress AI Services - Facial Emotion Recognition
 FastAPI service for comprehensive mental health assessment

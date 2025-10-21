@@ -1,3 +1,4 @@
+// This file handles user registration with role selection and password validation.
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {

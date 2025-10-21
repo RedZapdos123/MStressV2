@@ -14,7 +14,7 @@ class MentalHealthScorer:
     
     def __init__(self):
         """Initialize the mental health scoring system"""
-        # Component weights for final score calculation
+        # Component weights for final score calculation.
         self.component_weights = {
             'prosodic': 0.35,      # Pitch patterns, voice quality
             'spectral': 0.25,      # Voice timbre characteristics  
@@ -34,13 +34,13 @@ class MentalHealthScorer:
                 'stress': {'score': 0, 'severity': 'normal', 'confidence': 0.0}
             }
         
-        # Calculate component scores
+        # Calculate component scores.
         prosodic_scores = self._calculate_prosodic_score(features)
         spectral_scores = self._calculate_spectral_score(features)
         temporal_scores = self._calculate_temporal_score(features)
         deep_learning_scores = self._calculate_deep_learning_score(features)
         
-        # Weighted combination of all components
+        # Weighted combination of all components.
         final_scores = {}
         for condition in ['depression', 'anxiety', 'stress']:
             weighted_score = (
@@ -51,7 +51,7 @@ class MentalHealthScorer:
             )
             final_scores[condition] = min(weighted_score, 100)
         
-        # Convert to DASS-21 compatible format
+        # Convert to DASS-21 compatible format.
         return {
             'depression': {
                 'score': round(final_scores['depression'], 1),
@@ -77,7 +77,7 @@ class MentalHealthScorer:
         jitter = features.get('jitter', 0)
         shimmer = features.get('shimmer', 0)
 
-        # Depression indicators: monotone speech, reduced pitch variation
+        # Depression indicators: monotone speech, reduced pitch variation.
         depression_score = 0
         if f0_std < 15:  # Low pitch variation
             depression_score += 25
@@ -86,7 +86,7 @@ class MentalHealthScorer:
         if jitter > 0.02:  # Voice instability
             depression_score += 15
 
-        # Anxiety indicators: pitch instability, voice trembling
+        # Anxiety indicators: pitch instability, voice trembling.
         anxiety_score = 0
         if jitter > 0.015:  # High jitter indicates anxiety
             anxiety_score += 30
@@ -95,7 +95,7 @@ class MentalHealthScorer:
         if f0_std > 40:  # High pitch variation
             anxiety_score += 20
 
-        # Stress indicators: voice quality degradation
+        # Stress indicators: voice quality degradation.
         stress_score = 0
         if jitter > 0.01:
             stress_score += 20
@@ -116,14 +116,14 @@ class MentalHealthScorer:
         mfcc_0_mean = features.get('mfcc_0_mean', 0)
         mfcc_1_mean = features.get('mfcc_1_mean', 0)
 
-        # Depression: reduced spectral energy, flat timbre
+        # Depression: reduced spectral energy, flat timbre.
         depression_score = 0
         if spectral_centroid < 1500:  # Low spectral centroid
             depression_score += 25
         if abs(mfcc_0_mean) < 5:  # Low energy
             depression_score += 20
 
-        # Anxiety: spectral irregularities
+        # Anxiety: spectral irregularities.
         anxiety_score = 0
         if spectral_centroid > 3000:  # High spectral centroid
             anxiety_score += 20
@@ -131,7 +131,7 @@ class MentalHealthScorer:
         if spectral_std > 500:  # High spectral variation
             anxiety_score += 25
 
-        # Stress: voice quality changes
+        # Stress: voice quality changes.
         stress_score = 0
         if spectral_centroid > 2500:
             stress_score += 15
@@ -150,7 +150,7 @@ class MentalHealthScorer:
         pause_rate = features.get('pause_rate', 0.1)
         mean_pause_duration = features.get('mean_pause_duration', 0.5)
 
-        # Depression: slower speech, longer pauses
+        # Depression: slower speech, longer pauses.
         depression_score = 0
         if speaking_rate < 0.5:  # Slow speech
             depression_score += 30
@@ -159,7 +159,7 @@ class MentalHealthScorer:
         if pause_rate > 0.3:  # Frequent pauses
             depression_score += 20
 
-        # Anxiety: rapid speech or irregular patterns
+        # Anxiety: rapid speech or irregular patterns.
         anxiety_score = 0
         if speaking_rate > 0.9:  # Fast speech
             anxiety_score += 25
@@ -169,7 +169,7 @@ class MentalHealthScorer:
         if pause_std > 0.5:  # Irregular pause patterns
             anxiety_score += 15
 
-        # Stress: irregular speaking patterns
+        # Stress: irregular speaking patterns.
         stress_score = 0
         if speaking_rate < 0.4 or speaking_rate > 0.95:  # Extreme rates
             stress_score += 20
@@ -190,11 +190,11 @@ class MentalHealthScorer:
         wav2vec_std = features.get('wav2vec_std', 0)
         wav2vec_skewness = features.get('wav2vec_skewness', 0)
 
-        # If no deep learning features available, return neutral scores
+        # If no deep learning features available, return neutral scores.
         if wav2vec_mean == 0 and wav2vec_std == 0:
             return {'depression': 10, 'anxiety': 10, 'stress': 10}
 
-        # Advanced pattern recognition for mental health indicators
+        # Advanced pattern recognition for mental health indicators.
         depression_score = 0
         if wav2vec_mean < -0.1:  # Low activation patterns
             depression_score += 20
@@ -248,7 +248,7 @@ class MentalHealthScorer:
         
         feature_confidence = min(1.0, feature_count / total_expected)
         
-        # Adjust based on audio quality indicators
+        # Adjust based on audio quality indicators.
         f0_mean = features.get('f0_mean', 0)
         rms_mean = features.get('rms_mean', 0)
         

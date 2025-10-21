@@ -5,18 +5,16 @@ import Header from './Header'
 const DecideAsessment = ({ selectedBattalion, currentUser, onLogout }) => {
   const navigate = useNavigate()
 
-  const handleLogout = () => {
-    // Clear all stored data
+  const handleLogout = () => {/* Clear all stored data.
     localStorage.removeItem('token')
     localStorage.removeItem('user')
     localStorage.removeItem('currentArmyNo')
     
-    // Call parent logout function
+    // Call parent logout function.
     if (onLogout) {
-      onLogout()
-    }
+      onLogout() */
     
-    // Redirect to login page
+    // Redirect to login page.
     navigate('/login')
   }
 

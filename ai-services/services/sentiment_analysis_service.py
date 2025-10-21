@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.
 """
 Enhanced Sentiment Analysis Service for MStress Platform
 Integrates RoBERTa model for advanced text sentiment analysis
@@ -15,7 +15,7 @@ import os
 from pathlib import Path
 import json
 
-# Configure logging
+# Configure logging.
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -35,14 +35,14 @@ class SentimentAnalysisService:
         self.model_path = model_path or "models/roberta_sentiment"
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         
-        # Sentiment labels for mental health context
+        # Sentiment labels for mental health context.
         self.sentiment_labels = {
             0: 'negative',
             1: 'neutral', 
             2: 'positive'
         }
         
-        # Mental health indicators
+        # Mental health indicators.
         self.stress_keywords = [
             'stressed', 'anxious', 'worried', 'overwhelmed', 'depressed',
             'sad', 'angry', 'frustrated', 'tired', 'exhausted', 'hopeless',
@@ -59,19 +59,19 @@ class SentimentAnalysisService:
         self.model = None
         self.is_initialized = False
         
-        # Initialize the service
+        # Initialize the service.
         self.initialize()
     
     def initialize(self):
         """Initialize the RoBERTa sentiment analysis model"""
         try:
-            # Check if model directory exists
+            # Check if model directory exists.
             if not os.path.exists(self.model_path):
                 logger.warning(f"Model path {self.model_path} not found, using fallback")
                 self.is_initialized = False
                 return False
             
-            # Load tokenizer and model
+            # Load tokenizer and model.
             self.tokenizer = AutoTokenizer.from_pretrained(
                 self.model_path,
                 local_files_only=True
@@ -82,7 +82,7 @@ class SentimentAnalysisService:
                 local_files_only=True
             )
             
-            # Move model to device
+            # Move model to device.
             self.model.to(self.device)
             self.model.eval()
             
@@ -109,10 +109,10 @@ class SentimentAnalysisService:
             if not self.is_initialized:
                 return self._get_fallback_sentiment(text)
             
-            # Preprocess text
+            # Preprocess text.
             text = self._preprocess_text(text)
             
-            # Tokenize input
+            # Tokenize input.
             inputs = self.tokenizer(
                 text,
                 return_tensors="pt",
@@ -121,17 +121,17 @@ class SentimentAnalysisService:
                 max_length=512
             )
             
-            # Move inputs to device
+            # Move inputs to device.
             inputs = {k: v.to(self.device) for k, v in inputs.items()}
             
-            # Get predictions
+            # Get predictions.
             with torch.no_grad():
                 outputs = self.model(**inputs)
                 predictions = torch.nn.functional.softmax(outputs.logits, dim=-1)
                 predicted_class = torch.argmax(predictions, dim=-1).item()
                 confidence_scores = predictions.cpu().numpy()[0]
             
-            # Create sentiment results
+            # Create sentiment results.
             sentiment_scores = {}
             for idx, label in self.sentiment_labels.items():
                 sentiment_scores[label] = float(confidence_scores[idx])
@@ -139,10 +139,10 @@ class SentimentAnalysisService:
             dominant_sentiment = self.sentiment_labels[predicted_class]
             confidence = float(confidence_scores[predicted_class])
             
-            # Analyze mental health indicators
+            # Analyze mental health indicators.
             mental_health_analysis = self._analyze_mental_health_indicators(text)
             
-            # Calculate stress level
+            # Calculate stress level.
             stress_level = self._calculate_stress_level(sentiment_scores, mental_health_analysis)
             
             return {
@@ -195,7 +195,7 @@ class SentimentAnalysisService:
         if not text or not isinstance(text, str):
             return ""
         
-        # Basic text cleaning
+        # Basic text cleaning.
         text = text.strip()
         text = ' '.join(text.split())  # Remove extra whitespace
         
@@ -205,11 +205,11 @@ class SentimentAnalysisService:
         """Analyze mental health indicators in text"""
         text_lower = text.lower()
         
-        # Find stress indicators
+        # Find stress indicators.
         stress_indicators = [word for word in self.stress_keywords if word in text_lower]
         positive_indicators = [word for word in self.positive_keywords if word in text_lower]
         
-        # Calculate indicator scores
+        # Calculate indicator scores.
         stress_score = len(stress_indicators) / max(len(text.split()), 1)
         positive_score = len(positive_indicators) / max(len(text.split()), 1)
         
@@ -224,28 +224,28 @@ class SentimentAnalysisService:
     
     def _calculate_stress_level(self, sentiment_scores: Dict, mental_health_analysis: Dict) -> float:
         """Calculate overall stress level from sentiment and mental health indicators"""
-        # Base stress from sentiment
+        # Base stress from sentiment.
         negative_sentiment = sentiment_scores.get('negative', 0)
         positive_sentiment = sentiment_scores.get('positive', 0)
         
-        # Stress from sentiment (0-1 scale)
+        # Stress from sentiment (0-1 scale).
         sentiment_stress = negative_sentiment - (positive_sentiment * 0.5)
         
-        # Stress from keywords
+        # Stress from keywords.
         keyword_stress = mental_health_analysis.get('stress_indicator_score', 0)
         positive_keywords = mental_health_analysis.get('positive_indicator_score', 0)
         
-        # Combined stress level
+        # Combined stress level.
         combined_stress = (sentiment_stress * 0.7) + (keyword_stress * 0.3) - (positive_keywords * 0.2)
         
-        # Normalize to 0-1 scale
+        # Normalize to 0-1 scale.
         stress_level = max(0, min(1, combined_stress))
         
         return round(stress_level, 3)
     
     def _get_fallback_sentiment(self, text: str, error: Optional[str] = None) -> Dict:
         """Get fallback sentiment analysis when model is unavailable"""
-        # Simple keyword-based sentiment analysis
+        # Simple keyword-based sentiment analysis.
         text_lower = text.lower() if text else ""
         
         stress_count = sum(1 for word in self.stress_keywords if word in text_lower)
@@ -306,7 +306,7 @@ class SentimentAnalysisService:
             ]
         }
 
-# Global service instance
+# Global service instance.
 _sentiment_service = None
 
 def get_sentiment_service():
@@ -338,7 +338,7 @@ def get_sentiment_service_info():
     return service.get_service_info()
 
 if __name__ == "__main__":
-    # Test the service
+    # Test the service.
     service = SentimentAnalysisService()
     test_text = "I feel really stressed and anxious about my upcoming exams"
     result = service.analyze_sentiment(test_text)

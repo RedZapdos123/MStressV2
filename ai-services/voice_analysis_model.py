@@ -31,7 +31,7 @@ class VoiceFeatureExtractor:
         self.frame_length = 2048
         self.hop_length = 512
         
-        # Feature component weights for mental health assessment
+        # Feature component weights for mental health assessment.
         self.feature_weights = {
             'prosodic': 0.35,      # Pitch, voice quality
             'spectral': 0.25,      # Timbre, frequency characteristics
@@ -60,12 +60,12 @@ class VoiceFeatureExtractor:
         """Extract prosodic features including pitch patterns and voice quality"""
         features = {}
         
-        # Fundamental frequency analysis
+        # Fundamental frequency analysis.
         f0, voiced_flag, voiced_probs = librosa.pyin(
             audio, fmin=librosa.note_to_hz('C2'), fmax=librosa.note_to_hz('C7')
         )
         
-        # Remove NaN values
+        # Remove NaN values.
         f0_clean = f0[~np.isnan(f0)]
         
         if len(f0_clean) > 0:
@@ -76,14 +76,14 @@ class VoiceFeatureExtractor:
                 'voiced_ratio': np.mean(voiced_flag)
             })
             
-            # Voice quality measures
+            # Voice quality measures.
             if len(f0_clean) > 1:
                 f0_diff = np.diff(f0_clean)
                 features['jitter'] = np.std(f0_diff) / np.mean(f0_clean) if np.mean(f0_clean) > 0 else 0
             else:
                 features['jitter'] = 0
                 
-            # Energy-based shimmer approximation
+            # Energy-based shimmer approximation.
             rms = librosa.feature.rms(y=audio)[0]
             if len(rms) > 1:
                 rms_diff = np.diff(rms)
@@ -102,13 +102,13 @@ class VoiceFeatureExtractor:
         """Extract spectral features for voice timbre and quality analysis"""
         features = {}
         
-        # MFCCs for timbre analysis
+        # MFCCs for timbre analysis.
         mfccs = librosa.feature.mfcc(y=audio, sr=sr, n_mfcc=5)
         for i in range(5):
             features[f'mfcc_{i}_mean'] = np.mean(mfccs[i])
             features[f'mfcc_{i}_std'] = np.std(mfccs[i])
         
-        # Spectral characteristics
+        # Spectral characteristics.
         spectral_centroids = librosa.feature.spectral_centroid(y=audio, sr=sr)[0]
         spectral_rolloff = librosa.feature.spectral_rolloff(y=audio, sr=sr)[0]
         
@@ -125,7 +125,7 @@ class VoiceFeatureExtractor:
         """Extract temporal features including speaking rate and pause analysis"""
         features = {}
         
-        # Energy-based features
+        # Energy-based features.
         rms = librosa.feature.rms(y=audio, frame_length=self.frame_length, hop_length=self.hop_length)[0]
         features.update({
             'rms_mean': np.mean(rms),
@@ -133,18 +133,18 @@ class VoiceFeatureExtractor:
             'energy_entropy': self._calculate_entropy(rms)
         })
         
-        # Zero crossing rate for voice activity
+        # Zero crossing rate for voice activity.
         zcr = librosa.feature.zero_crossing_rate(audio, frame_length=self.frame_length, hop_length=self.hop_length)[0]
         features.update({
             'zcr_mean': np.mean(zcr),
             'zcr_std': np.std(zcr)
         })
         
-        # Pause detection and analysis
+        # Pause detection and analysis.
         energy_threshold = np.mean(rms) * 0.1
         voiced_frames = rms > energy_threshold
         
-        # Calculate pause statistics
+        # Calculate pause statistics.
         pause_frames = ~voiced_frames
         pause_segments = self._get_segments(pause_frames)
         
@@ -162,7 +162,7 @@ class VoiceFeatureExtractor:
                 'pause_duration_std': 0
             })
         
-        # Speaking rate estimation
+        # Speaking rate estimation.
         speaking_frames = np.sum(voiced_frames)
         speaking_time = speaking_frames * self.hop_length / sr
         features['speaking_rate'] = speaking_time / (len(audio) / sr) if len(audio) > 0 else 0
@@ -177,11 +177,11 @@ class VoiceFeatureExtractor:
             return features
         
         try:
-            # Resample if necessary
+            # Resample if necessary.
             if sr != 16000:
                 audio = librosa.resample(audio, orig_sr=sr, target_sr=16000)
             
-            # Process with Wav2Vec2
+            # Process with Wav2Vec2.
             inputs = self.wav2vec_processor(audio, sampling_rate=16000, return_tensors="pt", padding=True)
             
             with torch.no_grad():
@@ -243,16 +243,16 @@ class VoiceFeatureExtractor:
     def extract_all_features(self, audio: np.ndarray, sr: int) -> Dict[str, float]:
         """Extract complete feature set from audio signal"""
         try:
-            # Normalize audio
+            # Normalize audio.
             audio = librosa.util.normalize(audio)
             
-            # Extract all feature types
+            # Extract all feature types.
             prosodic_features = self.extract_prosodic_features(audio, sr)
             spectral_features = self.extract_spectral_features(audio, sr)
             temporal_features = self.extract_temporal_features(audio, sr)
             wav2vec_features = self.extract_wav2vec_features(audio, sr)
             
-            # Combine all features
+            # Combine all features.
             all_features = {}
             all_features.update(prosodic_features)
             all_features.update(spectral_features)

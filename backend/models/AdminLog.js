@@ -179,7 +179,7 @@ const adminLogSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Indexes for performance and compliance
+// Indexes for performance and compliance.
 adminLogSchema.index({ adminId: 1, createdAt: -1 });
 adminLogSchema.index({ action: 1, createdAt: -1 });
 adminLogSchema.index({ targetType: 1, targetId: 1 });
@@ -190,7 +190,7 @@ adminLogSchema.index({ 'compliance.gdprRelevant': 1 });
 adminLogSchema.index({ 'compliance.hipaaRelevant': 1 });
 adminLogSchema.index({ createdAt: 1 }, { expireAfterSeconds: 220752000 }); // 7 years TTL
 
-// Virtual for human-readable action description
+// Virtual for human-readable action description.
 adminLogSchema.virtual('actionDescription').get(function() {
   const actionMap = {
     'user_created': 'Created new user account',
@@ -221,7 +221,7 @@ adminLogSchema.virtual('actionDescription').get(function() {
   return actionMap[this.action] || this.action;
 });
 
-// Method to create a log entry
+// Method to create a log entry.
 adminLogSchema.statics.createLog = async function(logData) {
   try {
     const log = new this(logData);
@@ -233,7 +233,7 @@ adminLogSchema.statics.createLog = async function(logData) {
   }
 };
 
-// Method to get logs by admin
+// Method to get logs by admin.
 adminLogSchema.statics.getByAdmin = function(adminId, limit = 50, skip = 0) {
   return this.find({ adminId })
     .sort({ createdAt: -1 })
@@ -242,7 +242,7 @@ adminLogSchema.statics.getByAdmin = function(adminId, limit = 50, skip = 0) {
     .populate('adminId', 'name email');
 };
 
-// Method to get logs by action type
+// Method to get logs by action type.
 adminLogSchema.statics.getByAction = function(action, limit = 50, skip = 0) {
   return this.find({ action })
     .sort({ createdAt: -1 })
@@ -251,7 +251,7 @@ adminLogSchema.statics.getByAction = function(action, limit = 50, skip = 0) {
     .populate('adminId', 'name email');
 };
 
-// Method to get security-relevant logs
+// Method to get security-relevant logs.
 adminLogSchema.statics.getSecurityLogs = function(days = 30) {
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - days);
@@ -266,7 +266,7 @@ adminLogSchema.statics.getSecurityLogs = function(days = 30) {
   }).sort({ createdAt: -1 });
 };
 
-// Method to get compliance logs
+// Method to get compliance logs.
 adminLogSchema.statics.getComplianceLogs = function(type = 'gdpr', days = 90) {
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - days);
@@ -284,7 +284,7 @@ adminLogSchema.statics.getComplianceLogs = function(type = 'gdpr', days = 90) {
   return this.find(query).sort({ createdAt: -1 });
 };
 
-// Method to get activity summary
+// Method to get activity summary.
 adminLogSchema.statics.getActivitySummary = async function(days = 30) {
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - days);

@@ -7,6 +7,7 @@ import logging
 import os
 import base64
 from typing import Dict, Optional, List
+# This file provides facial emotion recognition using LibreFace and deep learning models.
 import cv2
 import numpy as np
 from PIL import Image

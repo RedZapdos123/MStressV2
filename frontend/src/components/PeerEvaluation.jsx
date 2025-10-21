@@ -49,8 +49,7 @@ const PeerEvaluation = ({ currentUser, onLogout }) => {
     }
   }
 
-  const handleSubmitEvaluation = async () => {
-    // Calculate average score
+  const handleSubmitEvaluation = async () => {/* Calculate average score.
     const numericAnswers = Object.values(answers).map(a => parseInt(a, 10)).filter(a => !isNaN(a));
     const avg = numericAnswers.length > 0 ? (numericAnswers.reduce((sum, a) => sum + a, 0) / numericAnswers.length) : 0;
     setAvgScore(avg);
@@ -59,8 +58,7 @@ const PeerEvaluation = ({ currentUser, onLogout }) => {
         answers: Object.keys(answers).map(questionId => ({
           questionId,
           answer: answers[questionId],
-          eval: finalEvaluation
-        })),
+          eval: finalEvaluation */)),
         finalScore: avg
       }
     try {

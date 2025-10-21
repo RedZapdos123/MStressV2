@@ -47,7 +47,7 @@ const JSODashboard = ({ currentUser, onLogout }) => {
 
         setPersonnelCount(personnel.length)
         
-        // Calculate stats
+        // Calculate stats.
         const stats = {
           pendingEvaluations: personnel.filter(p => p.peerEvaluation?.status === 'PENDING').length,
           completedEvaluations: personnel.filter(p => p.peerEvaluation?.status === 'EVALUATED').length,
@@ -103,7 +103,7 @@ const JSODashboard = ({ currentUser, onLogout }) => {
 
   return (
     <div className="jso-dashboard">
-      {/* Header */}
+      /* Header. */
       <header className="jso-dashboard-header">
         <div className="jso-header-content">
           <div className="jso-title-section">
@@ -124,9 +124,9 @@ const JSODashboard = ({ currentUser, onLogout }) => {
         </div>
       </header>
 
-      {/* Main Content */}
+      /* Main Content. */
       <main className="jso-main-content">
-        {/* Statistics Grid */}
+        /* Statistics Grid. */
         <section className="jso-stats-grid">
           
 

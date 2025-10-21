@@ -5,6 +5,7 @@ Provides sentiment analysis using the RoBERTa model from Hugging Face
 
 import logging
 from typing import Dict, Optional
+# This file provides sentiment analysis using the RoBERTa model for text-based assessment responses.
 import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import numpy as np

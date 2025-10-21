@@ -14,7 +14,7 @@ class WeightedAssessmentEngine:
     
     def __init__(self):
         """Initialize the weighted assessment engine with default component weights"""
-        # Component weights - voice analysis has highest priority as requested
+        # Component weights - voice analysis has highest priority as requested.
         self.component_weights = {
             'voice_analysis': 0.40,      # Highest weight for voice tone analysis
             'sentiment_analysis': 0.25,   # Text sentiment analysis
@@ -22,7 +22,7 @@ class WeightedAssessmentEngine:
             'facial_analysis': 0.15       # Lowest weight as requested
         }
         
-        # DASS-21 compatible severity thresholds
+        # DASS-21 compatible severity thresholds.
         self.severity_thresholds = {
             'depression': {'normal': 9, 'mild': 13, 'moderate': 20, 'severe': 27},
             'anxiety': {'normal': 7, 'mild': 9, 'moderate': 14, 'severe': 19},
@@ -39,42 +39,42 @@ class WeightedAssessmentEngine:
         Combines all available AI assessment components with configured weights
         """
         try:
-            # Initialize component scores
+            # Initialize component scores.
             component_scores = {
                 'depression': {},
                 'anxiety': {},
                 'stress': {}
             }
             
-            # Extract voice analysis scores (highest weight: 40%)
+            # Extract voice analysis scores (highest weight: 40%).
             if voice_results:
                 for condition in ['depression', 'anxiety', 'stress']:
                     if condition in voice_results:
                         score = voice_results[condition].get('score', 0)
                         component_scores[condition]['voice'] = score
             
-            # Extract sentiment analysis scores (25% weight)
+            # Extract sentiment analysis scores (25% weight).
             if sentiment_results:
                 sentiment_scores = self._convert_sentiment_to_scores(sentiment_results)
                 for condition in ['depression', 'anxiety', 'stress']:
                     component_scores[condition]['sentiment'] = sentiment_scores[condition]
             
-            # Extract keyword analysis scores (20% weight)
+            # Extract keyword analysis scores (20% weight).
             if keyword_results:
                 keyword_scores = self._convert_keywords_to_scores(keyword_results)
                 for condition in ['depression', 'anxiety', 'stress']:
                     component_scores[condition]['keyword'] = keyword_scores[condition]
             
-            # Extract facial analysis scores (lowest weight: 15%)
+            # Extract facial analysis scores (lowest weight: 15%).
             if facial_results:
                 facial_scores = self._convert_facial_to_scores(facial_results)
                 for condition in ['depression', 'anxiety', 'stress']:
                     component_scores[condition]['facial'] = facial_scores[condition]
             
-            # Calculate weighted final scores
+            # Calculate weighted final scores.
             final_scores = self._calculate_weighted_scores(component_scores)
             
-            # Determine overall risk assessment
+            # Determine overall risk assessment.
             risk_assessment = self._assess_overall_risk(final_scores)
             
             return {
@@ -94,10 +94,10 @@ class WeightedAssessmentEngine:
         positive_score = sentiment_results.get('positive', 0)
         neutral_score = sentiment_results.get('neutral', 0)
         
-        # Higher negative sentiment indicates higher mental health risk
+        # Higher negative sentiment indicates higher mental health risk.
         base_score = negative_score * 50
         
-        # Adjust based on positive sentiment (protective factor)
+        # Adjust based on positive sentiment (protective factor).
         adjustment = positive_score * 10
         
         return {
@@ -110,12 +110,12 @@ class WeightedAssessmentEngine:
         """Convert keyword analysis results to mental health scores"""
         total_words = keyword_results.get('total_words', 1)
         
-        # Calculate keyword density for each condition
+        # Calculate keyword density for each condition.
         depression_density = keyword_results.get('depression_indicators', 0) / total_words
         anxiety_density = keyword_results.get('anxiety_indicators', 0) / total_words
         stress_density = keyword_results.get('stress_indicators', 0) / total_words
         
-        # Convert density to scores (0-100 scale)
+        # Convert density to scores (0-100 scale).
         return {
             'depression': min(depression_density * 200, 100),
             'anxiety': min(anxiety_density * 200, 100),
@@ -129,7 +129,7 @@ class WeightedAssessmentEngine:
         anger = facial_results.get('anger', 0)
         happiness = facial_results.get('happiness', 0)
         
-        # Convert facial emotions to mental health indicators
+        # Convert facial emotions to mental health indicators.
         return {
             'depression': min(sadness * 80 + (1 - happiness) * 20, 100),
             'anxiety': min(fear * 70 + sadness * 30, 100),
@@ -141,7 +141,7 @@ class WeightedAssessmentEngine:
         final_scores = {'depression': 0, 'anxiety': 0, 'stress': 0}
         total_weight = 0
         
-        # Weight mapping for components
+        # Weight mapping for components.
         weight_mapping = {
             'voice': self.component_weights['voice_analysis'],
             'sentiment': self.component_weights['sentiment_analysis'],
@@ -149,7 +149,7 @@ class WeightedAssessmentEngine:
             'facial': self.component_weights['facial_analysis']
         }
         
-        # Calculate weighted sum for each condition
+        # Calculate weighted sum for each condition.
         for condition in ['depression', 'anxiety', 'stress']:
             weighted_sum = 0
             condition_weight = 0
@@ -165,7 +165,7 @@ class WeightedAssessmentEngine:
             
             total_weight = max(total_weight, condition_weight)
         
-        # Add severity classifications
+        # Add severity classifications.
         categories = ['depression', 'anxiety', 'stress']
         for category in categories:
             score = final_scores[category]
@@ -198,7 +198,7 @@ class WeightedAssessmentEngine:
         max_score = max(depression_score, anxiety_score, stress_score)
         avg_score = (depression_score + anxiety_score + stress_score) / 3
         
-        # Determine risk level
+        # Determine risk level.
         if max_score >= 50 or avg_score >= 35:
             risk_level = 'high'
         elif max_score >= 25 or avg_score >= 20:
@@ -230,7 +230,7 @@ class WeightedAssessmentEngine:
         total_components = len(self.component_weights)
         available_components = 0
         
-        # Check which components provided data
+        # Check which components provided data.
         sample_condition = 'depression'
         for component in ['voice', 'sentiment', 'keyword', 'facial']:
             if component in component_scores[sample_condition]:
@@ -238,7 +238,7 @@ class WeightedAssessmentEngine:
         
         completeness = available_components / total_components
         
-        # Determine quality level
+        # Determine quality level.
         if completeness >= 0.75:
             quality = 'high'
         elif completeness >= 0.5:

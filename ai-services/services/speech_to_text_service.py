@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.
 """
 Speech-to-Text Service for MStress Platform
 Integrates Whisper model for audio transcription and analysis
@@ -18,7 +18,7 @@ import io
 import wave
 from pathlib import Path
 
-# Configure logging
+# Configure logging.
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -40,7 +40,7 @@ class SpeechToTextService:
         self.model_size = model_size
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         
-        # Voice analysis parameters
+        # Voice analysis parameters.
         self.voice_indicators = {
             'stress_markers': [
                 'um', 'uh', 'like', 'you know', 'actually', 'basically',
@@ -55,18 +55,18 @@ class SpeechToTextService:
         self.model = None
         self.is_initialized = False
         
-        # Initialize the service
+        # Initialize the service.
         self.initialize()
     
     def initialize(self):
         """Initialize the Whisper speech-to-text model"""
         try:
-            # Try to load local model first
+            # Try to load local model first.
             if os.path.exists(self.model_path):
                 logger.info(f"Loading Whisper model from {self.model_path}")
                 self.model = whisper.load_model(self.model_path, device=self.device)
             else:
-                # Fallback to downloading model
+                # Fallback to downloading model.
                 logger.info(f"Local model not found, downloading Whisper {self.model_size} model")
                 self.model = whisper.load_model(self.model_size, device=self.device)
             
@@ -95,13 +95,13 @@ class SpeechToTextService:
             if not self.is_initialized:
                 return self._get_fallback_transcription()
             
-            # Process audio data
+            # Process audio data.
             audio_file_path = self._process_audio_input(audio_data)
             
             if not audio_file_path:
                 return self._create_error_response("Invalid audio data")
             
-            # Transcribe audio
+            # Transcribe audio.
             result = self.model.transcribe(
                 audio_file_path,
                 language=language,
@@ -109,17 +109,17 @@ class SpeechToTextService:
                 fp16=False  # Use fp32 for better compatibility
             )
             
-            # Extract transcription
+            # Extract transcription.
             transcription = result.get("text", "").strip()
             detected_language = result.get("language", "unknown")
             
-            # Analyze voice characteristics
+            # Analyze voice characteristics.
             voice_analysis = self._analyze_voice_characteristics(result)
             
-            # Analyze speech patterns for mental health indicators
+            # Analyze speech patterns for mental health indicators.
             speech_analysis = self._analyze_speech_patterns(transcription, result)
             
-            # Clean up temporary file
+            # Clean up temporary file.
             if audio_file_path.startswith(tempfile.gettempdir()):
                 try:
                     os.unlink(audio_file_path)
@@ -157,21 +157,21 @@ class SpeechToTextService:
             Dictionary with stress analysis results
         """
         try:
-            # Get transcription and voice analysis
+            # Get transcription and voice analysis.
             transcription_result = self.transcribe_audio(audio_data)
             
             if not transcription_result.get('success'):
                 return transcription_result
             
-            # Extract relevant data
+            # Extract relevant data.
             transcription = transcription_result.get('transcription', '')
             voice_analysis = transcription_result.get('voice_analysis', {})
             speech_patterns = transcription_result.get('speech_patterns', {})
             
-            # Calculate stress indicators
+            # Calculate stress indicators.
             stress_score = self._calculate_stress_score(voice_analysis, speech_patterns)
             
-            # Generate recommendations
+            # Generate recommendations.
             recommendations = self._generate_voice_recommendations(stress_score, speech_patterns)
             
             return {
@@ -196,24 +196,24 @@ class SpeechToTextService:
         try:
             if isinstance(audio_data, str):
                 if os.path.exists(audio_data):
-                    # File path
+                    # File path.
                     return audio_data
                 elif audio_data.startswith('data:audio'):
-                    # Base64 encoded audio
+                    # Base64 encoded audio.
                     header, encoded = audio_data.split(',', 1)
                     audio_bytes = base64.b64decode(encoded)
                     return self._save_temp_audio(audio_bytes)
                 else:
-                    # Base64 string without header
+                    # Base64 string without header.
                     audio_bytes = base64.b64decode(audio_data)
                     return self._save_temp_audio(audio_bytes)
             
             elif isinstance(audio_data, bytes):
-                # Raw audio bytes
+                # Raw audio bytes.
                 return self._save_temp_audio(audio_data)
             
             elif isinstance(audio_data, np.ndarray):
-                # Numpy array
+                # Numpy array.
                 return self._save_temp_audio_array(audio_data)
             
             return None
@@ -231,11 +231,11 @@ class SpeechToTextService:
     def _save_temp_audio_array(self, audio_array: np.ndarray, sample_rate: int = 16000) -> str:
         """Save numpy audio array to temporary file"""
         with tempfile.NamedTemporaryFile(delete=False, suffix='.wav') as temp_file:
-            # Normalize audio array
+            # Normalize audio array.
             if audio_array.dtype != np.int16:
                 audio_array = (audio_array * 32767).astype(np.int16)
             
-            # Write WAV file
+            # Write WAV file.
             with wave.open(temp_file.name, 'wb') as wav_file:
                 wav_file.setnchannels(1)  # Mono
                 wav_file.setsampwidth(2)  # 16-bit
@@ -251,12 +251,12 @@ class SpeechToTextService:
         if not segments:
             return {}
         
-        # Calculate speaking rate
+        # Calculate speaking rate.
         total_duration = sum(seg.get("end", 0) - seg.get("start", 0) for seg in segments)
         total_words = sum(len(seg.get("text", "").split()) for seg in segments)
         speaking_rate = total_words / max(total_duration, 1)  # words per second
         
-        # Calculate pause patterns
+        # Calculate pause patterns.
         pauses = []
         for i in range(1, len(segments)):
             pause_duration = segments[i].get("start", 0) - segments[i-1].get("end", 0)
@@ -265,7 +265,7 @@ class SpeechToTextService:
         
         avg_pause_duration = np.mean(pauses) if pauses else 0
         
-        # Calculate confidence variations
+        # Calculate confidence variations.
         confidences = [seg.get("avg_logprob", 0) for seg in segments]
         confidence_std = np.std(confidences) if confidences else 0
         
@@ -283,13 +283,13 @@ class SpeechToTextService:
         text_lower = transcription.lower()
         words = text_lower.split()
         
-        # Count filler words (stress indicators)
+        # Count filler words (stress indicators).
         filler_count = sum(1 for word in words if word in self.voice_indicators['stress_markers'])
         
-        # Count confidence markers
+        # Count confidence markers.
         confidence_count = sum(1 for word in words if word in self.voice_indicators['confidence_markers'])
         
-        # Calculate ratios
+        # Calculate ratios.
         total_words = len(words)
         filler_ratio = filler_count / max(total_words, 1)
         confidence_ratio = confidence_count / max(total_words, 1)
@@ -309,33 +309,33 @@ class SpeechToTextService:
         if not segments:
             return 0.0
         
-        # Average log probability across all segments
+        # Average log probability across all segments.
         avg_logprobs = [seg.get("avg_logprob", -1.0) for seg in segments]
         overall_logprob = np.mean(avg_logprobs)
         
-        # Convert log probability to confidence score (0-1)
+        # Convert log probability to confidence score (0-1).
         confidence = max(0, min(1, (overall_logprob + 1) / 1))
         return round(confidence, 3)
     
     def _calculate_stress_score(self, voice_analysis: Dict, speech_patterns: Dict) -> float:
         """Calculate stress score from voice and speech analysis"""
-        # Voice-based stress indicators
+        # Voice-based stress indicators.
         speaking_rate = voice_analysis.get('speaking_rate_wps', 2.0)
         pause_duration = voice_analysis.get('average_pause_duration', 0.5)
         confidence_variation = voice_analysis.get('confidence_variation', 0.1)
         
-        # Speech pattern stress indicators
+        # Speech pattern stress indicators.
         filler_ratio = speech_patterns.get('filler_word_ratio', 0.0)
         clarity_score = speech_patterns.get('speech_clarity_score', 1.0)
         
-        # Calculate stress components
+        # Calculate stress components.
         rate_stress = abs(speaking_rate - 2.0) / 2.0  # Optimal rate ~2 words/second
         pause_stress = max(0, pause_duration - 0.5) / 2.0  # Long pauses indicate stress
         variation_stress = min(1.0, confidence_variation * 10)  # High variation = stress
         filler_stress = min(1.0, filler_ratio * 5)  # High filler ratio = stress
         clarity_stress = 1.0 - clarity_score  # Low clarity = stress
         
-        # Weighted stress score
+        # Weighted stress score.
         stress_score = (
             rate_stress * 0.2 +
             pause_stress * 0.2 +
@@ -421,7 +421,7 @@ class SpeechToTextService:
             ]
         }
 
-# Global service instance
+# Global service instance.
 _speech_service = None
 
 def get_speech_service():
@@ -453,6 +453,6 @@ def get_speech_service_info():
     return service.get_service_info()
 
 if __name__ == "__main__":
-    # Test the service
+    # Test the service.
     service = SpeechToTextService()
     print("Service info:", service.get_service_info())

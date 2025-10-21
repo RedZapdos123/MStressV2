@@ -92,7 +92,7 @@ const IndividualMonitoring = ({ armyNo: propArmyNo, currentUser, onLogout, onBac
     );
   }
 
-  // Prepare data for charts
+  // Prepare data for charts.
   const chartData = examinationHistory.map((exam, index) => ({
     examination: `Exam ${index + 1}`,
     date: new Date(exam.completedAt).toLocaleDateString(),
@@ -104,7 +104,7 @@ const IndividualMonitoring = ({ armyNo: propArmyNo, currentUser, onLogout, onBac
     stressSeverity: exam.dassScores.stressSeverity
   }));
 
-  // Latest scores for pie charts
+  // Latest scores for pie charts.
   const latestScores = examinationHistory.length > 0 ? examinationHistory[examinationHistory.length - 1].dassScores : null;
 
   const pieData = latestScores ? [
@@ -168,7 +168,7 @@ const IndividualMonitoring = ({ armyNo: propArmyNo, currentUser, onLogout, onBac
       {examinationHistory.length > 0 ? (
         <div className="charts-container">
           <div className='same-line-charts'>
-            {/* Line Chart for Score Trends */}
+            /* Line Chart for Score Trends. */
             <div className="chart-card">
                 <h3>DASS-21 Score Trends Over Time</h3>
                 <ResponsiveContainer width="100%" height={400}>
@@ -203,7 +203,7 @@ const IndividualMonitoring = ({ armyNo: propArmyNo, currentUser, onLogout, onBac
                 </ResponsiveContainer>
             </div>
 
-            {/* Pie Chart for Score Distribution */}
+            /* Pie Chart for Score Distribution. */
             <div className="chart-card-pie">
                 <h3>Latest Score Distribution</h3>
                 <ResponsiveContainer width="100%" height={400}>
@@ -229,7 +229,7 @@ const IndividualMonitoring = ({ armyNo: propArmyNo, currentUser, onLogout, onBac
 
           </div>
 
-          {/* Severity History Table */}
+          /* Severity History Table. */
           <div className="chart-card-all">
             <h3>Examination History</h3>
             <div className="history-table">

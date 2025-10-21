@@ -21,10 +21,8 @@ const Login = ({ onLogin }) => {
   }
 
   const handleRoleSelect = (role) => {
-    if (role === 'USER') {
-      // Direct login for users without credentials
-      handleDirectLogin('USER')
-    } 
+    if (role === 'USER') {/* Direct login for users without credentials.
+      handleDirectLogin('USER') */ 
     else {
       setSelectedRole(role)
       setError('')
@@ -55,7 +53,7 @@ const Login = ({ onLogin }) => {
       
       onLogin(user, token)
       
-      // Redirect based on user role
+      // Redirect based on user role.
       switch (user.role) {
         case 'CO':
           navigate('/co-dashboard')
@@ -96,7 +94,7 @@ const Login = ({ onLogin }) => {
 
         <div className="login-form-container">
           {!selectedRole ? (
-            // Role selection cards
+            // Role selection cards.
             <div className="role-selection">
               <h2>Select Your Role</h2>
               <p className="role-subtitle">Choose your access level to continue</p>
@@ -129,7 +127,7 @@ const Login = ({ onLogin }) => {
               </div>
             </div>
           ) : (
-            // Login form for selected role
+            // Login form for selected role.
             <div className="login-form-section">
               <button className="back-btn" onClick={handleBackToRoles}>
                 ← Back to Role Selection

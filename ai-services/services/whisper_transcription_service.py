@@ -8,6 +8,7 @@ import os
 import tempfile
 from typing import Dict, Optional
 import torch
+# This file provides speech-to-text transcription using OpenAI's Whisper model.
 import whisper
 import librosa
 import numpy as np

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-// Configure axios base URL
+// Configure axios base URL.
 axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 import { 
   UserIcon, 
@@ -33,12 +33,12 @@ const UserManagement = () => {
     userType: 'student'
   });
 
-  // Get auth token
+  // Get auth token.
   const getAuthToken = () => {
     return localStorage.getItem('token');
   };
 
-  // Fetch users from API
+  // Fetch users from API.
   const fetchUsers = async (page = 1) => {
     try {
       setLoading(true);
@@ -67,7 +67,7 @@ const UserManagement = () => {
     }
   };
 
-  // Create new user
+  // Create new user.
   const createUser = async (e) => {
     e.preventDefault();
     try {
@@ -89,7 +89,7 @@ const UserManagement = () => {
     }
   };
 
-  // Update user
+  // Update user.
   const updateUser = async (e) => {
     e.preventDefault();
     try {
@@ -116,7 +116,7 @@ const UserManagement = () => {
     }
   };
 
-  // Delete user
+  // Delete user.
   const deleteUser = async () => {
     try {
       const token = getAuthToken();
@@ -137,7 +137,7 @@ const UserManagement = () => {
     }
   };
 
-  // Create admin user
+  // Create admin user.
   const createAdminUser = async (adminData) => {
     try {
       const token = getAuthToken();
@@ -156,7 +156,7 @@ const UserManagement = () => {
     }
   };
 
-  // Handle edit user
+  // Handle edit user.
   const handleEditUser = (user) => {
     setSelectedUser(user);
     setFormData({
@@ -168,18 +168,18 @@ const UserManagement = () => {
     setShowEditModal(true);
   };
 
-  // Handle delete user
+  // Handle delete user.
   const handleDeleteUser = (user) => {
     setSelectedUser(user);
     setShowDeleteModal(true);
   };
 
-  // Load users on component mount and when filters change
+  // Load users on component mount and when filters change.
   useEffect(() => {
     fetchUsers(1);
   }, [searchTerm, userTypeFilter]);
 
-  // Format date
+  // Format date.
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -192,7 +192,7 @@ const UserManagement = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      /* Header. */
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">User Management</h2>
@@ -219,7 +219,7 @@ const UserManagement = () => {
         </div>
       </div>
 
-      {/* Filters */}
+      /* Filters. */
       <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1">
@@ -249,7 +249,7 @@ const UserManagement = () => {
         </div>
       </div>
 
-      {/* Users Table */}
+      /* Users Table. */
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         {loading ? (
           <div className="p-8 text-center">
@@ -352,7 +352,7 @@ const UserManagement = () => {
         )}
       </div>
 
-      {/* Pagination */}
+      /* Pagination. */
       {totalPages > 1 && (
         <div className="flex justify-center space-x-2">
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
@@ -371,7 +371,7 @@ const UserManagement = () => {
         </div>
       )}
 
-      {/* Create User Modal */}
+      /* Create User Modal. */
       {showCreateModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
@@ -445,7 +445,7 @@ const UserManagement = () => {
         </div>
       )}
 
-      {/* Edit User Modal */}
+      /* Edit User Modal. */
       {showEditModal && selectedUser && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
@@ -518,7 +518,7 @@ const UserManagement = () => {
         </div>
       )}
 
-      {/* Delete User Modal */}
+      /* Delete User Modal. */
       {showDeleteModal && selectedUser && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">

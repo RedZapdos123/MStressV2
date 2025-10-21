@@ -44,7 +44,7 @@ const Register = ({ onRegister }) => {
       [name]: value,
     })
 
-    // Clear army number and rank if role is CO
+    // Clear army number and rank if role is CO.
     if (name === "role" && value === "CO") {
       setFormData((prev) => ({
         ...prev,
@@ -60,7 +60,7 @@ const Register = ({ onRegister }) => {
     setLoading(true)
     setError("")
 
-    // Validation
+    // Validation.
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match")
       setLoading(false)
@@ -96,7 +96,7 @@ const Register = ({ onRegister }) => {
 
       onRegister(user, token)
 
-      // Redirect based on user role
+      // Redirect based on user role.
       switch (user.role) {
         case "CO":
           navigate("/co-dashboard")

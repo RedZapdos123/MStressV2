@@ -15,16 +15,14 @@ const severityCategories = [
 ];
 
 
-function getSeverityCounts(filteredPersonnel, results, type, mode) {
-  // type: 'anxiety', 'depression', 'stress'; mode: 'MANUAL' or 'AI'
+function getSeverityCounts(filteredPersonnel, results, type, mode) {/* type: 'anxiety', 'depression', 'stress'; mode: 'MANUAL' or 'AI'.
   
   const counts = {
     'Normal': 0,
     'Mild': 0,
     'Moderate': 0,
     'Severe': 0,
-    'Extremely Severe': 0
-  };
+    'Extremely Severe': 0 */;
   filteredPersonnel.forEach(person => {
     if (person.selfEvaluation === 'COMPLETED') {
       const resultEntry = results.find(r => r?.[2] === person.armyNo && r?.[3] === mode);
@@ -41,15 +39,13 @@ function getSeverityCounts(filteredPersonnel, results, type, mode) {
 }
 
 
-const GraphicalAnalysis = ({ filteredPersonnel, results }) => {
-  // Manual graphs
+const GraphicalAnalysis = ({ filteredPersonnel, results }) => {/* Manual graphs.
   const [Bty, setBty] = useState([])
 
 
   useEffect(() => {
   const X = new Set(filteredPersonnel.map(p => p.subBty));
-  setBty([...X]);
-}, [filteredPersonnel]);
+  setBty([...X]); */, [filteredPersonnel]);
 
   
   const manualAnxietyData = {
@@ -82,7 +78,7 @@ const GraphicalAnalysis = ({ filteredPersonnel, results }) => {
       },
     ],
   };
-  // AI graphs
+  // AI graphs.
   const aiAnxietyData = {
     labels: severityCategories,
     datasets: [

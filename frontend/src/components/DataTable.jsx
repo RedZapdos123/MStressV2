@@ -134,7 +134,7 @@ const handleFilterChange = (column, value) => {
       console.error('Error importing data:', error)
       alert('Error importing data. Please check the file format and try again.')
     }
-    // Reset file input
+    // Reset file input.
     event.target.value = ''
   }
 
@@ -191,9 +191,9 @@ const handleFilterChange = (column, value) => {
         <div className="datatable-actions">
           {canImportExport && (
             <>
-              {/* <button onClick={handleImport} className="datatable-btn datatable-btn-import">
-                IMPORT
-              </button> */}
+// <button onClick={handleImport} className="datatable-btn datatable-btn-import">.
+// IMPORT.
+// </button>.
               <button onClick={handleExport} className="datatable-btn datatable-btn-export">
                 EXPORT DATA
               </button>
@@ -378,7 +378,7 @@ const handleFilterChange = (column, value) => {
         </div>
       </div>
 
-      {/* Table for personnel being interviewed */}
+      /* Table for personnel being interviewed. */
       <div className="datatable-wrapper" style={{marginTop: '2rem'}}>
           <h2 className="datatable-title" style={{textAlign:'center'}}>Personnel Being Interviewed</h2>
           <div className="datatable-scroll">

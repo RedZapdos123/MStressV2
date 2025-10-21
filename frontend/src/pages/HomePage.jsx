@@ -1,3 +1,4 @@
+// This file displays the landing page with features, testimonials, and mental health resources.
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {

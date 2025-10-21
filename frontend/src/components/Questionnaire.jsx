@@ -25,7 +25,7 @@ function scoreDASS(answers) {
     stress += Number(answers[q] ?? 0)
   })
 
-  // Multiply by 2 for DASS-21 scoring (since we're using 21 items instead of 42)
+  // Multiply by 2 for DASS-21 scoring (since we're using 21 items instead of 42).
   depression *= 2
   anxiety *= 2
   stress *= 2
@@ -116,7 +116,7 @@ const Questionnaire = ({ currentUser, onLogout }) => {
     setQuestions(response.data)
   } catch (error) {
     setError("Error loading questions. Please try again.")
-    // Fallback questions
+    // Fallback questions.
     setQuestions([
       {
         questionId: 1,
@@ -196,11 +196,11 @@ const Questionnaire = ({ currentUser, onLogout }) => {
     try {
       const armyNo = localStorage.getItem("currentArmyNo")
 
-      // Calculate DASS scores
+      // Calculate DASS scores.
       const scores = scoreDASS(answers)
 
       
-      // Prepare examination data with scores
+      // Prepare examination data with scores.
       const examinationData = {
         armyNo: armyNo,
         answers: Object.keys(answers).map((questionId) => ({
@@ -218,14 +218,14 @@ const Questionnaire = ({ currentUser, onLogout }) => {
         battalion : localStorage.getItem('selectedBattalion'),
         completedAt: new Date(),
         mode : "MANUAL",
-        // examManual_taken : True
+        // examManual_taken : True.
         
       }
 
       console.log(examinationData)
       
       
-      // Submit to backend
+      // Submit to backend.
       const response = await axios.post(`/api/examination/submit/${localStorage.getItem('examModes')}`, examinationData, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })

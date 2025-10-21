@@ -1,83 +1,1593 @@
-# OS
-.DS_Store
-Thumbs.db
-
-# Editors/IDE
-.vscode/
-.idea/
-
-# Node.js
+# Dependencies and build artifacts
 node_modules/
-frontend/node_modules/
-backend/node_modules/
-
-# Build outputs
-/dist/
-/build/
-frontend/dist/
-frontend/build/
-backend/dist/
-backend/build/
-
-# Logs
-*.log
-logs/
+**/node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
 
 # Python
 __pycache__/
 *.py[cod]
-*.pyo
-.venv/
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 venv/
-.env*/
-.pytest_cache/
-.ipynb_checkpoints/
+ENV/
+env/
 
-# Package managers
-npm-cache/
-yarn-error.log
-.pnpm-store/
+# AI Model files (large binary files)
+ai-services/models/
+**/.cache/
+~/.cache/whisper/
+~/.cache/huggingface/
 
-# Lock files (optional, if you prefer not to commit them)
-# yarn.lock
-# package-lock.json
+# Environment variables
+.env
+.env.local
+.env.*.local
 
-# Misc
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+logs/
+*.log
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Temporary files
+tmp/
+temp/
 *.tmp
 
-# AI Models and Large Files
-# Exclude pre-trained model files
-*.pt
-*.pth
-*.ckpt
-*.bin
-*.safetensors
-*.onnx
+ Management**: Users can update their profile information and change passwords.
+- **Assessment History**: Complete history of all assessments with scores and stress levels.
+- **Personalized Recommendations**: AI-generated recommendations based on assessment results using Gemini API.
+- **Nearby Resources**: Location-based mental health resources using Google Maps API.
+- **Reviewer Panel**: Human reviewers can review assessments and provide feedback.
+- **Admin Dashboard**: Administrative features for system management.
+- **Real-time Status**: Real-time "Open Now" status for mental health resources.
 
-# Exclude model directories (but keep README files)
-ai-services/models/**/*.pt
-ai-services/models/**/*.pth
-ai-services/models/**/*.bin
-ai-services/models/**/*.ckpt
-ai-services/models/**/*.safetensors
+## Technology Stack
 
-# Exclude Hugging Face cache
-~/.cache/huggingface/
-.cache/huggingface/
+### Frontend
+- **React**: UI framework with React Router for navigation.
+- **Vite**: Fast build tool and development server.
+- **Tailwind CSS**: Utility-first CSS framework for styling.
+- **Heroicons**: Icon library for UI components.
+- **Axios**: HTTP client for API requests.
+- **React Hot Toast**: Toast notifications for user feedback.
 
-# Exclude Whisper cache
-~/.cache/whisper/
-.cache/whisper/
+### Backend
+- **Node.js**: JavaScript runtime.
+- **Express**: Web framework for API development.
+- **MongoDB**: NoSQL database for data storage.
+- **JWT**: JSON Web Tokens for authentication.
+- **Bcrypt**: Password hashing and verification.
+- **Gemini API**: AI-powered recommendations.
+- **Google Maps API**: Location-based resource discovery.
 
-# Exclude PyTorch cache
-~/.cache/torch/
-.cache/torch/
+### AI Services
+- **FastAPI**: Python web framework for AI services.
+- **Transformers**: NLP models for sentiment analysis (RoBERTa).
+- **Librosa**: Audio analysis library.
+- **OpenAI Whisper**: Speech-to-text transcription.
+- **LibreFace**: Facial emotion recognition.
 
-# Exclude virtual environments
-ai-services/venv/
-backend/venv/
-frontend/node_modules/
+## Project Structure
 
-# Keep README files in models directory
-!ai-services/models/README.md
-!ai-services/models/**/README.md
+```
+MStress/
+├── frontend/                 # React frontend application
+│   ├── src/
+│   │   ├── pages/           # Page components
+│   │   ├── components/      # Reusable components
+│   │   ├── App.jsx          # Main app component with routing
+│   │   └── index.css        # Global styles
+│   └── package.json
+├── backend/                  # Node.js/Express backend
+│   ├── routes/              # API route handlers
+│   ├── models/              # MongoDB schemas
+│   ├── services/            # Business logic services
+│   ├── middleware/          # Express middleware
+│   ├── server.js            # Main server file
+│   └── package.json
+├── ai-services/             # Python FastAPI services
+│   ├── main.py              # FastAPI application
+│   ├── services/            # AI service implementations
+│   └── requirements.txt      # Python dependencies
+├── API.md                    # API documentation
+├── CodeBaseIndex.md          # Codebase structure documentation
+├── InstallationAndSetup.md   # Installation instructions
+└── Usage.md                  # Usage guide
+```
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js (v14 or higher)
+- Python (v3.8 or higher)
+- MongoDB (running locally or remote connection)
+- npm or yarn package manager
+
+### Installation
+
+1. **Clone the repository**:
+   ```bash
+git clone <repository-url>
+   cd MStress
+```
+
+2. **Run the setup script**:
+   ```bash
+.\setup.ps1
+```
+
+   This will install all dependencies for frontend, backend, and AI services.
+
+### Starting the Application
+
+1. **Start all services**:
+   ```bash
+.\start.ps1
+```
+
+   This will start all three services in parallel:
+   - Backend: http://localhost:5000
+   - Frontend: http://localhost:5174
+   - AI Services: http://localhost:8000
+
+2. **Access the application**:
+   - Open your browser and navigate to `http://localhost:5174`
+
+### Test Credentials
+
+Use these credentials to test the application:
+
+| Email | Password | Role |
+|-------|----------|------|
+| `iib2024017@iiita.ac.in` | `TestPassword123!` | User |
+| `iib2024001@iiita.ac.in` | `TestPassword123!` | User |
+| `reviewer@example.com` | `ReviewerPass123!` | Reviewer |
+| `admin@example.com` | `AdminPass123!` | Admin |
+
+## API Documentation
+
+For detailed API documentation, see [API.md](./API.md).
+
+## User Roles
+
+### User
+- Take assessments.
+- View assessment history and results.
+- Receive personalized recommendations.
+- View nearby mental health resources.
+- Manage profile and password.
+
+### Human Reviewer
+- Review pending assessments.
+- View assessment history for users.
+- View previous reviews.
+- Provide feedback and risk assessments.
+- Flag assessments for follow-up.
+
+### Admin
+- Access all reviewer features.
+- Manage user accounts.
+- View system statistics.
+- Configure system settings.
+
+## Assessment Scoring
+
+Assessments use the DASS-21 (Depression Anxiety Stress Scale) scoring methodology:
+
+- **0-9**: Normal
+- **10-13**: Mild
+- **14-20**: Moderate
+- **21-27**: Severe
+- **28+**: Extremely Severe
+
+## Security
+
+- Passwords are hashed using bcrypt with 10 salt rounds.
+- JWT tokens expire after 7 days.
+- Password reset tokens expire after 1 hour.
+- All sensitive endpoints require authentication.
+- CORS is configured to allow requests from specified origins.
+
+## Troubleshooting
+
+### Services not starting
+- Ensure MongoDB is running on `mongodb://localhost:27017`.
+- Check that ports 5000, 5174, and 8000 are not in use.
+- Verify all dependencies are installed correctly.
+
+### API errors
+- Check the browser console for error messages.
+- Review backend logs for detailed error information.
+- Ensure all environment variables are configured correctly.
+
+### Database issues
+- Verify MongoDB connection string in environment variables.
+- Check that the database exists and is accessible.
+- Run the seed script to populate test data: `cd backend && npm run seed`.
+
+## Contributing
+
+For contribution guidelines, please refer to the project documentation.
+
+## License
+
+This project is licensed under the MIT License.
+
+## Support
+
+For support and questions, please contact the development team.
+
+## Version
+
+Current Version: 1.0.0
+
+Last Updated: October 20, 2025.
+
+ Management**: Users can update their profile information and change passwords.
+- **Assessment History**: Complete history of all assessments with scores and stress levels.
+- **Personalized Recommendations**: AI-generated recommendations based on assessment results using Gemini API.
+- **Nearby Resources**: Location-based mental health resources using Google Maps API.
+- **Reviewer Panel**: Human reviewers can review assessments and provide feedback.
+- **Admin Dashboard**: Administrative features for system management.
+- **Real-time Status**: Real-time "Open Now" status for mental health resources.
+
+## Technology Stack
+
+### Frontend
+- **React**: UI framework with React Router for navigation.
+- **Vite**: Fast build tool and development server.
+- **Tailwind CSS**: Utility-first CSS framework for styling.
+- **Heroicons**: Icon library for UI components.
+- **Axios**: HTTP client for API requests.
+- **React Hot Toast**: Toast notifications for user feedback.
+
+### Backend
+- **Node.js**: JavaScript runtime.
+- **Express**: Web framework for API development.
+- **MongoDB**: NoSQL database for data storage.
+- **JWT**: JSON Web Tokens for authentication.
+- **Bcrypt**: Password hashing and verification.
+- **Gemini API**: AI-powered recommendations.
+- **Google Maps API**: Location-based resource discovery.
+
+### AI Services
+- **FastAPI**: Python web framework for AI services.
+- **Transformers**: NLP models for sentiment analysis (RoBERTa).
+- **Librosa**: Audio analysis library.
+- **OpenAI Whisper**: Speech-to-text transcription.
+- **LibreFace**: Facial emotion recognition.
+
+## Project Structure
+
+```
+MStress/
+├── frontend/                 # React frontend application
+│   ├── src/
+│   │   ├── pages/           # Page components
+│   │   ├── components/      # Reusable components
+│   │   ├── App.jsx          # Main app component with routing
+│   │   └── index.css        # Global styles
+│   └── package.json
+├── backend/                  # Node.js/Express backend
+│   ├── routes/              # API route handlers
+│   ├── models/              # MongoDB schemas
+│   ├── services/            # Business logic services
+│   ├── middleware/          # Express middleware
+│   ├── server.js            # Main server file
+│   └── package.json
+├── ai-services/             # Python FastAPI services
+│   ├── main.py              # FastAPI application
+│   ├── services/            # AI service implementations
+│   └── requirements.txt      # Python dependencies
+├── API.md                    # API documentation
+├── CodeBaseIndex.md          # Codebase structure documentation
+├── InstallationAndSetup.md   # Installation instructions
+└── Usage.md                  # Usage guide
+```
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js (v14 or higher)
+- Python (v3.8 or higher)
+- MongoDB (running locally or remote connection)
+- npm or yarn package manager
+
+### Installation
+
+1. **Clone the repository**:
+   ```bash
+git clone <repository-url>
+   cd MStress
+```
+
+2. **Run the setup script**:
+   ```bash
+.\setup.ps1
+```
+
+   This will install all dependencies for frontend, backend, and AI services.
+
+### Starting the Application
+
+1. **Start all services**:
+   ```bash
+.\start.ps1
+```
+
+   This will start all three services in parallel:
+   - Backend: http://localhost:5000
+   - Frontend: http://localhost:5174
+   - AI Services: http://localhost:8000
+
+2. **Access the application**:
+   - Open your browser and navigate to `http://localhost:5174`
+
+### Test Credentials
+
+Use these credentials to test the application:
+
+| Email | Password | Role |
+|-------|----------|------|
+| `iib2024017@iiita.ac.in` | `TestPassword123!` | User |
+| `iib2024001@iiita.ac.in` | `TestPassword123!` | User |
+| `reviewer@example.com` | `ReviewerPass123!` | Reviewer |
+| `admin@example.com` | `AdminPass123!` | Admin |
+
+## API Documentation
+
+For detailed API documentation, see [API.md](./API.md).
+
+## User Roles
+
+### User
+- Take assessments.
+- View assessment history and results.
+- Receive personalized recommendations.
+- View nearby mental health resources.
+- Manage profile and password.
+
+### Human Reviewer
+- Review pending assessments.
+- View assessment history for users.
+- View previous reviews.
+- Provide feedback and risk assessments.
+- Flag assessments for follow-up.
+
+### Admin
+- Access all reviewer features.
+- Manage user accounts.
+- View system statistics.
+- Configure system settings.
+
+## Assessment Scoring
+
+Assessments use the DASS-21 (Depression Anxiety Stress Scale) scoring methodology:
+
+- **0-9**: Normal
+- **10-13**: Mild
+- **14-20**: Moderate
+- **21-27**: Severe
+- **28+**: Extremely Severe
+
+## Security
+
+- Passwords are hashed using bcrypt with 10 salt rounds.
+- JWT tokens expire after 7 days.
+- Password reset tokens expire after 1 hour.
+- All sensitive endpoints require authentication.
+- CORS is configured to allow requests from specified origins.
+
+## Troubleshooting
+
+### Services not starting
+- Ensure MongoDB is running on `mongodb://localhost:27017`.
+- Check that ports 5000, 5174, and 8000 are not in use.
+- Verify all dependencies are installed correctly.
+
+### API errors
+- Check the browser console for error messages.
+- Review backend logs for detailed error information.
+- Ensure all environment variables are configured correctly.
+
+### Database issues
+- Verify MongoDB connection string in environment variables.
+- Check that the database exists and is accessible.
+- Run the seed script to populate test data: `cd backend && npm run seed`.
+
+## Contributing
+
+For contribution guidelines, please refer to the project documentation.
+
+## License
+
+This project is licensed under the MIT License.
+
+## Support
+
+For support and questions, please contact the development team.
+
+## Version
+
+Current Version: 1.0.0
+
+Last Updated: October 20, 2025.
+
+ Management**: Users can update their profile information and change passwords.
+- **Assessment History**: Complete history of all assessments with scores and stress levels.
+- **Personalized Recommendations**: AI-generated recommendations based on assessment results using Gemini API.
+- **Nearby Resources**: Location-based mental health resources using Google Maps API.
+- **Reviewer Panel**: Human reviewers can review assessments and provide feedback.
+- **Admin Dashboard**: Administrative features for system management.
+- **Real-time Status**: Real-time "Open Now" status for mental health resources.
+
+## Technology Stack
+
+### Frontend
+- **React**: UI framework with React Router for navigation.
+- **Vite**: Fast build tool and development server.
+- **Tailwind CSS**: Utility-first CSS framework for styling.
+- **Heroicons**: Icon library for UI components.
+- **Axios**: HTTP client for API requests.
+- **React Hot Toast**: Toast notifications for user feedback.
+
+### Backend
+- **Node.js**: JavaScript runtime.
+- **Express**: Web framework for API development.
+- **MongoDB**: NoSQL database for data storage.
+- **JWT**: JSON Web Tokens for authentication.
+- **Bcrypt**: Password hashing and verification.
+- **Gemini API**: AI-powered recommendations.
+- **Google Maps API**: Location-based resource discovery.
+
+### AI Services
+- **FastAPI**: Python web framework for AI services.
+- **Transformers**: NLP models for sentiment analysis (RoBERTa).
+- **Librosa**: Audio analysis library.
+- **OpenAI Whisper**: Speech-to-text transcription.
+- **LibreFace**: Facial emotion recognition.
+
+## Project Structure
+
+```
+MStress/
+├── frontend/                 # React frontend application
+│   ├── src/
+│   │   ├── pages/           # Page components
+│   │   ├── components/      # Reusable components
+│   │   ├── App.jsx          # Main app component with routing
+│   │   └── index.css        # Global styles
+│   └── package.json
+├── backend/                  # Node.js/Express backend
+│   ├── routes/              # API route handlers
+│   ├── models/              # MongoDB schemas
+│   ├── services/            # Business logic services
+│   ├── middleware/          # Express middleware
+│   ├── server.js            # Main server file
+│   └── package.json
+├── ai-services/             # Python FastAPI services
+│   ├── main.py              # FastAPI application
+│   ├── services/            # AI service implementations
+│   └── requirements.txt      # Python dependencies
+├── API.md                    # API documentation
+├── CodeBaseIndex.md          # Codebase structure documentation
+├── InstallationAndSetup.md   # Installation instructions
+└── Usage.md                  # Usage guide
+```
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js (v14 or higher)
+- Python (v3.8 or higher)
+- MongoDB (running locally or remote connection)
+- npm or yarn package manager
+
+### Installation
+
+1. **Clone the repository**:
+   ```bash
+git clone <repository-url>
+   cd MStress
+```
+
+2. **Run the setup script**:
+   ```bash
+.\setup.ps1
+```
+
+   This will install all dependencies for frontend, backend, and AI services.
+
+### Starting the Application
+
+1. **Start all services**:
+   ```bash
+.\start.ps1
+```
+
+   This will start all three services in parallel:
+   - Backend: http://localhost:5000
+   - Frontend: http://localhost:5174
+   - AI Services: http://localhost:8000
+
+2. **Access the application**:
+   - Open your browser and navigate to `http://localhost:5174`
+
+### Test Credentials
+
+Use these credentials to test the application:
+
+| Email | Password | Role |
+|-------|----------|------|
+| `iib2024017@iiita.ac.in` | `TestPassword123!` | User |
+| `iib2024001@iiita.ac.in` | `TestPassword123!` | User |
+| `reviewer@example.com` | `ReviewerPass123!` | Reviewer |
+| `admin@example.com` | `AdminPass123!` | Admin |
+
+## API Documentation
+
+For detailed API documentation, see [API.md](./API.md).
+
+## User Roles
+
+### User
+- Take assessments.
+- View assessment history and results.
+- Receive personalized recommendations.
+- View nearby mental health resources.
+- Manage profile and password.
+
+### Human Reviewer
+- Review pending assessments.
+- View assessment history for users.
+- View previous reviews.
+- Provide feedback and risk assessments.
+- Flag assessments for follow-up.
+
+### Admin
+- Access all reviewer features.
+- Manage user accounts.
+- View system statistics.
+- Configure system settings.
+
+## Assessment Scoring
+
+Assessments use the DASS-21 (Depression Anxiety Stress Scale) scoring methodology:
+
+- **0-9**: Normal
+- **10-13**: Mild
+- **14-20**: Moderate
+- **21-27**: Severe
+- **28+**: Extremely Severe
+
+## Security
+
+- Passwords are hashed using bcrypt with 10 salt rounds.
+- JWT tokens expire after 7 days.
+- Password reset tokens expire after 1 hour.
+- All sensitive endpoints require authentication.
+- CORS is configured to allow requests from specified origins.
+
+## Troubleshooting
+
+### Services not starting
+- Ensure MongoDB is running on `mongodb://localhost:27017`.
+- Check that ports 5000, 5174, and 8000 are not in use.
+- Verify all dependencies are installed correctly.
+
+### API errors
+- Check the browser console for error messages.
+- Review backend logs for detailed error information.
+- Ensure all environment variables are configured correctly.
+
+### Database issues
+- Verify MongoDB connection string in environment variables.
+- Check that the database exists and is accessible.
+- Run the seed script to populate test data: `cd backend && npm run seed`.
+
+## Contributing
+
+For contribution guidelines, please refer to the project documentation.
+
+## License
+
+This project is licensed under the MIT License.
+
+## Support
+
+For support and questions, please contact the development team.
+
+## Version
+
+Current Version: 1.0.0
+
+Last Updated: October 20, 2025.
+
+ Management**: Users can update their profile information and change passwords.
+- **Assessment History**: Complete history of all assessments with scores and stress levels.
+- **Personalized Recommendations**: AI-generated recommendations based on assessment results using Gemini API.
+- **Nearby Resources**: Location-based mental health resources using Google Maps API.
+- **Reviewer Panel**: Human reviewers can review assessments and provide feedback.
+- **Admin Dashboard**: Administrative features for system management.
+- **Real-time Status**: Real-time "Open Now" status for mental health resources.
+
+## Technology Stack
+
+### Frontend
+- **React**: UI framework with React Router for navigation.
+- **Vite**: Fast build tool and development server.
+- **Tailwind CSS**: Utility-first CSS framework for styling.
+- **Heroicons**: Icon library for UI components.
+- **Axios**: HTTP client for API requests.
+- **React Hot Toast**: Toast notifications for user feedback.
+
+### Backend
+- **Node.js**: JavaScript runtime.
+- **Express**: Web framework for API development.
+- **MongoDB**: NoSQL database for data storage.
+- **JWT**: JSON Web Tokens for authentication.
+- **Bcrypt**: Password hashing and verification.
+- **Gemini API**: AI-powered recommendations.
+- **Google Maps API**: Location-based resource discovery.
+
+### AI Services
+- **FastAPI**: Python web framework for AI services.
+- **Transformers**: NLP models for sentiment analysis (RoBERTa).
+- **Librosa**: Audio analysis library.
+- **OpenAI Whisper**: Speech-to-text transcription.
+- **LibreFace**: Facial emotion recognition.
+
+## Project Structure
+
+```
+MStress/
+├── frontend/                 # React frontend application
+│   ├── src/
+│   │   ├── pages/           # Page components
+│   │   ├── components/      # Reusable components
+│   │   ├── App.jsx          # Main app component with routing
+│   │   └── index.css        # Global styles
+│   └── package.json
+├── backend/                  # Node.js/Express backend
+│   ├── routes/              # API route handlers
+│   ├── models/              # MongoDB schemas
+│   ├── services/            # Business logic services
+│   ├── middleware/          # Express middleware
+│   ├── server.js            # Main server file
+│   └── package.json
+├── ai-services/             # Python FastAPI services
+│   ├── main.py              # FastAPI application
+│   ├── services/            # AI service implementations
+│   └── requirements.txt      # Python dependencies
+├── API.md                    # API documentation
+├── CodeBaseIndex.md          # Codebase structure documentation
+├── InstallationAndSetup.md   # Installation instructions
+└── Usage.md                  # Usage guide
+```
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js (v14 or higher)
+- Python (v3.8 or higher)
+- MongoDB (running locally or remote connection)
+- npm or yarn package manager
+
+### Installation
+
+1. **Clone the repository**:
+   ```bash
+git clone <repository-url>
+   cd MStress
+```
+
+2. **Run the setup script**:
+   ```bash
+.\setup.ps1
+```
+
+   This will install all dependencies for frontend, backend, and AI services.
+
+### Starting the Application
+
+1. **Start all services**:
+   ```bash
+.\start.ps1
+```
+
+   This will start all three services in parallel:
+   - Backend: http://localhost:5000
+   - Frontend: http://localhost:5174
+   - AI Services: http://localhost:8000
+
+2. **Access the application**:
+   - Open your browser and navigate to `http://localhost:5174`
+
+### Test Credentials
+
+Use these credentials to test the application:
+
+| Email | Password | Role |
+|-------|----------|------|
+| `iib2024017@iiita.ac.in` | `TestPassword123!` | User |
+| `iib2024001@iiita.ac.in` | `TestPassword123!` | User |
+| `reviewer@example.com` | `ReviewerPass123!` | Reviewer |
+| `admin@example.com` | `AdminPass123!` | Admin |
+
+## API Documentation
+
+For detailed API documentation, see [API.md](./API.md).
+
+## User Roles
+
+### User
+- Take assessments.
+- View assessment history and results.
+- Receive personalized recommendations.
+- View nearby mental health resources.
+- Manage profile and password.
+
+### Human Reviewer
+- Review pending assessments.
+- View assessment history for users.
+- View previous reviews.
+- Provide feedback and risk assessments.
+- Flag assessments for follow-up.
+
+### Admin
+- Access all reviewer features.
+- Manage user accounts.
+- View system statistics.
+- Configure system settings.
+
+## Assessment Scoring
+
+Assessments use the DASS-21 (Depression Anxiety Stress Scale) scoring methodology:
+
+- **0-9**: Normal
+- **10-13**: Mild
+- **14-20**: Moderate
+- **21-27**: Severe
+- **28+**: Extremely Severe
+
+## Security
+
+- Passwords are hashed using bcrypt with 10 salt rounds.
+- JWT tokens expire after 7 days.
+- Password reset tokens expire after 1 hour.
+- All sensitive endpoints require authentication.
+- CORS is configured to allow requests from specified origins.
+
+## Troubleshooting
+
+### Services not starting
+- Ensure MongoDB is running on `mongodb://localhost:27017`.
+- Check that ports 5000, 5174, and 8000 are not in use.
+- Verify all dependencies are installed correctly.
+
+### API errors
+- Check the browser console for error messages.
+- Review backend logs for detailed error information.
+- Ensure all environment variables are configured correctly.
+
+### Database issues
+- Verify MongoDB connection string in environment variables.
+- Check that the database exists and is accessible.
+- Run the seed script to populate test data: `cd backend && npm run seed`.
+
+## Contributing
+
+For contribution guidelines, please refer to the project documentation.
+
+## License
+
+This project is licensed under the MIT License.
+
+## Support
+
+For support and questions, please contact the development team.
+
+## Version
+
+Current Version: 1.0.0
+
+Last Updated: October 20, 2025.
+
+ Management**: Users can update their profile information and change passwords.
+- **Assessment History**: Complete history of all assessments with scores and stress levels.
+- **Personalized Recommendations**: AI-generated recommendations based on assessment results using Gemini API.
+- **Nearby Resources**: Location-based mental health resources using Google Maps API.
+- **Reviewer Panel**: Human reviewers can review assessments and provide feedback.
+- **Admin Dashboard**: Administrative features for system management.
+- **Real-time Status**: Real-time "Open Now" status for mental health resources.
+
+## Technology Stack
+
+### Frontend
+- **React**: UI framework with React Router for navigation.
+- **Vite**: Fast build tool and development server.
+- **Tailwind CSS**: Utility-first CSS framework for styling.
+- **Heroicons**: Icon library for UI components.
+- **Axios**: HTTP client for API requests.
+- **React Hot Toast**: Toast notifications for user feedback.
+
+### Backend
+- **Node.js**: JavaScript runtime.
+- **Express**: Web framework for API development.
+- **MongoDB**: NoSQL database for data storage.
+- **JWT**: JSON Web Tokens for authentication.
+- **Bcrypt**: Password hashing and verification.
+- **Gemini API**: AI-powered recommendations.
+- **Google Maps API**: Location-based resource discovery.
+
+### AI Services
+- **FastAPI**: Python web framework for AI services.
+- **Transformers**: NLP models for sentiment analysis (RoBERTa).
+- **Librosa**: Audio analysis library.
+- **OpenAI Whisper**: Speech-to-text transcription.
+- **LibreFace**: Facial emotion recognition.
+
+## Project Structure
+
+```
+MStress/
+├── frontend/                 # React frontend application
+│   ├── src/
+│   │   ├── pages/           # Page components
+│   │   ├── components/      # Reusable components
+│   │   ├── App.jsx          # Main app component with routing
+│   │   └── index.css        # Global styles
+│   └── package.json
+├── backend/                  # Node.js/Express backend
+│   ├── routes/              # API route handlers
+│   ├── models/              # MongoDB schemas
+│   ├── services/            # Business logic services
+│   ├── middleware/          # Express middleware
+│   ├── server.js            # Main server file
+│   └── package.json
+├── ai-services/             # Python FastAPI services
+│   ├── main.py              # FastAPI application
+│   ├── services/            # AI service implementations
+│   └── requirements.txt      # Python dependencies
+├── API.md                    # API documentation
+├── CodeBaseIndex.md          # Codebase structure documentation
+├── InstallationAndSetup.md   # Installation instructions
+└── Usage.md                  # Usage guide
+```
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js (v14 or higher)
+- Python (v3.8 or higher)
+- MongoDB (running locally or remote connection)
+- npm or yarn package manager
+
+### Installation
+
+1. **Clone the repository**:
+   ```bash
+git clone <repository-url>
+   cd MStress
+```
+
+2. **Run the setup script**:
+   ```bash
+.\setup.ps1
+```
+
+   This will install all dependencies for frontend, backend, and AI services.
+
+### Starting the Application
+
+1. **Start all services**:
+   ```bash
+.\start.ps1
+```
+
+   This will start all three services in parallel:
+   - Backend: http://localhost:5000
+   - Frontend: http://localhost:5174
+   - AI Services: http://localhost:8000
+
+2. **Access the application**:
+   - Open your browser and navigate to `http://localhost:5174`
+
+### Test Credentials
+
+Use these credentials to test the application:
+
+| Email | Password | Role |
+|-------|----------|------|
+| `iib2024017@iiita.ac.in` | `TestPassword123!` | User |
+| `iib2024001@iiita.ac.in` | `TestPassword123!` | User |
+| `reviewer@example.com` | `ReviewerPass123!` | Reviewer |
+| `admin@example.com` | `AdminPass123!` | Admin |
+
+## API Documentation
+
+For detailed API documentation, see [API.md](./API.md).
+
+## User Roles
+
+### User
+- Take assessments.
+- View assessment history and results.
+- Receive personalized recommendations.
+- View nearby mental health resources.
+- Manage profile and password.
+
+### Human Reviewer
+- Review pending assessments.
+- View assessment history for users.
+- View previous reviews.
+- Provide feedback and risk assessments.
+- Flag assessments for follow-up.
+
+### Admin
+- Access all reviewer features.
+- Manage user accounts.
+- View system statistics.
+- Configure system settings.
+
+## Assessment Scoring
+
+Assessments use the DASS-21 (Depression Anxiety Stress Scale) scoring methodology:
+
+- **0-9**: Normal
+- **10-13**: Mild
+- **14-20**: Moderate
+- **21-27**: Severe
+- **28+**: Extremely Severe
+
+## Security
+
+- Passwords are hashed using bcrypt with 10 salt rounds.
+- JWT tokens expire after 7 days.
+- Password reset tokens expire after 1 hour.
+- All sensitive endpoints require authentication.
+- CORS is configured to allow requests from specified origins.
+
+## Troubleshooting
+
+### Services not starting
+- Ensure MongoDB is running on `mongodb://localhost:27017`.
+- Check that ports 5000, 5174, and 8000 are not in use.
+- Verify all dependencies are installed correctly.
+
+### API errors
+- Check the browser console for error messages.
+- Review backend logs for detailed error information.
+- Ensure all environment variables are configured correctly.
+
+### Database issues
+- Verify MongoDB connection string in environment variables.
+- Check that the database exists and is accessible.
+- Run the seed script to populate test data: `cd backend && npm run seed`.
+
+## Contributing
+
+For contribution guidelines, please refer to the project documentation.
+
+## License
+
+This project is licensed under the MIT License.
+
+## Support
+
+For support and questions, please contact the development team.
+
+## Version
+
+Current Version: 1.0.0
+
+Last Updated: October 20, 2025.
+
+ Management**: Users can update their profile information and change passwords.
+- **Assessment History**: Complete history of all assessments with scores and stress levels.
+- **Personalized Recommendations**: AI-generated recommendations based on assessment results using Gemini API.
+- **Nearby Resources**: Location-based mental health resources using Google Maps API.
+- **Reviewer Panel**: Human reviewers can review assessments and provide feedback.
+- **Admin Dashboard**: Administrative features for system management.
+- **Real-time Status**: Real-time "Open Now" status for mental health resources.
+
+## Technology Stack
+
+### Frontend
+- **React**: UI framework with React Router for navigation.
+- **Vite**: Fast build tool and development server.
+- **Tailwind CSS**: Utility-first CSS framework for styling.
+- **Heroicons**: Icon library for UI components.
+- **Axios**: HTTP client for API requests.
+- **React Hot Toast**: Toast notifications for user feedback.
+
+### Backend
+- **Node.js**: JavaScript runtime.
+- **Express**: Web framework for API development.
+- **MongoDB**: NoSQL database for data storage.
+- **JWT**: JSON Web Tokens for authentication.
+- **Bcrypt**: Password hashing and verification.
+- **Gemini API**: AI-powered recommendations.
+- **Google Maps API**: Location-based resource discovery.
+
+### AI Services
+- **FastAPI**: Python web framework for AI services.
+- **Transformers**: NLP models for sentiment analysis (RoBERTa).
+- **Librosa**: Audio analysis library.
+- **OpenAI Whisper**: Speech-to-text transcription.
+- **LibreFace**: Facial emotion recognition.
+
+## Project Structure
+
+```
+MStress/
+├── frontend/                 # React frontend application
+│   ├── src/
+│   │   ├── pages/           # Page components
+│   │   ├── components/      # Reusable components
+│   │   ├── App.jsx          # Main app component with routing
+│   │   └── index.css        # Global styles
+│   └── package.json
+├── backend/                  # Node.js/Express backend
+│   ├── routes/              # API route handlers
+│   ├── models/              # MongoDB schemas
+│   ├── services/            # Business logic services
+│   ├── middleware/          # Express middleware
+│   ├── server.js            # Main server file
+│   └── package.json
+├── ai-services/             # Python FastAPI services
+│   ├── main.py              # FastAPI application
+│   ├── services/            # AI service implementations
+│   └── requirements.txt      # Python dependencies
+├── API.md                    # API documentation
+├── CodeBaseIndex.md          # Codebase structure documentation
+├── InstallationAndSetup.md   # Installation instructions
+└── Usage.md                  # Usage guide
+```
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js (v14 or higher)
+- Python (v3.8 or higher)
+- MongoDB (running locally or remote connection)
+- npm or yarn package manager
+
+### Installation
+
+1. **Clone the repository**:
+   ```bash
+git clone <repository-url>
+   cd MStress
+```
+
+2. **Run the setup script**:
+   ```bash
+.\setup.ps1
+```
+
+   This will install all dependencies for frontend, backend, and AI services.
+
+### Starting the Application
+
+1. **Start all services**:
+   ```bash
+.\start.ps1
+```
+
+   This will start all three services in parallel:
+   - Backend: http://localhost:5000
+   - Frontend: http://localhost:5174
+   - AI Services: http://localhost:8000
+
+2. **Access the application**:
+   - Open your browser and navigate to `http://localhost:5174`
+
+### Test Credentials
+
+Use these credentials to test the application:
+
+| Email | Password | Role |
+|-------|----------|------|
+| `iib2024017@iiita.ac.in` | `TestPassword123!` | User |
+| `iib2024001@iiita.ac.in` | `TestPassword123!` | User |
+| `reviewer@example.com` | `ReviewerPass123!` | Reviewer |
+| `admin@example.com` | `AdminPass123!` | Admin |
+
+## API Documentation
+
+For detailed API documentation, see [API.md](./API.md).
+
+## User Roles
+
+### User
+- Take assessments.
+- View assessment history and results.
+- Receive personalized recommendations.
+- View nearby mental health resources.
+- Manage profile and password.
+
+### Human Reviewer
+- Review pending assessments.
+- View assessment history for users.
+- View previous reviews.
+- Provide feedback and risk assessments.
+- Flag assessments for follow-up.
+
+### Admin
+- Access all reviewer features.
+- Manage user accounts.
+- View system statistics.
+- Configure system settings.
+
+## Assessment Scoring
+
+Assessments use the DASS-21 (Depression Anxiety Stress Scale) scoring methodology:
+
+- **0-9**: Normal
+- **10-13**: Mild
+- **14-20**: Moderate
+- **21-27**: Severe
+- **28+**: Extremely Severe
+
+## Security
+
+- Passwords are hashed using bcrypt with 10 salt rounds.
+- JWT tokens expire after 7 days.
+- Password reset tokens expire after 1 hour.
+- All sensitive endpoints require authentication.
+- CORS is configured to allow requests from specified origins.
+
+## Troubleshooting
+
+### Services not starting
+- Ensure MongoDB is running on `mongodb://localhost:27017`.
+- Check that ports 5000, 5174, and 8000 are not in use.
+- Verify all dependencies are installed correctly.
+
+### API errors
+- Check the browser console for error messages.
+- Review backend logs for detailed error information.
+- Ensure all environment variables are configured correctly.
+
+### Database issues
+- Verify MongoDB connection string in environment variables.
+- Check that the database exists and is accessible.
+- Run the seed script to populate test data: `cd backend && npm run seed`.
+
+## Contributing
+
+For contribution guidelines, please refer to the project documentation.
+
+## License
+
+This project is licensed under the MIT License.
+
+## Support
+
+For support and questions, please contact the development team.
+
+## Version
+
+Current Version: 1.0.0
+
+Last Updated: October 20, 2025.
+
+ Management**: Users can update their profile information and change passwords.
+- **Assessment History**: Complete history of all assessments with scores and stress levels.
+- **Personalized Recommendations**: AI-generated recommendations based on assessment results using Gemini API.
+- **Nearby Resources**: Location-based mental health resources using Google Maps API.
+- **Reviewer Panel**: Human reviewers can review assessments and provide feedback.
+- **Admin Dashboard**: Administrative features for system management.
+- **Real-time Status**: Real-time "Open Now" status for mental health resources.
+
+## Technology Stack
+
+### Frontend
+- **React**: UI framework with React Router for navigation.
+- **Vite**: Fast build tool and development server.
+- **Tailwind CSS**: Utility-first CSS framework for styling.
+- **Heroicons**: Icon library for UI components.
+- **Axios**: HTTP client for API requests.
+- **React Hot Toast**: Toast notifications for user feedback.
+
+### Backend
+- **Node.js**: JavaScript runtime.
+- **Express**: Web framework for API development.
+- **MongoDB**: NoSQL database for data storage.
+- **JWT**: JSON Web Tokens for authentication.
+- **Bcrypt**: Password hashing and verification.
+- **Gemini API**: AI-powered recommendations.
+- **Google Maps API**: Location-based resource discovery.
+
+### AI Services
+- **FastAPI**: Python web framework for AI services.
+- **Transformers**: NLP models for sentiment analysis (RoBERTa).
+- **Librosa**: Audio analysis library.
+- **OpenAI Whisper**: Speech-to-text transcription.
+- **LibreFace**: Facial emotion recognition.
+
+## Project Structure
+
+```
+MStress/
+├── frontend/                 # React frontend application
+│   ├── src/
+│   │   ├── pages/           # Page components
+│   │   ├── components/      # Reusable components
+│   │   ├── App.jsx          # Main app component with routing
+│   │   └── index.css        # Global styles
+│   └── package.json
+├── backend/                  # Node.js/Express backend
+│   ├── routes/              # API route handlers
+│   ├── models/              # MongoDB schemas
+│   ├── services/            # Business logic services
+│   ├── middleware/          # Express middleware
+│   ├── server.js            # Main server file
+│   └── package.json
+├── ai-services/             # Python FastAPI services
+│   ├── main.py              # FastAPI application
+│   ├── services/            # AI service implementations
+│   └── requirements.txt      # Python dependencies
+├── API.md                    # API documentation
+├── CodeBaseIndex.md          # Codebase structure documentation
+├── InstallationAndSetup.md   # Installation instructions
+└── Usage.md                  # Usage guide
+```
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js (v14 or higher)
+- Python (v3.8 or higher)
+- MongoDB (running locally or remote connection)
+- npm or yarn package manager
+
+### Installation
+
+1. **Clone the repository**:
+   ```bash
+git clone <repository-url>
+   cd MStress
+```
+
+2. **Run the setup script**:
+   ```bash
+.\setup.ps1
+```
+
+   This will install all dependencies for frontend, backend, and AI services.
+
+### Starting the Application
+
+1. **Start all services**:
+   ```bash
+.\start.ps1
+```
+
+   This will start all three services in parallel:
+   - Backend: http://localhost:5000
+   - Frontend: http://localhost:5174
+   - AI Services: http://localhost:8000
+
+2. **Access the application**:
+   - Open your browser and navigate to `http://localhost:5174`
+
+### Test Credentials
+
+Use these credentials to test the application:
+
+| Email | Password | Role |
+|-------|----------|------|
+| `iib2024017@iiita.ac.in` | `TestPassword123!` | User |
+| `iib2024001@iiita.ac.in` | `TestPassword123!` | User |
+| `reviewer@example.com` | `ReviewerPass123!` | Reviewer |
+| `admin@example.com` | `AdminPass123!` | Admin |
+
+## API Documentation
+
+For detailed API documentation, see [API.md](./API.md).
+
+## User Roles
+
+### User
+- Take assessments.
+- View assessment history and results.
+- Receive personalized recommendations.
+- View nearby mental health resources.
+- Manage profile and password.
+
+### Human Reviewer
+- Review pending assessments.
+- View assessment history for users.
+- View previous reviews.
+- Provide feedback and risk assessments.
+- Flag assessments for follow-up.
+
+### Admin
+- Access all reviewer features.
+- Manage user accounts.
+- View system statistics.
+- Configure system settings.
+
+## Assessment Scoring
+
+Assessments use the DASS-21 (Depression Anxiety Stress Scale) scoring methodology:
+
+- **0-9**: Normal
+- **10-13**: Mild
+- **14-20**: Moderate
+- **21-27**: Severe
+- **28+**: Extremely Severe
+
+## Security
+
+- Passwords are hashed using bcrypt with 10 salt rounds.
+- JWT tokens expire after 7 days.
+- Password reset tokens expire after 1 hour.
+- All sensitive endpoints require authentication.
+- CORS is configured to allow requests from specified origins.
+
+## Troubleshooting
+
+### Services not starting
+- Ensure MongoDB is running on `mongodb://localhost:27017`.
+- Check that ports 5000, 5174, and 8000 are not in use.
+- Verify all dependencies are installed correctly.
+
+### API errors
+- Check the browser console for error messages.
+- Review backend logs for detailed error information.
+- Ensure all environment variables are configured correctly.
+
+### Database issues
+- Verify MongoDB connection string in environment variables.
+- Check that the database exists and is accessible.
+- Run the seed script to populate test data: `cd backend && npm run seed`.
+
+## Contributing
+
+For contribution guidelines, please refer to the project documentation.
+
+## License
+
+This project is licensed under the MIT License.
+
+## Support
+
+For support and questions, please contact the development team.
+
+## Version
+
+Current Version: 1.0.0
+
+Last Updated: October 20, 2025.
+
+ Management**: Users can update their profile information and change passwords.
+- **Assessment History**: Complete history of all assessments with scores and stress levels.
+- **Personalized Recommendations**: AI-generated recommendations based on assessment results using Gemini API.
+- **Nearby Resources**: Location-based mental health resources using Google Maps API.
+- **Reviewer Panel**: Human reviewers can review assessments and provide feedback.
+- **Admin Dashboard**: Administrative features for system management.
+- **Real-time Status**: Real-time "Open Now" status for mental health resources.
+
+## Technology Stack
+
+### Frontend
+- **React**: UI framework with React Router for navigation.
+- **Vite**: Fast build tool and development server.
+- **Tailwind CSS**: Utility-first CSS framework for styling.
+- **Heroicons**: Icon library for UI components.
+- **Axios**: HTTP client for API requests.
+- **React Hot Toast**: Toast notifications for user feedback.
+
+### Backend
+- **Node.js**: JavaScript runtime.
+- **Express**: Web framework for API development.
+- **MongoDB**: NoSQL database for data storage.
+- **JWT**: JSON Web Tokens for authentication.
+- **Bcrypt**: Password hashing and verification.
+- **Gemini API**: AI-powered recommendations.
+- **Google Maps API**: Location-based resource discovery.
+
+### AI Services
+- **FastAPI**: Python web framework for AI services.
+- **Transformers**: NLP models for sentiment analysis (RoBERTa).
+- **Librosa**: Audio analysis library.
+- **OpenAI Whisper**: Speech-to-text transcription.
+- **LibreFace**: Facial emotion recognition.
+
+## Project Structure
+
+```
+MStress/
+├── frontend/                 # React frontend application
+│   ├── src/
+│   │   ├── pages/           # Page components
+│   │   ├── components/      # Reusable components
+│   │   ├── App.jsx          # Main app component with routing
+│   │   └── index.css        # Global styles
+│   └── package.json
+├── backend/                  # Node.js/Express backend
+│   ├── routes/              # API route handlers
+│   ├── models/              # MongoDB schemas
+│   ├── services/            # Business logic services
+│   ├── middleware/          # Express middleware
+│   ├── server.js            # Main server file
+│   └── package.json
+├── ai-services/             # Python FastAPI services
+│   ├── main.py              # FastAPI application
+│   ├── services/            # AI service implementations
+│   └── requirements.txt      # Python dependencies
+├── API.md                    # API documentation
+├── CodeBaseIndex.md          # Codebase structure documentation
+├── InstallationAndSetup.md   # Installation instructions
+└── Usage.md                  # Usage guide
+```
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js (v14 or higher)
+- Python (v3.8 or higher)
+- MongoDB (running locally or remote connection)
+- npm or yarn package manager
+
+### Installation
+
+1. **Clone the repository**:
+   ```bash
+git clone <repository-url>
+   cd MStress
+```
+
+2. **Run the setup script**:
+   ```bash
+.\setup.ps1
+```
+
+   This will install all dependencies for frontend, backend, and AI services.
+
+### Starting the Application
+
+1. **Start all services**:
+   ```bash
+.\start.ps1
+```
+
+   This will start all three services in parallel:
+   - Backend: http://localhost:5000
+   - Frontend: http://localhost:5174
+   - AI Services: http://localhost:8000
+
+2. **Access the application**:
+   - Open your browser and navigate to `http://localhost:5174`
+
+### Test Credentials
+
+Use these credentials to test the application:
+
+| Email | Password | Role |
+|-------|----------|------|
+| `iib2024017@iiita.ac.in` | `TestPassword123!` | User |
+| `iib2024001@iiita.ac.in` | `TestPassword123!` | User |
+| `reviewer@example.com` | `ReviewerPass123!` | Reviewer |
+| `admin@example.com` | `AdminPass123!` | Admin |
+
+## API Documentation
+
+For detailed API documentation, see [API.md](./API.md).
+
+## User Roles
+
+### User
+- Take assessments.
+- View assessment history and results.
+- Receive personalized recommendations.
+- View nearby mental health resources.
+- Manage profile and password.
+
+### Human Reviewer
+- Review pending assessments.
+- View assessment history for users.
+- View previous reviews.
+- Provide feedback and risk assessments.
+- Flag assessments for follow-up.
+
+### Admin
+- Access all reviewer features.
+- Manage user accounts.
+- View system statistics.
+- Configure system settings.
+
+## Assessment Scoring
+
+Assessments use the DASS-21 (Depression Anxiety Stress Scale) scoring methodology:
+
+- **0-9**: Normal
+- **10-13**: Mild
+- **14-20**: Moderate
+- **21-27**: Severe
+- **28+**: Extremely Severe
+
+## Security
+
+- Passwords are hashed using bcrypt with 10 salt rounds.
+- JWT tokens expire after 7 days.
+- Password reset tokens expire after 1 hour.
+- All sensitive endpoints require authentication.
+- CORS is configured to allow requests from specified origins.
+
+## Troubleshooting
+
+### Services not starting
+- Ensure MongoDB is running on `mongodb://localhost:27017`.
+- Check that ports 5000, 5174, and 8000 are not in use.
+- Verify all dependencies are installed correctly.
+
+### API errors
+- Check the browser console for error messages.
+- Review backend logs for detailed error information.
+- Ensure all environment variables are configured correctly.
+
+### Database issues
+- Verify MongoDB connection string in environment variables.
+- Check that the database exists and is accessible.
+- Run the seed script to populate test data: `cd backend && npm run seed`.
+
+## Contributing
+
+For contribution guidelines, please refer to the project documentation.
+
+## License
+
+This project is licensed under the MIT License.
+
+## Support
+
+For support and questions, please contact the development team.
+
+## Version
+
+Current Version: 1.0.0
+
+Last Updated: October 20, 2025.
+

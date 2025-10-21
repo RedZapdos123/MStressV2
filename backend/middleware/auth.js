@@ -1,3 +1,4 @@
+// This file provides JWT authentication middleware for protecting API routes.
 const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'mstress-secret-key-2024';
