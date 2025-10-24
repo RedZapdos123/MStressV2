@@ -427,6 +427,19 @@ async def analyze_speech_stress(request: SpeechToTextRequest):
 
 # ============ NEW AI SERVICES ENDPOINTS ============
 
+@app.get("/fer/recognize-emotion")
+async def fer_recognize_emotion_health():
+    """Health check for FER service (GET endpoint)"""
+    if not recognize_emotion:
+        raise HTTPException(status_code=503, detail="FER service not available")
+
+    return {
+        "success": True,
+        "status": "available",
+        "service": "Facial Emotion Recognition",
+        "timestamp": datetime.now().isoformat()
+    }
+
 @app.post("/fer/recognize-emotion")
 async def fer_recognize_emotion(request: FacialEmotionRequest):
     """Recognize emotions from facial image using libreface"""
@@ -444,6 +457,19 @@ async def fer_recognize_emotion(request: FacialEmotionRequest):
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Emotion recognition failed: {str(e)}")
+
+@app.get("/fer/detect-faces")
+async def fer_detect_faces_health():
+    """Health check for face detection service (GET endpoint)"""
+    if not detect_faces:
+        raise HTTPException(status_code=503, detail="Face detection service not available")
+
+    return {
+        "success": True,
+        "status": "available",
+        "service": "Face Detection",
+        "timestamp": datetime.now().isoformat()
+    }
 
 @app.post("/fer/detect-faces")
 async def fer_detect_faces(request: FacialEmotionRequest):

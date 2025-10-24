@@ -108,6 +108,10 @@ The login interface provides secure authentication with email and password crede
 7. Click "Reset Password".
 8. You can now log in with your new password.
 
+![The Forgot Password page allows users to reset their password by entering their email address. Users will receive a password reset link via email.](visuals/ForgotPasswordPage.png)
+
+The forgot password interface provides a secure way to recover account access by verifying email identity and setting a new password.
+
 ## Dashboard:
 
 The dashboard displays:

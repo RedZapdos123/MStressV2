@@ -1,16 +1,28 @@
 # MStress Start Script
 # This script starts all three services: AI Services, Backend, and Frontend
 
-Write-Host "========================================" -ForegroundColor Cyan
 Write-Host "MStress Application Startup" -ForegroundColor Cyan
-Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
 # Check if MongoDB is running
 Write-Host "Checking MongoDB connection..." -ForegroundColor Yellow
-$mongoTest = mongosh --eval "db.adminCommand('ping')" 2>$null
-if (-not $mongoTest) {
-    Write-Host "[WARNING] MongoDB is not running. Please start MongoDB before continuing." -ForegroundColor Yellow
+$mongoRunning = $false
+
+# Try to connect to MongoDB on localhost:27017
+try {
+    $tcpClient = New-Object System.Net.Sockets.TcpClient
+    $tcpClient.Connect("127.0.0.1", 27017)
+    if ($tcpClient.Connected) {
+        $mongoRunning = $true
+        Write-Host "[OK] MongoDB is running on localhost:27017" -ForegroundColor Green
+    }
+    $tcpClient.Close()
+} catch {
+    $mongoRunning = $false
+}
+
+if (-not $mongoRunning) {
+    Write-Host "[WARNING] MongoDB is not running on localhost:27017. Please start MongoDB before continuing." -ForegroundColor Yellow
     Write-Host "  Windows: net start MongoDB" -ForegroundColor Gray
     Write-Host "  macOS: brew services start mongodb-community" -ForegroundColor Gray
     Write-Host "  Linux: sudo systemctl start mongodb" -ForegroundColor Gray
@@ -72,9 +84,7 @@ $frontendProcess = Start-Service -ServiceName "Frontend" `
     -WorkingDirectory "$rootDir\frontend"
 
 Write-Host ""
-Write-Host "========================================" -ForegroundColor Green
 Write-Host "All Services Started Successfully!" -ForegroundColor Green
-Write-Host "========================================" -ForegroundColor Green
 Write-Host ""
 Write-Host "Service Status:" -ForegroundColor Cyan
 Write-Host "  AI Services:  http://localhost:8000" -ForegroundColor White
