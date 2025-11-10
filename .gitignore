@@ -48,6 +48,10 @@ ai-services/models/
 *.swp
 *.swo
 *~
+
+# Playwright and Serena cache folders
+.playwright-mcp/
+.serena/
 .DS_Store
 
 # Logs
