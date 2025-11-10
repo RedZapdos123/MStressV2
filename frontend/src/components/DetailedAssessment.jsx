@@ -96,6 +96,11 @@ const DetailedAssessment = ({ assessmentType = 'detailed_stress' }) => {
         setAssessmentComplete(true);
         toast.success('Assessment completed successfully!');
 
+        // Dispatch custom event for dashboard refresh
+        window.dispatchEvent(new CustomEvent('assessmentCompleted', {
+          detail: result.data
+        }));
+
         // Navigate to results page with the assessment data
         navigate(`/results/${result.data.assessmentId}`, {
           state: {

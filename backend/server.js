@@ -32,14 +32,61 @@ mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(() => {
-  console.log('📊 Connected to MongoDB database');
-  console.log(`🔗 Database: ${MONGODB_URI}`);
+.then(async () => {
+  console.log('Connected to MongoDB database');
+  console.log(`Database: ${MONGODB_URI}`);
+  await initializeDefaultUsers();
 })
 .catch((error) => {
-  console.error('❌ MongoDB connection error:', error);
-  console.log('⚠️  Continuing with limited functionality...');
+  console.error('MongoDB connection error:', error);
+  console.log('Continuing with limited functionality...');
 });
+
+async function initializeDefaultUsers() {
+  try {
+    const defaultUsers = [
+      {
+        email: 'iib2024017@iiita.ac.in',
+        password: 'TestPassword123!',
+        name: 'Mridankan Mandal',
+        role: 'admin'
+      },
+      {
+        email: 'iib2024001@iiita.ac.in',
+        password: 'TestPassword123!',
+        name: 'Aditya Pachauri',
+        role: 'user'
+      },
+      {
+        email: 'admin@mstress.com',
+        password: 'TestPassword123!',
+        name: 'System Administrator',
+        role: 'admin'
+      }
+    ];
+
+    for (const userData of defaultUsers) {
+      const existingUser = await User.findOne({ email: userData.email });
+      
+      if (existingUser) {
+        existingUser.password = userData.password;
+        existingUser.role = userData.role;
+        existingUser.name = userData.name;
+        existingUser.authProvider = 'local';
+        existingUser.markModified('password');
+        await existingUser.save();
+        console.log(`Updated user: ${userData.email}`);
+      } else {
+        const newUser = new User(userData);
+        await newUser.save();
+        console.log(`Created user: ${userData.email}`);
+      }
+    }
+    console.log('Default users initialized successfully');
+  } catch (error) {
+    console.error('Error initializing default users:', error);
+  }
+}
 
 // Middleware
 app.use(cors({

@@ -22,26 +22,19 @@ const handleValidationErrors = (req, res, next) => {
  * Handles all assessment-related API endpoints
  */
 
-// Validation middleware
+// Validation middleware - SIMPLIFIED FOR DEMO
 const validateAssessmentSubmission = [
-    body('userId').notEmpty().withMessage('User ID is required'),
-    body('responses').isArray().withMessage('Responses must be an array'),
-    body('responses.*.id').notEmpty().withMessage('Response ID is required'),
-    body('responses.*.value').isNumeric().withMessage('Response value must be numeric'),
+    body('userId').optional(),
+    body('responses').optional(),
     body('assessmentType').optional().isString()
 ];
 
 const validateComprehensiveAssessment = [
-    body('userId').notEmpty().withMessage('User ID is required'),
-    // Allow either responses array or questionnaire object or responses object
-    body().custom((value) => {
-        if (!value.responses && !value.questionnaire) {
-            throw new Error('Either responses array or questionnaire object is required');
-        }
-        return true;
-    }),
-    body('facialImage').optional().isString().withMessage('Facial image must be base64 string'),
-    body('facialImages').optional().isArray().withMessage('Facial images must be an array'),
+    body('userId').optional(),
+    body('responses').optional(),
+    body('questionnaire').optional(),
+    body('facialImage').optional(),
+    body('facialImages').optional(),
     body('assessmentType').optional().isString()
 ];
 

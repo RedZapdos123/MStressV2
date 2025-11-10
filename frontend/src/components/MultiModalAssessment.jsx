@@ -98,6 +98,11 @@ const MultiModalAssessment = ({ assessmentType = 'multi_modal' }) => {
         setAssessmentComplete(true);
         toast.success('Assessment completed successfully!');
         
+        // Dispatch custom event for dashboard refresh
+        window.dispatchEvent(new CustomEvent('assessmentCompleted', {
+          detail: result.data
+        }));
+        
         navigate(`/results/${result.data.assessmentId}`, {
           state: {
             results: result.data.results,
