@@ -2,7 +2,7 @@
 
 ## Overview:
 
-MStress is a comprehensive mental health assessment platform designed to help users evaluate their stress levels and receive personalized recommendations. The application combines multiple assessment methodologies including questionnaires, facial emotion recognition, voice analysis, and sentiment analysis to provide accurate stress evaluations.
+MStress is a comprehensive mental  health assessment platform designed to help users evaluate their stress levels and receive personalized recommendations. The application combines multiple assessment methodologies including questionnaires, facial emotion recognition, voice analysis, and sentiment analysis to provide accurate stress evaluations.
 
 ![MStress homepage displaying platform features, testimonials, and mental health resources.](visuals/HomePage1.png)
 
